@@ -1,45 +1,57 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { Canvas } from "@react-three/fiber";
+import { RoundedBox, Plane, OrbitControls } from "@react-three/drei";
+import styled from "styled-components";
+import { Physics, useBox, usePlane } from "@react-three/cannon";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
+    <AppStyles>
+      <Canvas>
+        <Physics>
+          <Scene />
+        </Physics>
+      </Canvas>
+    </AppStyles>
+  );
+}
+const AppStyles = styled.div`
+  height: 100vh;
+`;
+
+export default App;
+
+function Scene() {
+  const [boxRef] = useBox(() => ({ mass: 1, position: [0, 2, 0] }));
+  return (
+    <>
+      <OrbitControls {...({} as any)} />
+      <Ground />
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} />
+      <mesh ref={boxRef}>
+        <RoundedBox
+          args={[1, 1, 1]}
+          radius={0.05}
+          smoothness={4}
+          {...({} as any)}
+        >
+          <meshPhongMaterial attach="material" color="#f3f3f3" wireframe />
+        </RoundedBox>
+      </mesh>
+    </>
+  );
 }
 
-export default App
+function Ground() {
+  const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
+  return (
+    <Plane
+      ref={planeRef}
+      args={[100, 100]}
+      position={[0, -1, 0]}
+      material-color="red"
+      rotation={[-Math.PI / 2, 0, 0]}
+      {...({} as any)}
+    />
+  );
+}

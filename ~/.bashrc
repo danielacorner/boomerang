@@ -1,1 +1,0 @@
-alias ns="npm start"
