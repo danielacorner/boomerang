@@ -1,6 +1,12 @@
 import { atom, useAtom } from "jotai";
 
-const targetPositionAtom = atom([0, 0, 0]);
-export function useTargetPosition() {
-  return useAtom(targetPositionAtom);
+const boomerangStateAtom = atom<{
+  targetPosition: number[] | null;
+  isThrown: boolean;
+}>({
+  targetPosition: [0, 0, 0],
+  isThrown: false,
+});
+export function useBoomerangState() {
+  return useAtom(boomerangStateAtom);
 }

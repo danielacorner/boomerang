@@ -1,7 +1,7 @@
 import { forwardRef, useEffect, useRef } from "react";
 import Boomerang from "../GLTFs/Boomerang";
 import * as THREE from "three";
-import { useTargetPosition } from "../../store";
+import { useBoomerangState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 
 export const BoomerangWithControls = forwardRef((props, playerRef) => {
@@ -17,7 +17,7 @@ export const BoomerangWithControls = forwardRef((props, playerRef) => {
 function useBoomerang(boomerangRef, playerRef) {
   console.log("🌟🚨 ~ useBoomerang ~ boomerangRef", boomerangRef);
   console.log("🌟🚨 ~ useBoomerang ~ playerRef", playerRef);
-  const [targetPosition, setTargetPosition] = useTargetPosition();
+  const [{ targetPosition }, setState] = useBoomerangState();
   console.log("🌟🚨 ~ useBoomerang ~ targetPosition", targetPosition);
   // useKey(" ", () => {
   // });
@@ -33,24 +33,43 @@ function useBoomerang(boomerangRef, playerRef) {
   //   }, []);
   useFrame(() => {
     if (boomerangRef.current) {
-      boomerangRef.current.lookAt(playerRef.current.position);
+      // boomerangRef.current.lookAt(playerRef.current.position);
+
+      const target = targetPosition || [
+        playerRef.current.position.x,
+        0,
+        playerRef.current.position.z,
+      ];
 
       const newX = THREE.MathUtils.lerp(
         boomerangRef.current.position.x,
-        targetPosition[0],
+        target[0],
         0.1
       );
       const newY = THREE.MathUtils.lerp(
         boomerangRef.current.position.y,
-        targetPosition[1],
+        target[1],
         0.1
       );
       const newZ = THREE.MathUtils.lerp(
         boomerangRef.current.position.z,
-        targetPosition[2],
+        target[2],
         0.1
       );
-      boomerangRef.current.position.set(newX, newY, newZ);
+      const isAtTarget =
+        targetPosition &&
+        Math.abs(newX - targetPosition[0]) < 0.1 &&
+        Math.abs(newY - targetPosition[1]) < 0.1 &&
+        Math.abs(newZ - targetPosition[2]) < 0.1;
+      console.log("🌟🚨 ~ useFrame ~ newX", newX);
+      console.log("🌟🚨 ~ useFrame ~ targetPosition[0]", targetPosition?.[0]);
+      console.log("🌟🚨 ~ useFrame ~ targetPosition", targetPosition);
+      if (isAtTarget) {
+        console.log("🌟🚨 ~ useFrame ~ isAtTarget", isAtTarget);
+        setState((p) => ({ ...p, targetPosition: null }));
+      } else {
+        boomerangRef.current.position.set(newX, newY, newZ);
+      }
     }
   });
 }
