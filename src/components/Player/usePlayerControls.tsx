@@ -76,5 +76,5 @@ export function usePlayerControls() {
     );
   });
 
-  return [ref, boxRef];
+  return [ref, position];
 }

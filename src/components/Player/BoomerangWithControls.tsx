@@ -4,21 +4,20 @@ import * as THREE from "three";
 import { useBoomerangState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 
-export const BoomerangWithControls = forwardRef((props, playerRef) => {
+const ROTATION_SPEED = 0.2;
+export const BoomerangWithControls = ({ position: playerPosition }) => {
   const boomerangRef = useRef<THREE.Mesh>(null);
-  useBoomerang(boomerangRef, playerRef);
+  useBoomerang(boomerangRef, playerPosition);
   return (
-    <mesh ref={boomerangRef} {...props}>
+    <mesh ref={boomerangRef}>
       <Boomerang />
     </mesh>
   );
-});
+};
 /** shoots a boomerang when you hit space */
-function useBoomerang(boomerangRef, playerRef) {
-  console.log("🌟🚨 ~ useBoomerang ~ boomerangRef", boomerangRef);
-  console.log("🌟🚨 ~ useBoomerang ~ playerRef", playerRef);
-  const [{ targetPosition }, setState] = useBoomerangState();
-  console.log("🌟🚨 ~ useBoomerang ~ targetPosition", targetPosition);
+function useBoomerang(boomerangRef, playerPosition) {
+  console.log("🌟🚨 ~ useBoomerang ~ playerPosition", playerPosition);
+  const [{ targetPosition, isThrown }, setState] = useBoomerangState();
   // useKey(" ", () => {
   // });
   // const {mouse}=useThree()
@@ -32,44 +31,54 @@ function useBoomerang(boomerangRef, playerRef) {
   //     };
   //   }, []);
   useFrame(() => {
-    if (boomerangRef.current) {
-      // boomerangRef.current.lookAt(playerRef.current.position);
+    if (!boomerangRef.current || !playerPosition.current) {
+      return;
+    }
+    boomerangRef.current.rotation.set(
+      boomerangRef.current.rotation.x,
+      boomerangRef.current.rotation.y + ROTATION_SPEED,
+      boomerangRef.current.rotation.z
+    );
 
-      const target = targetPosition || [
-        playerRef.current.position.x,
-        0,
-        playerRef.current.position.z,
-      ];
+    // boomerangRef.current.lookAt(playerRef.current.position);
 
-      const newX = THREE.MathUtils.lerp(
-        boomerangRef.current.position.x,
-        target[0],
-        0.1
-      );
-      const newY = THREE.MathUtils.lerp(
-        boomerangRef.current.position.y,
-        target[1],
-        0.1
-      );
-      const newZ = THREE.MathUtils.lerp(
-        boomerangRef.current.position.z,
-        target[2],
-        0.1
-      );
-      const isAtTarget =
-        targetPosition &&
-        Math.abs(newX - targetPosition[0]) < 0.1 &&
-        Math.abs(newY - targetPosition[1]) < 0.1 &&
-        Math.abs(newZ - targetPosition[2]) < 0.1;
-      console.log("🌟🚨 ~ useFrame ~ newX", newX);
-      console.log("🌟🚨 ~ useFrame ~ targetPosition[0]", targetPosition?.[0]);
-      console.log("🌟🚨 ~ useFrame ~ targetPosition", targetPosition);
-      if (isAtTarget) {
-        console.log("🌟🚨 ~ useFrame ~ isAtTarget", isAtTarget);
-        setState((p) => ({ ...p, targetPosition: null }));
-      } else {
-        boomerangRef.current.position.set(newX, newY, newZ);
-      }
+    const target = targetPosition || [
+      playerPosition.current[0],
+      playerPosition.current[1],
+      playerPosition.current[2],
+    ];
+
+    const newX = THREE.MathUtils.lerp(
+      boomerangRef.current.position.x,
+      target[0],
+      0.1
+    );
+    const newY = THREE.MathUtils.lerp(
+      boomerangRef.current.position.y,
+      target[1],
+      0.1
+    );
+    const newZ = THREE.MathUtils.lerp(
+      boomerangRef.current.position.z,
+      target[2],
+      0.1
+    );
+    const isAtTarget =
+      targetPosition &&
+      Math.abs(newX - targetPosition[0]) < 0.1 &&
+      Math.abs(newY - targetPosition[1]) < 0.1 &&
+      Math.abs(newZ - targetPosition[2]) < 0.1;
+    const isAtPlayer =
+      playerPosition.current &&
+      Math.abs(newX - playerPosition.current[0]) < 0.1 &&
+      Math.abs(newY - playerPosition.current[1]) < 0.1 &&
+      Math.abs(newZ - playerPosition.current[2]) < 0.1;
+    if (isAtTarget && isThrown) {
+      setState((p) => ({ ...p, targetPosition: null }));
+    } else if (isAtPlayer && isThrown) {
+      setState((p) => ({ ...p, isThrown: false }));
+    } else {
+      boomerangRef.current.position?.set(newX, newY, newZ);
     }
   });
 }

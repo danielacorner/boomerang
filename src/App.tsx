@@ -8,7 +8,7 @@ function App() {
     <AppStyles>
       <Canvas
         camera={{
-          position: [0, 10 * (3 / 3) /* 120deg */, 10],
+          position: [0, 10 * (5 / 3), 10],
         }}
       >
         <Physics>
