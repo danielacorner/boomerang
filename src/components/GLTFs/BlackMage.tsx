@@ -6,7 +6,7 @@ source: https://sketchfab.com/3d-models/wizard-cat-42cc473a1c17467c8f96e47e2a443
 title: Wizard Cat
 */
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 
 export default function BlackMage({ ...props }) {
@@ -14,7 +14,17 @@ export default function BlackMage({ ...props }) {
 	const { nodes, materials, animations } = useGLTF(
 		"/models/black_mage/scene.gltf"
 	) as any;
-	const { actions } = useAnimations(animations, group);
+	const { actions, names, ...rest } = useAnimations(animations, group);
+
+	// Change animation when the index changes
+	useEffect(() => {
+		// Reset and fade in animation after an index has been changed
+		actions[names?.[0]]?.reset().fadeIn(0.5).play();
+		// In the clean-up phase, fade it out
+		return () => {
+			actions[names?.[0]]?.fadeOut(0.5);
+		};
+	}, [actions, names]);
 	return (
 		<group ref={group} {...props} dispose={null}>
 			<group rotation={[-Math.PI / 2, 0, 0]}>
