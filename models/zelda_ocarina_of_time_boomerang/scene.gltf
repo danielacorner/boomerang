@@ -1,0 +1,419 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 110,
+      "max": [4.939610481262207, 7.5631914138793945, 0.62520301342010498],
+      "min": [-4.5277047157287598, -6.5776190757751465, -3.7836737632751465],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 1320,
+      "componentType": 5126,
+      "count": 110,
+      "max": [0.97271132469177246, 0.99261796474456787, 0.99456846714019775],
+      "min": [-0.96600550413131714, -0.9283263087272644, -0.99518603086471558],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 110,
+      "max": [0.99284976720809937, 0.99015712738037109, 0.94372892379760742, 1],
+      "min": [
+        -0.99998742341995239, -0.98823320865631104, -0.9484943151473999, -1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 110,
+      "max": [0.99993777275085449, 0.98524487018585205],
+      "min": [6.2185215938370675e-5, 6.2185215938370675e-5],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 417,
+      "max": [109],
+      "min": [0],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 2640,
+      "componentType": 5126,
+      "count": 20,
+      "max": [4.2153458595275879, 6.7159309387207031, 1.6740767955780029],
+      "min": [-3.8069581985473633, -5.9293537139892578, -4.7773141860961914],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 2880,
+      "componentType": 5126,
+      "count": 20,
+      "max": [0.97271132469177246, 0.99261796474456787, 0.98577219247817993],
+      "min": [-0.96600550413131714, -0.9283263087272644, -0.9783291220664978],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 1760,
+      "componentType": 5126,
+      "count": 20,
+      "max": [0.9646904468536377, 0.44828972220420837, 0.38143458962440491, 1],
+      "min": [
+        -0.2585165798664093, -0.97230392694473267, -0.43140405416488647, -1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 880,
+      "componentType": 5126,
+      "count": 20,
+      "max": [1.0226764678955078, 1.5526866912841797],
+      "min": [-0.51984018087387085, -0.014767646789550781],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 1668,
+      "componentType": 5125,
+      "count": 42,
+      "max": [19],
+      "min": [0],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 3120,
+      "componentType": 5126,
+      "count": 5288,
+      "max": [1.4657166004180908, 3.406440258026123, 14.523317337036133],
+      "min": [-1.4656884670257568, -30.256046295166016, -33.909526824951172],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 66576,
+      "componentType": 5126,
+      "count": 5288,
+      "max": [0.99995291233062744, 0.91201692819595337, 0.99999868869781494],
+      "min": [-0.99995291233062744, -0.99996113777160645, -1],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 2080,
+      "componentType": 5126,
+      "count": 5288,
+      "max": [0.99147921800613403, 0.99983769655227661, 0.99472957849502563, 1],
+      "min": [
+        -0.99285244941711426, -0.99995869398117065, -0.59841489791870117, 1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 1040,
+      "componentType": 5126,
+      "count": 5288,
+      "max": [0.95956063270568848, 0.98355859518051147],
+      "min": [0.0015011429786682129, 0.0039915712550282478],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 1836,
+      "componentType": 5125,
+      "count": 29184,
+      "max": [5287],
+      "min": [0],
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "marvelmaster (https://sketchfab.com/marvelmaster)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/models/df8ac2230ff148b5b9f8bc2f7883c87b",
+      "title": "Zelda Ocarina of Time Boomerang"
+    },
+    "generator": "Sketchfab-3.19.5",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 118572,
+      "byteOffset": 0,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 43344,
+      "byteOffset": 118572,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 130032,
+      "byteOffset": 161916,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 86688,
+      "byteOffset": 291948,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 378636,
+      "uri": "scene.bin"
+    }
+  ],
+  "images": [
+    {
+      "uri": "textures/BoomerangOrb_Mat_normal.jpg"
+    },
+    {
+      "uri": "textures/BoomerangOrb_Mat_baseColor.jpg"
+    },
+    {
+      "uri": "textures/BoomerangOrbHoler_Mat_baseColor.jpg"
+    },
+    {
+      "uri": "textures/BoomerangOrbHoler_Mat_normal.jpg"
+    },
+    {
+      "uri": "textures/BoomerangWood_Mat_normal.jpg"
+    },
+    {
+      "uri": "textures/BoomerangWood_Mat_baseColor.jpg"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "emissiveFactor": [0, 0, 0],
+      "name": "BoomerangOrbHoler_Mat",
+      "normalTexture": {
+        "index": 3,
+        "scale": 0.20303987709999999,
+        "texCoord": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [1, 1, 1, 1],
+        "baseColorTexture": {
+          "index": 2,
+          "texCoord": 0
+        },
+        "metallicFactor": 0.63700214119999998,
+        "roughnessFactor": 0.20576515439999998
+      }
+    },
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "emissiveFactor": [0, 0, 0],
+      "name": "BoomerangOrb_Mat",
+      "normalTexture": {
+        "index": 0,
+        "scale": 1,
+        "texCoord": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [1, 1, 1, 0.84727458830000002],
+        "baseColorTexture": {
+          "index": 1,
+          "texCoord": 0
+        },
+        "metallicFactor": 0.80052415379999997,
+        "roughnessFactor": 0.1743186135
+      }
+    },
+    {
+      "doubleSided": true,
+      "emissiveFactor": [0, 0, 0],
+      "name": "BoomerangWood_Mat",
+      "normalTexture": {
+        "index": 4,
+        "scale": 1,
+        "texCoord": 0
+      },
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [1, 1, 1, 1],
+        "baseColorTexture": {
+          "index": 5,
+          "texCoord": 0
+        },
+        "metallicFactor": 0,
+        "roughnessFactor": 0.32882604059999998
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Orb_BoomerangOrbHoler_Mat_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "Orb_BoomerangOrb_Mat_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "RangWood_BoomerangWood_Mat_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 11,
+            "POSITION": 10,
+            "TANGENT": 12,
+            "TEXCOORD_0": 13
+          },
+          "indices": 14,
+          "material": 2,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [1],
+      "name": "RootNode (gltf orientation matrix)",
+      "rotation": [-0.70710678118654746, -0, -0, 0.70710678118654757]
+    },
+    {
+      "children": [2],
+      "matrix": [
+        0.59569555521011353, -0.78742247819900513, -0.1584697961807251, 0,
+        0.49161612987518311, 0.20141428709030151, 0.84719884395599365, 0,
+        -0.63518530130386353, -0.58257889747619629, 0.50709116458892822, 0,
+        7.2727847099304199, 14.193194389343262, 2.8399066925048828, 1
+      ],
+      "name": "RootNode (model correction matrix)"
+    },
+    {
+      "children": [3],
+      "matrix": [1, 0, 0, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 1],
+      "name": "82ffcd0dd1404936b745b4264d7332dc.fbx"
+    },
+    {
+      "children": [4, 7],
+      "name": "RootNode"
+    },
+    {
+      "children": [5, 6],
+      "matrix": [
+        0.7143639941080917, -5.5511151231257827e-17, 0.69977430927545081, 0,
+        0.69977430927545026, -4.3711390063094768e-8, -0.71436399410809104, 0,
+        3.0588107713391821e-8, 0.99999999999999911, -3.1225843022397726e-8, 0,
+        13.418293952941895, 16.081972122192383, -13.228053092956543, 1
+      ],
+      "name": "Orb"
+    },
+    {
+      "mesh": 0,
+      "name": "Orb_BoomerangOrbHoler_Mat_0"
+    },
+    {
+      "mesh": 1,
+      "name": "Orb_BoomerangOrb_Mat_0"
+    },
+    {
+      "children": [8],
+      "matrix": [
+        7.5497899487686482e-8, -0.99999999999999722, -1.065125238008946e-8, 0,
+        0.405000727972883, 4.0315318527994748e-8, -0.91431636228464896, 0,
+        0.91431636228464663, 6.4715199976639326e-8, 0.40500072797288478, 0,
+        15.997819900512695, 14.590524673461914, -13.803153038024902, 1
+      ],
+      "name": "RangWood"
+    },
+    {
+      "mesh": 2,
+      "name": "RangWood_BoomerangWood_Mat_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "OSG_Scene",
+      "nodes": [0]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    },
+    {
+      "sampler": 0,
+      "source": 3
+    },
+    {
+      "sampler": 0,
+      "source": 4
+    },
+    {
+      "sampler": 0,
+      "source": 5
+    }
+  ]
+}
