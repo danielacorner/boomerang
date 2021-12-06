@@ -5,7 +5,6 @@ import { usePlayerControls } from "./usePlayerControls";
 export function Player() {
 	const [ref] = usePlayerControls();
 	const { scene, ...stuff } = useGLTF("/models/black_mage/scene.gltf");
-	console.log("🌟🚨 ~ file: Player.tsx ~ line 8 ~ Player ~ stuff", stuff);
 	return (
 		<mesh ref={ref}>
 			<BlackMage />

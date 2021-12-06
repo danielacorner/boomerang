@@ -23,6 +23,11 @@ export function usePlayerControls() {
 		const unsubscribe = api.position.subscribe((v) => (position.current = v));
 		return unsubscribe;
 	}, []);
+	const rotation = useRef([0, 0, 0]);
+	useEffect(() => {
+		const unsubscribe = api.rotation.subscribe((v) => (rotation.current = v));
+		return unsubscribe;
+	}, []);
 	useFrame(() => {
 		if (!boxRef.current) {
 			return;
@@ -47,8 +52,7 @@ export function usePlayerControls() {
 		];
 		api.position.set(x2, y2, z2);
 
-		api.rotation.set(
-			0,
+		const newRotY =
 			lastPressedKey === UP
 				? ROT_TOP
 				: lastPressedKey === LEFT
@@ -57,14 +61,20 @@ export function usePlayerControls() {
 				? ROT_BOTTOM
 				: lastPressedKey === RIGHT
 				? ROT_RIGHT
-				: 0,
-			0
+				: 0;
+
+		const newRX = THREE.MathUtils.lerp(rotation.current[0], 0, 0.1);
+		const newRY = THREE.MathUtils.lerp(rotation.current[1], newRotY, 0.1);
+		const newRZ = THREE.MathUtils.lerp(rotation.current[2], 0, 0.1);
+		api.rotation.set(
+			newRX,
+			newRY,
+			newRZ
+			// 0,
+			// newRotY,
+			// 0
 		);
 	});
-	console.log(
-		"🌟🚨 ~ file: App.tsx ~ line 62 ~ usePlayerControls ~ pressedKeys",
-		pressedKeys
-	);
 
 	return [ref, boxRef];
 }
