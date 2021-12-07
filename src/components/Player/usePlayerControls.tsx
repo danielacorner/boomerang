@@ -63,9 +63,13 @@ export function usePlayerControls() {
         ? ROT_TOP
         : 0;
 
-    const newRX = THREE.MathUtils.lerp(rotation.current[0], 0, 0.1);
-    const newRY = THREE.MathUtils.lerp(rotation.current[1], newRotY, 0.1);
-    const newRZ = THREE.MathUtils.lerp(rotation.current[2], 0, 0.1);
+    const newRX = THREE.MathUtils.lerp(rotation.current[0], 0, BOOM_SPEED);
+    const newRY = THREE.MathUtils.lerp(
+      rotation.current[1],
+      newRotY,
+      BOOM_SPEED
+    );
+    const newRZ = THREE.MathUtils.lerp(rotation.current[2], 0, BOOM_SPEED);
     api.rotation.set(
       newRX,
       newRY,
@@ -78,3 +82,4 @@ export function usePlayerControls() {
 
   return [ref, position];
 }
+const BOOM_SPEED = 0.08;

@@ -4,20 +4,17 @@ import { useBoomerangState } from "../store";
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
+
   const [{ isThrown }, setState] = useBoomerangState();
   const onClick = (e) => {
+    const { x, y, z } = e.intersections[0].point;
+    const targetPosition = [x, y, z];
     console.log(e);
-    console.log("🌟🚨 ~ Ground ~ e", e);
-    console.log("🌟🚨 ~ Ground ~ [e.point.x, e.point.y, e.point.z]", [
-      e.point.x,
-      e.point.y,
-      e.point.z,
-    ]);
     if (!isThrown) {
       setState((p) => ({
         ...p,
         isThrown: true,
-        targetPosition: [e.point.x, 1, e.point.z],
+        targetPosition,
       }));
     }
   };

@@ -34,19 +34,20 @@ function useBoomerang(boomerangRef, playerPosition) {
     if (!boomerangRef.current || !playerPosition.current) {
       return;
     }
+    // spin the boomerang
     boomerangRef.current.rotation.set(
       boomerangRef.current.rotation.x,
       boomerangRef.current.rotation.y + ROTATION_SPEED,
       boomerangRef.current.rotation.z
     );
 
-    // boomerangRef.current.lookAt(playerRef.current.position);
-
+    // target: the target if it's outgoing, or the player if it's incoming
     const target = targetPosition || [
       playerPosition.current[0],
       playerPosition.current[1],
       playerPosition.current[2],
     ];
+    console.log("🌟🚨 ~ useFrame ~ targetPosition", targetPosition);
 
     const newX = THREE.MathUtils.lerp(
       boomerangRef.current.position.x,
