@@ -16,7 +16,6 @@ export const BoomerangWithControls = ({ position: playerPosition }) => {
 };
 /** shoots a boomerang when you hit space */
 function useBoomerang(boomerangRef, playerPosition) {
-  console.log("🌟🚨 ~ useBoomerang ~ playerPosition", playerPosition);
   const [{ targetPosition, isThrown }, setState] = useBoomerangState();
   // useKey(" ", () => {
   // });
@@ -47,7 +46,6 @@ function useBoomerang(boomerangRef, playerPosition) {
       playerPosition.current[1],
       playerPosition.current[2],
     ];
-    console.log("🌟🚨 ~ useFrame ~ targetPosition", targetPosition);
 
     const newX = THREE.MathUtils.lerp(
       boomerangRef.current.position.x,

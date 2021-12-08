@@ -5,7 +5,7 @@ import { BoomerangWithControls } from "./BoomerangWithControls";
 
 export function Player() {
   const [ref, position] = usePlayerControls();
-  const { scene, ...stuff } = useGLTF("/models/black_mage/scene.gltf");
+  const { scene } = useGLTF("/models/black_mage/scene.gltf");
   return (
     <>
       <mesh ref={ref}>
