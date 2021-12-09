@@ -1,6 +1,8 @@
 import { Plane } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
 import { useBoomerangState, usePlayerState } from "../store";
+import { getMousePosition } from "./Player/Player";
+import { useThree } from "@react-three/fiber";
 
 const GROUND_PLANE = "groundPlane";
 
@@ -9,6 +11,7 @@ export function Ground() {
 
   const [{ isThrown }, setBoomerangState] = useBoomerangState();
   const [, setPlayerState] = usePlayerState();
+  const { mouse, viewport } = useThree();
   const onClick = (e) => {
     const ground = e.intersections.find((i) => i.object.name === GROUND_PLANE);
     const point = ground?.point;
@@ -16,13 +19,13 @@ export function Ground() {
       ("no intersection found!");
       return;
     }
-    const targetPosition = [point.x, 0.5, point.z];
+    const mousePosition = getMousePosition(mouse, viewport);
     console.log(e);
     if (!isThrown) {
       setBoomerangState((p) => ({
         ...p,
         isThrown: true,
-        targetPosition,
+        targetPosition: [mousePosition.x, mousePosition.y, mousePosition.z],
       }));
       onMouseMove(e);
     }
@@ -35,7 +38,6 @@ export function Ground() {
       ("no intersection found!");
       return;
     }
-    console.log("🌟🚨 ~ onMouseMove ~ point", point);
     const targetPosition = [point.x, 0.5, point.z];
 
     setPlayerState((p) => ({ ...p, lookAt: targetPosition }));

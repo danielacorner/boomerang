@@ -3,20 +3,27 @@ import Boomerang from "../GLTFs/Boomerang";
 import * as THREE from "three";
 import { useBoomerangState } from "../../store";
 import { useFrame } from "@react-three/fiber";
+import { getMousePosition } from "./Player";
 
 const ROTATION_SPEED = 0.2;
-export const BoomerangWithControls = ({ position: playerPosition }) => {
-  const boomerangRef = useRef<THREE.Mesh>(null);
-  useBoomerang(boomerangRef, playerPosition);
-  return (
-    <mesh ref={boomerangRef}>
-      <Boomerang />
-    </mesh>
-  );
-};
+export const BoomerangWithControls = forwardRef(
+  (
+    { playerPosition }: { playerPosition: number[] },
+    playerRef: React.ForwardedRef<THREE.Mesh>
+  ) => {
+    const boomerangRef = useRef<THREE.Mesh>(null);
+    useBoomerang(boomerangRef, playerPosition, playerRef);
+    return (
+      <mesh ref={boomerangRef}>
+        <Boomerang />
+      </mesh>
+    );
+  }
+);
 /** shoots a boomerang when you hit space */
-function useBoomerang(boomerangRef, playerPosition) {
-  const [{ targetPosition, isThrown }, setState] = useBoomerangState();
+function useBoomerang(boomerangRef, playerPosition, playerRef) {
+  const [{ targetPosition: boomerangTargetPosition, isThrown }, setState] =
+    useBoomerangState();
   // useKey(" ", () => {
   // });
   // const {mouse}=useThree()
@@ -29,8 +36,8 @@ function useBoomerang(boomerangRef, playerPosition) {
   //       window.removeEventListener("click", onClick);
   //     };
   //   }, []);
-  useFrame(() => {
-    if (!boomerangRef.current || !playerPosition.current) {
+  useFrame(({ mouse, viewport }) => {
+    if (!boomerangRef.current || !playerPosition) {
       return;
     }
     // spin the boomerang
@@ -41,12 +48,17 @@ function useBoomerang(boomerangRef, playerPosition) {
     );
 
     // target: the target if it's outgoing, or the player if it's incoming
-    const target = targetPosition || [
-      playerPosition.current[0],
-      playerPosition.current[1],
-      playerPosition.current[2],
-    ];
-
+    const target =
+      isThrown && boomerangTargetPosition
+        ? boomerangTargetPosition
+        : playerPosition || [
+            playerRef.current?.position.x,
+            playerRef.current?.position.y,
+            playerRef.current?.position.z,
+          ];
+    if (!target) {
+      return;
+    }
     const newX = THREE.MathUtils.lerp(
       boomerangRef.current.position.x,
       target[0],
@@ -62,11 +74,13 @@ function useBoomerang(boomerangRef, playerPosition) {
       target[2],
       0.1
     );
+
     const isAtTarget =
-      targetPosition &&
-      Math.abs(newX - targetPosition[0]) < 0.1 &&
-      Math.abs(newY - targetPosition[1]) < 0.1 &&
-      Math.abs(newZ - targetPosition[2]) < 0.1;
+      boomerangTargetPosition &&
+      Math.abs(newX - boomerangTargetPosition[0]) < 0.1 &&
+      Math.abs(newY - boomerangTargetPosition[1]) < 0.1 &&
+      Math.abs(newZ - boomerangTargetPosition[2]) < 0.1;
+
     const isAtPlayer =
       playerPosition.current &&
       Math.abs(newX - playerPosition.current[0]) < 0.1 &&

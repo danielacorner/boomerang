@@ -12,8 +12,17 @@ const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
   Math.PI * 0,
   Math.PI * -0.5,
 ];
-
-export function usePlayerControls() {
+export function usePlayerControls(): [
+  playerRef: React.MutableRefObject<null | THREE.Mesh<
+    THREE.BufferGeometry,
+    THREE.Material | THREE.Material[]
+  >>,
+  targetRef: React.MutableRefObject<null | THREE.Mesh<
+    THREE.BufferGeometry,
+    THREE.Material | THREE.Material[]
+  >>,
+  playerPosition: number[]
+] {
   const MOVE_SPEED = 0.3;
   const [pressedKeys, lastPressedKey] = usePressedKeys();
   const [{ lookAt }] = usePlayerState();
@@ -24,8 +33,12 @@ export function usePlayerControls() {
     setMovedMouse(false);
   }, [pressedKeys]);
 
-  const ref = useRef<THREE.Mesh>(null!);
-  const [boxRef, api] = useBox(() => ({ mass: 1, position: [0, 2, 0] }), ref);
+  const targetRef = useRef<THREE.Mesh>(null);
+  const playerRef = useRef<THREE.Mesh>(null!);
+  const [boxRef, api] = useBox(
+    () => ({ mass: 1, position: [0, 2, 0] }),
+    playerRef
+  );
 
   const position = useRef([0, 0, 0]);
   useEffect(() => {
@@ -37,6 +50,7 @@ export function usePlayerControls() {
     const unsubscribe = api.rotation.subscribe((v) => (rotation.current = v));
     return unsubscribe;
   }, []);
+
   useFrame(() => {
     if (!boxRef.current) {
       return;
@@ -65,11 +79,11 @@ export function usePlayerControls() {
     // rotate the player
     const p1 = [px, py, pz] as [number, number, number];
     const p2 = [lookAt[0], lookAt[1], lookAt[2]] as [number, number, number];
-    console.log("🌟🚨 ~ useFrame ~ lookAt", lookAt);
-    console.log("🌟🚨 ~ useFrame ~ p2", p2);
-    const newRotY = movedMouse
-      ? getRotationFromNorth(p1, p2)
-      : getPlayerRotation(lastPressedKey);
+    if (movedMouse && targetRef.current) {
+      playerRef.current.lookAt(targetRef.current.position);
+      return;
+    }
+    const newRotY = getPlayerRotation(lastPressedKey);
 
     const newRX = THREE.MathUtils.lerp(
       rotation.current[0],
@@ -96,7 +110,7 @@ export function usePlayerControls() {
     );
   });
 
-  return [ref, position];
+  return [playerRef, targetRef, position.current];
 }
 const PLAYER_ROTATION_SPEED = 0.08;
 
@@ -112,15 +126,15 @@ function getPlayerRotation(lastPressedKey) {
     : 0;
 }
 
-function getRotationFromNorth(
-  p1: [number, number, number],
-  p2: [number, number, number]
-): number {
-  const [x1, y1, z1] = p1;
-  const [x2, y2, z2] = p2;
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const dz = z2 - z1;
-  const angle = Math.atan2(dz, dx);
-  return angle;
-}
+// function getRotationFromNorth(
+//   p1: [number, number, number],
+//   p2: [number, number, number]
+// ): number {
+//   const [x1, y1, z1] = p1;
+//   const [x2, y2, z2] = p2;
+//   const dx = x2 - x1;
+//   const dy = y2 - y1;
+//   const dz = z2 - z1;
+//   const angle = Math.atan2(dz, dx);
+//   return angle;
+// }

@@ -59,4 +59,4 @@ export default function Boomerang(props) {
   );
 }
 
-// useGLTF.preload("/models/zelda_ocarina_of_time_boomerang/scene.gltf");
+useGLTF.preload("/models/zelda_ocarina_of_time_boomerang/scene.gltf");
