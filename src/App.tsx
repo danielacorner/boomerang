@@ -2,7 +2,7 @@ import { Canvas } from "@react-three/fiber";
 import styled from "styled-components";
 import { Physics } from "@react-three/cannon";
 import { Scene } from "./components/Scene";
-
+import { Joystick } from "./components/Joystick";
 function App() {
   return (
     <AppStyles>
@@ -15,6 +15,7 @@ function App() {
           <Scene />
         </Physics>
       </Canvas>
+      <Controls />
     </AppStyles>
   );
 }
@@ -23,3 +24,11 @@ const AppStyles = styled.div`
 `;
 
 export default App;
+
+function Controls() {
+  return (
+    <>
+      <Joystick />
+    </>
+  );
+}
