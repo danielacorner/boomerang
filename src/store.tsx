@@ -1,11 +1,11 @@
 import { atom, useAtom } from "jotai";
 
 const boomerangStateAtom = atom<{
-  targetPosition: number[] | null;
-  isThrown: boolean;
+  clickTargetPosition: number[] | null;
+  status: "idle" | "flying" | "returning";
 }>({
-  targetPosition: [0, 0, 0],
-  isThrown: false,
+  clickTargetPosition: [0, 0, 0],
+  status: "idle",
 });
 export function useBoomerangState() {
   return useAtom(boomerangStateAtom);

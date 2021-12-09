@@ -9,7 +9,7 @@ const GROUND_PLANE = "groundPlane";
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
 
-  const [{ isThrown }, setBoomerangState] = useBoomerangState();
+  const [{ status }, setBoomerangState] = useBoomerangState();
   const [, setPlayerState] = usePlayerState();
   const { mouse, viewport } = useThree();
   const onClick = (e) => {
@@ -19,13 +19,13 @@ export function Ground() {
       ("no intersection found!");
       return;
     }
-    const mousePosition = getMousePosition(mouse, viewport);
+    const { x, y, z } = getMousePosition(mouse, viewport);
     console.log(e);
-    if (!isThrown) {
+    if (status === "idle") {
       setBoomerangState((p) => ({
         ...p,
-        isThrown: true,
-        targetPosition: [mousePosition.x, mousePosition.y, mousePosition.z],
+        status: "flying",
+        clickTargetPosition: [x, y, z],
       }));
       onMouseMove(e);
     }
@@ -38,9 +38,10 @@ export function Ground() {
       ("no intersection found!");
       return;
     }
-    const targetPosition = [point.x, 0.5, point.z];
+    // const targetPosition = [point.x, 0.5, point.z];
+    const { x, y, z } = getMousePosition(mouse, viewport);
 
-    setPlayerState((p) => ({ ...p, lookAt: targetPosition }));
+    setPlayerState((p) => ({ ...p, lookAt: [x, y, z] }));
   };
 
   return (
