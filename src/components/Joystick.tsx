@@ -3,6 +3,13 @@ import { animated, useSpring } from "react-spring";
 import { atom, useAtom } from "jotai";
 import { SetStateAction } from "react";
 
+const JOYSTICK_RADIUS = 64;
+const JOYSTICK_THUMB_RADIUS = JOYSTICK_RADIUS / 2;
+const JOYSTICK_PADDING = JOYSTICK_RADIUS / 2;
+
+const MAX_THUMB_XY = JOYSTICK_RADIUS - JOYSTICK_THUMB_RADIUS / 2;
+const MIN_THUMB_YY = -JOYSTICK_RADIUS + JOYSTICK_THUMB_RADIUS / 2;
+
 const joystickPositionAtom = atom([0, 0]);
 export function useJoystickPosition(): [
   number[],
@@ -11,7 +18,6 @@ export function useJoystickPosition(): [
   const [joystickPosition, setJoystickPosition] = useAtom(joystickPositionAtom);
   return [joystickPosition, setJoystickPosition];
 }
-const JOYSTICK_RADIUS = 64;
 
 export function Joystick() {
   const [joystickPosition, setJoystickPosition] = useJoystickPosition();
@@ -21,14 +27,24 @@ export function Joystick() {
     y: joystickPosition[1],
   });
   const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log("🌟🚨 ~ onMouseMove ~ e", e);
-    const x = e.clientX - JOYSTICK_RADIUS;
+    // x ranges from -JOYSTICK_RADIUS to JOYSTICK_RADIUS
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    const joystickCenterX =
+      window.innerWidth - JOYSTICK_RADIUS - JOYSTICK_PADDING;
+    const joystickCenterY =
+      window.innerHeight - JOYSTICK_RADIUS - JOYSTICK_PADDING;
 
-    const mouseDistanceFromBottom = window.innerHeight - e.clientY;
-    const y = window.innerHeight - e.clientY - JOYSTICK_RADIUS;
+    const x = Math.max(
+      MIN_THUMB_YY,
+      Math.min(MAX_THUMB_XY, mouseX - joystickCenterX)
+    );
+    const y = Math.max(
+      MIN_THUMB_YY,
+      Math.min(MAX_THUMB_XY, mouseY - joystickCenterY)
+    );
+
     const distance = Math.sqrt(x * x + y * y);
-    console.log("🌟🚨 ~ onMouseMove ~ distance", distance);
-    console.log("🌟🚨 ~ onMouseMove ~ x, y", x, y);
     if (distance > JOYSTICK_RADIUS) {
       const angle = Math.atan2(y, x);
       const x2 = JOYSTICK_RADIUS * Math.cos(angle);
@@ -42,12 +58,13 @@ export function Joystick() {
     setJoystickPosition([0, 0]);
   };
   return (
-    <JoystickStyles>
+    <JoystickStyles
+      onMouseMove={onMouseMove}
+      onPointerMove={onMouseMove}
+      onMouseUp={onMouseUp}
+    >
       <animated.div
         style={springPosition}
-        onMouseMove={onMouseMove}
-        onPointerMove={onMouseMove}
-        onMouseUp={onMouseUp}
         className="joystickThumb"
       ></animated.div>
     </JoystickStyles>
@@ -55,18 +72,20 @@ export function Joystick() {
 }
 const JoystickStyles = styled.div`
   position: fixed;
-  bottom: ${JOYSTICK_RADIUS / 2}px;
-  right: ${JOYSTICK_RADIUS / 2}px;
-  background: rgba(255, 255, 255, 0.5);
+  bottom: ${JOYSTICK_PADDING}px;
+  right: ${JOYSTICK_PADDING}px;
+  background: rgb(255 255 255 / 42%);
   border-radius: 50%;
   width: ${JOYSTICK_RADIUS * 2}px;
   height: ${JOYSTICK_RADIUS * 2}px;
+  box-shadow: inset 0 0 20px 10px rgb(68 63 63 / 37%);
   .joystickThumb {
-    margin-top: ${JOYSTICK_RADIUS / 2 - 1}px;
-    margin-left: ${JOYSTICK_RADIUS / 2 - 1}px;
-    width: ${JOYSTICK_RADIUS}px;
-    height: ${JOYSTICK_RADIUS}px;
-    background: rgba(148, 36, 36, 0.5);
+    margin-top: ${JOYSTICK_THUMB_RADIUS - 1}px;
+    margin-left: ${JOYSTICK_THUMB_RADIUS - 1}px;
+    width: ${JOYSTICK_THUMB_RADIUS * 2}px;
+    height: ${JOYSTICK_THUMB_RADIUS * 2}px;
+    background: rgba(85, 80, 80, 0.815);
+    box-shadow: 0 0 3px 1px rgb(68 63 63 / 37%);
     border-radius: 50%;
   }
 `;
