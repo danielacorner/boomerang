@@ -4,6 +4,7 @@ import { JOYSTICK_RADIUS } from "../Joystick";
 import { Direction } from "../Scene";
 import { useEffect } from "react";
 import { useJoystickPosition } from "../../store";
+import { isEqual } from "@react-spring/shared";
 
 // function getRotationFromNorth(
 //   p1: [number, number, number],
@@ -24,23 +25,27 @@ export function useMovePlayerWithJoystick() {
   const [joystickPosition] = useJoystickPosition();
   const [pressedKeys, lastPressedKey, setPressedKeys] = usePressedKeys();
   // move the player in the direction of the joystick
+  const [x, y] = joystickPosition;
+  const isBelowThreshold =
+    x > -MIN_X_DETECTION_THRESHOLD &&
+    x < MIN_X_DETECTION_THRESHOLD &&
+    y > -MIN_X_DETECTION_THRESHOLD &&
+    y < MIN_X_DETECTION_THRESHOLD;
+
+  const nextPressedKeys = [
+    ...(y < -MIN_X_DETECTION_THRESHOLD ? ["ArrowUp"] : []),
+    ...(y > MIN_X_DETECTION_THRESHOLD ? ["ArrowDown"] : []),
+    ...(x < -MIN_X_DETECTION_THRESHOLD ? ["ArrowLeft"] : []),
+    ...(x > MIN_X_DETECTION_THRESHOLD ? ["ArrowRight"] : []),
+  ] as Direction[];
+
   useEffect(() => {
-    const [x, y] = joystickPosition;
-    if (
-      x > -MIN_X_DETECTION_THRESHOLD &&
-      x < MIN_X_DETECTION_THRESHOLD &&
-      x > -MIN_X_DETECTION_THRESHOLD &&
-      x < MIN_X_DETECTION_THRESHOLD
-    ) {
+    if (isBelowThreshold) {
       return;
     }
-    const nextPressedKeys = [
-      ...(y > MIN_X_DETECTION_THRESHOLD ? ["ArrowUp"] : []),
-      ...(y < -MIN_X_DETECTION_THRESHOLD ? ["ArrowDown"] : []),
-      ...(x < -MIN_X_DETECTION_THRESHOLD ? ["ArrowLeft"] : []),
-      ...(x > MIN_X_DETECTION_THRESHOLD ? ["ArrowRight"] : []),
-    ] as Direction[];
     console.log("🌟🚨 ~ useFrame ~ nextPressedKeys", nextPressedKeys);
-    setPressedKeys(nextPressedKeys);
-  }, [joystickPosition, setPressedKeys]);
+    if (!isEqual(nextPressedKeys, pressedKeys)) {
+      setPressedKeys(nextPressedKeys);
+    }
+  }, [nextPressedKeys, setPressedKeys, isBelowThreshold]);
 }
