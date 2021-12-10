@@ -1,4 +1,5 @@
 import { usePlayerControls } from "./usePlayerControls";
+import { useMovePlayerWithJoystick } from "./useMovePlayerWithJoystick";
 import { BoomerangWithControls } from "./BoomerangWithControls";
 import Bm from "../GLTFs/Bm";
 import { useRef } from "react";
@@ -6,6 +7,8 @@ import { useFrame } from "@react-three/fiber";
 
 export function Player() {
   const [playerRef, targetRef, playerPosition] = usePlayerControls();
+  useMovePlayerWithJoystick();
+
   return (
     <>
       <BoxFollowsMouse>

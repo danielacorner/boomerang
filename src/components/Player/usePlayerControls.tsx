@@ -125,16 +125,3 @@ function getPlayerRotation(lastPressedKey) {
     ? ROT_TOP
     : 0;
 }
-
-// function getRotationFromNorth(
-//   p1: [number, number, number],
-//   p2: [number, number, number]
-// ): number {
-//   const [x1, y1, z1] = p1;
-//   const [x2, y2, z2] = p2;
-//   const dx = x2 - x1;
-//   const dy = y2 - y1;
-//   const dz = z2 - z1;
-//   const angle = Math.atan2(dz, dx);
-//   return angle;
-// }

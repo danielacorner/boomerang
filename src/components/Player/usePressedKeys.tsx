@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { atom, SetStateAction, useAtom } from "jotai";
 import { useKey } from "react-use";
 import { Direction } from "../Scene";
 export const [UP, LEFT, RIGHT, DOWN]: Direction[] = [
@@ -7,10 +7,19 @@ export const [UP, LEFT, RIGHT, DOWN]: Direction[] = [
   "ArrowRight",
   "ArrowDown",
 ];
+
 const INITIAL_DIRECTION = DOWN;
-export function usePressedKeys() {
-  const [pressedKeys, setPressedKeys] = useState<Direction[]>([]);
-  const [lastPressedKey, setLastPressedKey] = useState(INITIAL_DIRECTION);
+
+const pressedKeysAtom = atom<Direction[]>([]);
+const lastPressedKeyAtom = atom<Direction>(INITIAL_DIRECTION);
+
+export function usePressedKeys(): [
+  Direction[],
+  Direction,
+  (update: SetStateAction<Direction[]>) => void
+] {
+  const [pressedKeys, setPressedKeys] = useAtom(pressedKeysAtom);
+  const [lastPressedKey, setLastPressedKey] = useAtom(lastPressedKeyAtom);
 
   useKey("w", () => {
     setPressedKeys((p) => [...p, UP]);
@@ -72,5 +81,5 @@ export function usePressedKeys() {
     event: "keyup",
   });
 
-  return [pressedKeys, lastPressedKey];
+  return [pressedKeys, lastPressedKey, setPressedKeys];
 }

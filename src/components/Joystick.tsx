@@ -1,32 +1,25 @@
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
-import { atom, useAtom } from "jotai";
-import { SetStateAction } from "react";
+import { useCallback } from "react";
+import { useJoystickPosition } from "../store";
 
-const JOYSTICK_RADIUS = 64;
+export const JOYSTICK_RADIUS = 64;
 const JOYSTICK_THUMB_RADIUS = JOYSTICK_RADIUS / 2;
 const JOYSTICK_PADDING = JOYSTICK_RADIUS / 2;
 
 const MAX_THUMB_XY = JOYSTICK_RADIUS - JOYSTICK_THUMB_RADIUS / 2;
 const MIN_THUMB_YY = -JOYSTICK_RADIUS + JOYSTICK_THUMB_RADIUS / 2;
 
-const joystickPositionAtom = atom([0, 0]);
-export function useJoystickPosition(): [
-  number[],
-  (update: SetStateAction<number[]>) => void
-] {
-  const [joystickPosition, setJoystickPosition] = useAtom(joystickPositionAtom);
-  return [joystickPosition, setJoystickPosition];
-}
-
 export function Joystick() {
   const [joystickPosition, setJoystickPosition] = useJoystickPosition();
+
   console.log("🌟🚨 ~ Joystick ~ joystickPosition", joystickPosition);
   const springPosition = useSpring({
-    x: joystickPosition[0],
-    y: joystickPosition[1],
+    transform: `translate(${joystickPosition[0]}px, ${joystickPosition[1]}px)`,
   });
-  const onMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+
+  const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     // x ranges from -JOYSTICK_RADIUS to JOYSTICK_RADIUS
     const mouseX = e.clientX;
     const mouseY = e.clientY;
@@ -53,16 +46,10 @@ export function Joystick() {
     } else {
       setJoystickPosition([x, y]);
     }
-  };
-  const onMouseUp = () => {
-    setJoystickPosition([0, 0]);
-  };
+  }, []);
+
   return (
-    <JoystickStyles
-      onMouseMove={onMouseMove}
-      onPointerMove={onMouseMove}
-      onMouseUp={onMouseUp}
-    >
+    <JoystickStyles onPointerMove={onMouseMove}>
       <animated.div
         style={springPosition}
         className="joystickThumb"
@@ -74,11 +61,11 @@ const JoystickStyles = styled.div`
   position: fixed;
   bottom: ${JOYSTICK_PADDING}px;
   right: ${JOYSTICK_PADDING}px;
-  background: rgb(255 255 255 / 42%);
+  background: rgb(255 255 255 / 30%);
   border-radius: 50%;
   width: ${JOYSTICK_RADIUS * 2}px;
   height: ${JOYSTICK_RADIUS * 2}px;
-  box-shadow: inset 0 0 20px 10px rgb(68 63 63 / 37%);
+  box-shadow: inset 0 0 10px 4px rgb(68 63 63 / 37%);
   .joystickThumb {
     margin-top: ${JOYSTICK_THUMB_RADIUS - 1}px;
     margin-left: ${JOYSTICK_THUMB_RADIUS - 1}px;

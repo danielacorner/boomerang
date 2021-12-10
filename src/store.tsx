@@ -1,4 +1,5 @@
 import { atom, useAtom } from "jotai";
+import { SetStateAction } from "react";
 
 const boomerangStateAtom = atom<{
   clickTargetPosition: number[] | null;
@@ -17,4 +18,13 @@ const playerStateAtom = atom<{
 });
 export function usePlayerState() {
   return useAtom(playerStateAtom);
+}
+
+const joystickPositionAtom = atom([0, 0]);
+export function useJoystickPosition(): [
+  number[],
+  (update: SetStateAction<number[]>) => void
+] {
+  const [joystickPosition, setJoystickPosition] = useAtom(joystickPositionAtom);
+  return [joystickPosition, setJoystickPosition];
 }
