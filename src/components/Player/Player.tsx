@@ -2,8 +2,9 @@ import { usePlayerControls } from "./usePlayerControls";
 import { useMovePlayerWithJoystick } from "./useMovePlayerWithJoystick";
 import { BoomerangWithControls } from "./BoomerangWithControls";
 import Bm from "../GLTFs/Bm";
-import { useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { animated } from "@react-spring/three";
+import { BoomerangTarget } from "./BoomerangTarget";
+import { MouseTarget } from "./MouseTarget";
 
 export function Player() {
   const [playerRef, targetRef, playerPosition] = usePlayerControls();
@@ -11,12 +12,9 @@ export function Player() {
 
   return (
     <>
-      <BoxFollowsMouse>
-        <mesh ref={targetRef}>
-          <meshBasicMaterial color="blue" />
-          <boxBufferGeometry args={[0.5, 1, 1]} />
-        </mesh>
-      </BoxFollowsMouse>
+      <MouseTarget>
+        <mesh ref={targetRef} />
+      </MouseTarget>
 
       <mesh ref={playerRef}>
         <Bm />
@@ -24,27 +22,11 @@ export function Player() {
       </mesh>
 
       <BoomerangWithControls playerPosition={playerPosition} ref={playerRef} />
+
+      <BoomerangTarget />
     </>
   );
 }
-function BoxFollowsMouse({ children }) {
-  const ref = useRef<THREE.Mesh | null>(null);
-  useFrame(({ mouse, viewport, ...stuff }) => {
-    if (!ref.current) {
-      return;
-    }
-    const { x, y, z } = getMousePosition(mouse, viewport);
-    ref.current.position.set(x, y, z);
-  });
-  return (
-    <mesh ref={ref}>
-      <meshBasicMaterial color="red" />
-      <boxBufferGeometry args={[1, 1, 1]} />
-      {children}
-    </mesh>
-  );
-}
-
 export function getMousePosition(mouse: THREE.Vector2, viewport: any) {
   return {
     x: (mouse.x * viewport.width) / 2,

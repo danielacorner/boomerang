@@ -19,7 +19,7 @@ export function FlashWhenStatusChanges() {
 
   const { scale, color, opacity } = useSpring({
     scale: flash ? 15 : 0,
-    color: flash ? "#f5b8b8" : "#000",
+    color: flash ? "#ffffff" : "#000",
     opacity: flash ? 0.4 : 0,
     config: {
       mass: 1,
