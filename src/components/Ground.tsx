@@ -56,7 +56,7 @@ export function Ground() {
       position={[0, -1, 0]}
       rotation={[-Math.PI / 2, 0, 0]}
       receiveShadow
-      material-color="#613f3f"
+      material-color="#53755a"
     />
   );
 }

@@ -15,6 +15,7 @@ export const BoomerangWithControls = forwardRef(
   ) => {
     const boomerangRef = useRef<THREE.Mesh>(null);
     useBoomerang(boomerangRef, playerPosition, playerRef);
+
     return (
       <mesh ref={boomerangRef}>
         <Boomerang />

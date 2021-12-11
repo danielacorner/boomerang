@@ -8,6 +8,8 @@ title: Zelda Ocarina of Time Boomerang
 
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
+import { animated, useSpring } from "@react-spring/three";
+import { useBoomerangState } from "../../store";
 
 export default function Boomerang(props) {
   const group = useRef();
@@ -17,6 +19,14 @@ export default function Boomerang(props) {
   const { x, y, z } = { x: -0.89, y: 0.64, z: 0.3 };
 
   const { x2, y2, z2 } = { x2: -18.13, y2: 60, z2: 9 };
+
+  // fade out the boomerang when we catch it
+  const [{ status }, setBoomerangState] = useBoomerangState();
+
+  const { opacity } = useSpring({
+    opacity: status === "idle" ? 0 : 1,
+  });
+
   return (
     <group ref={group} {...props} dispose={null} scale={0.055}>
       <group
@@ -33,13 +43,17 @@ export default function Boomerang(props) {
               position={[13.42, 16.08, -13.23]}
               rotation={[-Math.PI / 2, 0, -0.78]}
             >
-              <mesh
+              <animated.mesh
                 geometry={nodes.Orb_BoomerangOrbHoler_Mat_0.geometry}
                 material={materials.BoomerangOrbHoler_Mat}
+                material-transparent={true}
+                material-opacity={opacity}
               />
-              <mesh
+              <animated.mesh
                 geometry={nodes.Orb_BoomerangOrb_Mat_0.geometry}
                 material={materials.BoomerangOrb_Mat}
+                material-transparent={true}
+                material-opacity={opacity}
               />
             </group>
             <group
@@ -47,9 +61,11 @@ export default function Boomerang(props) {
               rotation={[0, 1.15, -Math.PI / 2]}
               scale={[1, 1, 1]}
             >
-              <mesh
+              <animated.mesh
                 geometry={nodes.RangWood_BoomerangWood_Mat_0.geometry}
                 material={materials.BoomerangWood_Mat}
+                material-transparent={true}
+                material-opacity={opacity}
               />
             </group>
           </group>

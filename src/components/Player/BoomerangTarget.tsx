@@ -17,7 +17,7 @@ export function BoomerangTarget() {
       <torusBufferGeometry attach="geometry" args={[1, 0.1, 16, 16]} />
       <animated.meshBasicMaterial
         attach="material"
-        color="green"
+        color="#a07e7e"
         transparent={true}
         opacity={opacity}
       />
