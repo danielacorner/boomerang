@@ -9,7 +9,7 @@ const GROUND_PLANE = "groundPlane";
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
 
-  const [{ status }, setBoomerangState] = useBoomerangState();
+  const [, setBoomerangState] = useBoomerangState();
   const [, setPlayerState] = usePlayerState();
   const { mouse, viewport } = useThree();
   const onClick = (e) => {
