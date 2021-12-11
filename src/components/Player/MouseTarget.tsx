@@ -15,8 +15,12 @@ export function MouseTarget({ children }) {
   const [{ status }] = useBoomerangState();
   return (
     <mesh ref={ref}>
-      <boxBufferGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color="red" />
+      <sphereBufferGeometry args={[0.6, 16, 16]} />
+      <meshBasicMaterial
+        color="#b90f0f"
+        transparent={true}
+        opacity={status === "idle" ? 0.2 : 0}
+      />
       {children}
     </mesh>
   );

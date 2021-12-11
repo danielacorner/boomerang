@@ -1,0 +1,11 @@
+Model Information:
+* title:	Jeff Bezos - Blue Origin
+* source:	https://sketchfab.com/3d-models/jeff-bezos-blue-origin-5a072b4d63dd48a8b4bd41a2b845dc91
+* author:	bettycolors (https://sketchfab.com/bettycolors)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Jeff Bezos - Blue Origin" (https://sketchfab.com/3d-models/jeff-bezos-blue-origin-5a072b4d63dd48a8b4bd41a2b845dc91) by bettycolors (https://sketchfab.com/bettycolors) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
