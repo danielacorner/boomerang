@@ -1,14 +1,11 @@
 import { usePlayerControls } from "./usePlayerControls";
-import { useMovePlayerWithJoystick } from "./useMovePlayerWithJoystick";
 import { BoomerangWithControls } from "./BoomerangWithControls";
 import Bm from "../GLTFs/Bm";
-import { animated } from "@react-spring/three";
 import { BoomerangTarget } from "./BoomerangTarget";
 import { MouseTarget } from "./MouseTarget";
 
 export function Player() {
   const [playerRef, targetRef, playerPosition] = usePlayerControls();
-  useMovePlayerWithJoystick();
 
   return (
     <>

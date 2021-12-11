@@ -1,24 +1,28 @@
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
 import { useCallback } from "react";
-import { useJoystickPosition } from "../store";
+import { usePressedKeys } from "./Player/usePressedKeys";
+import { Direction } from "./Scene";
 
 export const JOYSTICK_RADIUS = 64;
 const JOYSTICK_THUMB_RADIUS = JOYSTICK_RADIUS / 2;
 const JOYSTICK_PADDING = JOYSTICK_RADIUS / 2;
 
-const MAX_THUMB_XY = JOYSTICK_RADIUS - JOYSTICK_THUMB_RADIUS / 2;
-const MIN_THUMB_YY = -JOYSTICK_RADIUS + JOYSTICK_THUMB_RADIUS / 2;
+const THRESHOLD = JOYSTICK_RADIUS - JOYSTICK_THUMB_RADIUS / 2;
+const MAX_THUMB_XY = THRESHOLD;
+const MIN_THUMB_YY = -THRESHOLD;
 
+const trans1 = (x, y) => `translate3d(${x}px,${y}px,0)`;
 export function Joystick() {
-  const [joystickPosition, setJoystickPosition] = useJoystickPosition();
-
-  const springPosition = useSpring({
-    transform: `translate(${joystickPosition[0]}px, ${joystickPosition[1]}px)`,
-  });
-
+  const { pressedKeys, lastPressedKey, setPressedKeys } = usePressedKeys();
+  const [{ xy }, set] = useSpring(() => ({
+    xy: [0, 0],
+    config: { mass: 10, tension: 550, friction: 140 },
+  }));
   const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
+    console.log("🌟🚨 ~ onMouseMove ~ e", e);
+
     // x ranges from -JOYSTICK_RADIUS to JOYSTICK_RADIUS
     const mouseX = e.clientX;
     const mouseY = e.clientY;
@@ -37,20 +41,47 @@ export function Joystick() {
     );
 
     const distance = Math.sqrt(x * x + y * y);
-    if (distance > JOYSTICK_RADIUS) {
+    console.log("🌟🚨 ~ onMouseMove ~ distance", distance);
+    if (distance < JOYSTICK_RADIUS) {
       const angle = Math.atan2(y, x);
       const x2 = JOYSTICK_RADIUS * Math.cos(angle);
       const y2 = JOYSTICK_RADIUS * Math.sin(angle);
-      setJoystickPosition([x2, y2]);
+
+      const [up, down, left, right] = [
+        y2 > THRESHOLD,
+        y2 < -THRESHOLD,
+        x2 > THRESHOLD,
+        x2 < -THRESHOLD,
+      ];
+
+      const nextPressedKeys = [
+        ...(up ? ["ArrowUp"] : []),
+        ...(down ? ["ArrowDown"] : []),
+        ...(left ? ["ArrowLeft"] : []),
+        ...(right ? ["ArrowRight"] : []),
+      ] as Direction[];
+
+      setPressedKeys(nextPressedKeys);
+      set({ xy: [x2, y2] });
+      console.log("🌟🚨 ~ onMouseMove ~ x2, y2", x2, y2);
     } else {
-      setJoystickPosition([x, y]);
+      setPressedKeys([]);
     }
   }, []);
-
+  const onMouseUp = () => {
+    console.log("🌟🚨 ~ onMouseUp ~ onMouseUp");
+    setPressedKeys([]);
+    set({ xy: [0, 0] });
+  };
   return (
-    <JoystickStyles onPointerMove={onMouseMove}>
+    <JoystickStyles
+      onMouseMove={onMouseMove}
+      onPointerMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      onPointerUp={onMouseUp}
+    >
       <animated.div
-        style={springPosition}
+        style={{ transform: xy.to(trans1) }}
         className="joystickThumb"
       ></animated.div>
     </JoystickStyles>

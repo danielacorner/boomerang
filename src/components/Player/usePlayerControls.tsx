@@ -24,7 +24,7 @@ export function usePlayerControls(): [
   playerPosition: number[]
 ] {
   const MOVE_SPEED = 0.3;
-  const [pressedKeys, lastPressedKey] = usePressedKeys();
+  const { pressedKeys, lastPressedKey } = usePressedKeys();
   const [{ lookAt }] = usePlayerState();
 
   const [movedMouse, setMovedMouse] = useState(false);

@@ -13,11 +13,11 @@ const INITIAL_DIRECTION = DOWN;
 const pressedKeysAtom = atom<Direction[]>([]);
 const lastPressedKeyAtom = atom<Direction>(INITIAL_DIRECTION);
 
-export function usePressedKeys(): [
-  Direction[],
-  Direction,
-  (update: SetStateAction<Direction[]>) => void
-] {
+export function usePressedKeys(): {
+  pressedKeys: Direction[];
+  lastPressedKey: Direction;
+  setPressedKeys: (update: SetStateAction<Direction[]>) => void;
+} {
   const [pressedKeys, setPressedKeys] = useAtom(pressedKeysAtom);
   const [lastPressedKey, setLastPressedKey] = useAtom(lastPressedKeyAtom);
 
@@ -81,5 +81,9 @@ export function usePressedKeys(): [
     event: "keyup",
   });
 
-  return [pressedKeys, lastPressedKey, setPressedKeys];
+  return {
+    pressedKeys,
+    lastPressedKey,
+    setPressedKeys,
+  };
 }
