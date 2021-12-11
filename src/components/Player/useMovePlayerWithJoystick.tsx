@@ -43,7 +43,6 @@ export function useMovePlayerWithJoystick() {
     if (isBelowThreshold) {
       return;
     }
-    console.log("🌟🚨 ~ useFrame ~ nextPressedKeys", nextPressedKeys);
     if (!isEqual(nextPressedKeys, pressedKeys)) {
       setPressedKeys(nextPressedKeys);
     }

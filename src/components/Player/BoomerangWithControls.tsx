@@ -79,10 +79,10 @@ function useBoomerang(boomerangRef, playerPosition, playerRef) {
       Math.abs(newZ - targetPosition[2]) < 0.1;
 
     const isAtPlayer =
-      playerPosition.current &&
-      Math.abs(newX - playerPosition.current[0]) < 0.1 &&
-      Math.abs(newY - playerPosition.current[1]) < 0.1 &&
-      Math.abs(newZ - playerPosition.current[2]) < 0.1;
+      playerPosition &&
+      Math.abs(newX - playerPosition[0]) < 0.1 &&
+      Math.abs(newY - playerPosition[1]) < 0.1 &&
+      Math.abs(newZ - playerPosition[2]) < 0.1;
     if (isAtTarget && status === "flying") {
       setBoomerangState((p) => ({ ...p, status: "returning" }));
     } else if (isAtPlayer && status === "returning") {

@@ -13,7 +13,6 @@ const MIN_THUMB_YY = -JOYSTICK_RADIUS + JOYSTICK_THUMB_RADIUS / 2;
 export function Joystick() {
   const [joystickPosition, setJoystickPosition] = useJoystickPosition();
 
-  console.log("🌟🚨 ~ Joystick ~ joystickPosition", joystickPosition);
   const springPosition = useSpring({
     transform: `translate(${joystickPosition[0]}px, ${joystickPosition[1]}px)`,
   });

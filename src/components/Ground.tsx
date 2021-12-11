@@ -21,14 +21,16 @@ export function Ground() {
     }
     const { x, y, z } = getMousePosition(mouse, viewport);
     console.log(e);
-    if (status === "idle") {
-      setBoomerangState((p) => ({
-        ...p,
-        status: "flying",
-        clickTargetPosition: [x, y, z],
-      }));
-      onMouseMove(e);
-    }
+    setBoomerangState((p) =>
+      p.status !== "idle"
+        ? p
+        : {
+            ...p,
+            status: "flying",
+            clickTargetPosition: [x, y, z],
+          }
+    );
+    onMouseMove(e);
   };
 
   const onMouseMove = (e) => {
