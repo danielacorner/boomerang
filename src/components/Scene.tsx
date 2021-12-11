@@ -1,8 +1,7 @@
 import { Player } from "./Player/Player";
 import { Ground } from "./Ground";
-import JeffBezos from "./GLTFs/JeffBezos";
-import { useControls } from "leva";
-import { OrbitControls } from "@react-three/drei";
+import { Instance, Instances, OrbitControls } from "@react-three/drei";
+import { Enemy } from "./Enemy";
 
 export function Scene() {
   return (
@@ -11,21 +10,22 @@ export function Scene() {
       <ambientLight intensity={0.5} />
       <pointLight position={[10, 10, 10]} />
       <Player />
-      <Enemy />
+      <Enemies />
       <OrbitControls />
     </mesh>
   );
 }
 export type Direction = "ArrowUp" | "ArrowLeft" | "ArrowRight" | "ArrowDown";
 
-function Enemy() {
-  const { x, y, z } = useControls({ x: 0, y: 0, z: 0 });
-
+function Enemies() {
+  const enemies = [...new Array(5)].map((_) => ({
+    id: Math.random() * 10 ** 16,
+  }));
   return (
-    <mesh position={[x, y, z]}>
-      <meshBasicMaterial color={"#FFFFFF"} />
-      <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} />
-      <JeffBezos />;
-    </mesh>
+    <>
+      {enemies.map((e) => (
+        <Enemy key={e.id} />
+      ))}
+    </>
   );
 }
