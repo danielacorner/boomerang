@@ -1,14 +1,13 @@
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
 import { usePressedKeys } from "../Player/usePressedKeys";
-import { useJoystickMouseMove } from "./useJoystickMouseMove";
 import { Direction } from "../Scene";
 
 export const JOYSTICK_RADIUS = 64;
 const JOYSTICK_THUMB_RADIUS = JOYSTICK_RADIUS / 2;
 export const JOYSTICK_PADDING = JOYSTICK_RADIUS / 2;
 
-export const THRESHOLD = JOYSTICK_RADIUS - JOYSTICK_THUMB_RADIUS / 2;
+export const THRESHOLD = JOYSTICK_RADIUS / 2 - JOYSTICK_THUMB_RADIUS / 2;
 export const MAX_THUMB_XY = THRESHOLD;
 export const MIN_THUMB_YY = -THRESHOLD;
 
@@ -45,8 +44,8 @@ export function Joystick() {
     const distance = Math.sqrt(x * x + y * y);
     if (distance < JOYSTICK_RADIUS) {
       const angle = Math.atan2(y, x);
-      const x2 = (JOYSTICK_RADIUS / 2) * Math.cos(angle) * 1.1;
-      const y2 = (JOYSTICK_RADIUS / 2) * Math.sin(angle) * 1.1;
+      const x2 = (JOYSTICK_RADIUS / 2) * Math.cos(angle);
+      const y2 = (JOYSTICK_RADIUS / 2) * Math.sin(angle);
 
       const [up, down, left, right] = [
         y2 > THRESHOLD,
