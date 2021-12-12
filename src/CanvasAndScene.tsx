@@ -1,7 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 import { Debug, Physics } from "@react-three/cannon";
 import { Scene } from "./components/Scene";
-import { Joystick } from "./components/Joystick";
+import { Joystick } from "./components/Joystick/Joystick";
 import { useMediaQuery } from "@mui/material";
 
 export function CanvasAndScene() {

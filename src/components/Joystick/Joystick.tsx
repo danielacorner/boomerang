@@ -1,31 +1,33 @@
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
-import { useCallback } from "react";
-import { usePressedKeys } from "./Player/usePressedKeys";
-import { Direction } from "./Scene";
+import { usePressedKeys } from "../Player/usePressedKeys";
+import { useJoystickMouseMove } from "./useJoystickMouseMove";
+import { Direction } from "../Scene";
 
 export const JOYSTICK_RADIUS = 64;
 const JOYSTICK_THUMB_RADIUS = JOYSTICK_RADIUS / 2;
-const JOYSTICK_PADDING = JOYSTICK_RADIUS / 2;
+export const JOYSTICK_PADDING = JOYSTICK_RADIUS / 2;
 
-const THRESHOLD = JOYSTICK_RADIUS - JOYSTICK_THUMB_RADIUS / 2;
-const MAX_THUMB_XY = THRESHOLD;
-const MIN_THUMB_YY = -THRESHOLD;
+export const THRESHOLD = JOYSTICK_RADIUS - JOYSTICK_THUMB_RADIUS / 2;
+export const MAX_THUMB_XY = THRESHOLD;
+export const MIN_THUMB_YY = -THRESHOLD;
 
 const trans1 = (x, y) => `translate3d(${x}px,${y}px,0)`;
+
 export function Joystick() {
   const { pressedKeys, lastPressedKey, setPressedKeys } = usePressedKeys();
   const [{ xy }, set] = useSpring(() => ({
     xy: [0, 0],
     config: { mass: 10, tension: 550, friction: 140 },
   }));
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+  const onMouseMove = (
+    e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
+  ) => {
     e.stopPropagation();
-    console.log("🌟🚨 ~ onMouseMove ~ e", e);
 
     // x ranges from -JOYSTICK_RADIUS to JOYSTICK_RADIUS
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
+    const mouseX = "clientX" in e ? e.clientX : e.touches[0].clientX;
+    const mouseY = "clientY" in e ? e.clientY : e.touches[0].clientY;
     const joystickCenterX =
       window.innerWidth - JOYSTICK_RADIUS - JOYSTICK_PADDING;
     const joystickCenterY =
@@ -41,11 +43,10 @@ export function Joystick() {
     );
 
     const distance = Math.sqrt(x * x + y * y);
-    console.log("🌟🚨 ~ onMouseMove ~ distance", distance);
     if (distance < JOYSTICK_RADIUS) {
       const angle = Math.atan2(y, x);
-      const x2 = JOYSTICK_RADIUS * Math.cos(angle);
-      const y2 = JOYSTICK_RADIUS * Math.sin(angle);
+      const x2 = (JOYSTICK_RADIUS / 2) * Math.cos(angle) * 1.1;
+      const y2 = (JOYSTICK_RADIUS / 2) * Math.sin(angle) * 1.1;
 
       const [up, down, left, right] = [
         y2 > THRESHOLD,
@@ -63,13 +64,11 @@ export function Joystick() {
 
       setPressedKeys(nextPressedKeys);
       set({ xy: [x2, y2] });
-      console.log("🌟🚨 ~ onMouseMove ~ x2, y2", x2, y2);
     } else {
       setPressedKeys([]);
     }
-  }, []);
+  };
   const onMouseUp = () => {
-    console.log("🌟🚨 ~ onMouseUp ~ onMouseUp");
     setPressedKeys([]);
     set({ xy: [0, 0] });
   };
@@ -77,8 +76,9 @@ export function Joystick() {
     <JoystickStyles
       onMouseMove={onMouseMove}
       onPointerMove={onMouseMove}
+      onTouchMove={(e) => onMouseMove(e)}
       onMouseUp={onMouseUp}
-      onPointerUp={onMouseUp}
+      onTouchEnd={onMouseUp}
     >
       <animated.div
         style={{ transform: xy.to(trans1) }}
