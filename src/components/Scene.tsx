@@ -33,6 +33,11 @@ function Enemies() {
           <MarkZuckerberg />
         </group>
       </Enemy>
+      {/* <Enemy>
+        <group scale={1} rotation={[0, 0, 0]}>
+          <ElonMusk />
+        </group>
+      </Enemy> */}
     </>
   );
 }
