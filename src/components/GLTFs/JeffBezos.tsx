@@ -15,7 +15,6 @@ export default function JeffBezos({ ...props }) {
     "/models/jeff_bezos/scene.gltf"
   ) as any;
   const { actions } = useAnimations(animations, group);
-  console.log("🌟🚨 ~ Model ~ actions", actions);
   return (
     <group ref={group} {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]} scale={0.02}>

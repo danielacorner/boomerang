@@ -19,6 +19,7 @@ export function Joystick() {
     xy: [0, 0],
     config: { mass: 10, tension: 550, friction: 140 },
   }));
+
   const onMouseMove = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
@@ -47,12 +48,10 @@ export function Joystick() {
       const x2 = (JOYSTICK_RADIUS / 2) * Math.cos(angle);
       const y2 = (JOYSTICK_RADIUS / 2) * Math.sin(angle);
 
-      const [up, down, left, right] = [
-        y2 > THRESHOLD,
-        y2 < -THRESHOLD,
-        x2 > THRESHOLD,
-        x2 < -THRESHOLD,
-      ];
+      const up = y2 < THRESHOLD;
+      const down = y2 > -THRESHOLD;
+      const left = x2 < THRESHOLD;
+      const right = x2 > -THRESHOLD;
 
       const nextPressedKeys = [
         ...(up ? ["ArrowUp"] : []),
@@ -73,11 +72,14 @@ export function Joystick() {
   };
   return (
     <JoystickStyles
-      onMouseMove={onMouseMove}
-      onPointerMove={onMouseMove}
-      onTouchMove={(e) => onMouseMove(e)}
-      onMouseUp={onMouseUp}
-      onTouchEnd={onMouseUp}
+      {...{
+        onMouseMove,
+        onPointerMove: onMouseMove,
+        onTouchMove: onMouseMove,
+        onMouseUp,
+        onPointerUp: onMouseUp,
+        onTouchEnd: onMouseUp,
+      }}
     >
       <animated.div
         style={{ transform: xy.to(trans1) }}
