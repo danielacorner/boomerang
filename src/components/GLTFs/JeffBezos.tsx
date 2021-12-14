@@ -6,7 +6,7 @@ source: https://sketchfab.com/3d-models/jeff-bezos-blue-origin-5a072b4d63dd48a8b
 title: Jeff Bezos - Blue Origin
 */
 
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 
 export default function JeffBezos({ ...props }) {
@@ -14,7 +14,18 @@ export default function JeffBezos({ ...props }) {
   const { nodes, materials, animations } = useGLTF(
     "/models/jeff_bezos/scene.gltf"
   ) as any;
-  const { actions } = useAnimations(animations, group);
+
+  const { actions, names, ...rest } = useAnimations(animations, group);
+
+  // Change animation when the index changes
+  useEffect(() => {
+    // Reset and fade in animation after an index has been changed
+    actions[names?.[0]]?.reset().fadeIn(0.5).play();
+    // In the clean-up phase, fade it out
+    return () => {
+      actions[names?.[0]]?.fadeOut(0.5);
+    };
+  }, [actions, names]);
   return (
     <group ref={group} {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]} scale={0.02}>

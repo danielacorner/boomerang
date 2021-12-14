@@ -1,7 +1,10 @@
 import { Player } from "./Player/Player";
 import { Ground } from "./Ground";
-import { Instance, Instances, OrbitControls } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { Enemy } from "./Enemy";
+import JeffBezos from "./GLTFs/JeffBezos";
+import ElonMusk from "./GLTFs/ElonMusk";
+import MarkZuckerberg from "./GLTFs/MarkZuckerberg";
 
 export function Scene() {
   return (
@@ -18,14 +21,18 @@ export function Scene() {
 export type Direction = "ArrowUp" | "ArrowLeft" | "ArrowRight" | "ArrowDown";
 
 function Enemies() {
-  const enemies = [...new Array(5)].map((_) => ({
-    id: Math.random() * 10 ** 16,
-  }));
   return (
     <>
-      {enemies.map((e) => (
-        <Enemy key={e.id} />
-      ))}
+      <Enemy>
+        <group scale={1.8} position={[0, 1, 0]} rotation={[0, 0, 0]}>
+          <JeffBezos />
+        </group>
+      </Enemy>
+      <Enemy>
+        <group scale={1} rotation={[0, 0, 0]}>
+          <MarkZuckerberg />
+        </group>
+      </Enemy>
     </>
   );
 }

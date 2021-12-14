@@ -3,10 +3,11 @@ import { useEffect, useRef, useState } from "react";
 import JeffBezos from "./GLTFs/JeffBezos";
 import * as THREE from "three";
 import { useSphere } from "@react-three/cannon";
+import { useGLTF } from "@react-three/drei";
 
 const ENEMY_JITTER_SPEED = 2;
 
-export function Enemy() {
+export function Enemy({ children }) {
   const { viewport } = useThree();
 
   const initialPosition: [x: number, y: number, z: number] = [
@@ -52,7 +53,7 @@ export function Enemy() {
     <mesh ref={sphereRef}>
       {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
-      <JeffBezos scale={20} rotation={[Math.PI / 2, 0, 0]} />
+      {children}
     </mesh>
   );
 }

@@ -3,6 +3,7 @@ import { Debug, Physics } from "@react-three/cannon";
 import { Scene } from "./components/Scene";
 import { Joystick } from "./components/Joystick/Joystick";
 import { useMediaQuery } from "@mui/material";
+import { Suspense } from "react";
 
 export function CanvasAndScene() {
   return (
@@ -11,11 +12,13 @@ export function CanvasAndScene() {
         position: [0, 10 * (8 / 3), 1],
       }}
     >
-      <Physics>
-        <DebugInDev>
-          <Scene />
-        </DebugInDev>
-      </Physics>
+      <Suspense fallback={null}>
+        <Physics>
+          <DebugInDev>
+            <Scene />
+          </DebugInDev>
+        </Physics>
+      </Suspense>
     </Canvas>
   );
 }

@@ -15,6 +15,8 @@ export function Player() {
 
       <mesh ref={playerRef}>
         <Bm position={[0, -1, 0]} />
+        <Bm position={[1, -1, 0]} />
+        <Bm position={[-1, -1, 0]} />
       </mesh>
 
       <BoomerangWithControls playerPosition={playerPosition} ref={playerRef} />

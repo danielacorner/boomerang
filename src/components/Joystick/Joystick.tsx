@@ -102,7 +102,7 @@ const JoystickStyles = styled.div`
   border-radius: 50%;
   width: ${JOYSTICK_RADIUS * 2}px;
   height: ${JOYSTICK_RADIUS * 2}px;
-  box-shadow: inset 0 0 10px 4px rgb(68 63 63 / 37%);
+  box-shadow: inset 0 0 4px 4px rgb(68 63 63 / 17%);
   .joystickThumb {
     margin-top: ${JOYSTICK_THUMB_RADIUS - 1}px;
     margin-left: ${JOYSTICK_THUMB_RADIUS - 1}px;
