@@ -53,15 +53,21 @@ export function Joystick() {
       const left = x2 < THRESHOLD;
       const right = x2 > -THRESHOLD;
 
+      const moveX = Math.abs(x) > THRESHOLD / 2;
+      const moveY = Math.abs(y) > THRESHOLD / 2;
+
       const nextPressedKeys = [
-        ...(up ? ["ArrowUp"] : []),
-        ...(down ? ["ArrowDown"] : []),
-        ...(left ? ["ArrowLeft"] : []),
-        ...(right ? ["ArrowRight"] : []),
+        ...(moveY && up ? ["ArrowUp"] : []),
+        ...(moveY && down ? ["ArrowDown"] : []),
+        ...(moveX && left ? ["ArrowLeft"] : []),
+        ...(moveX && right ? ["ArrowRight"] : []),
       ] as Direction[];
 
+      const dxFromCenter = Math.abs(x) / THRESHOLD;
+      const dyFromCenter = Math.abs(y) / THRESHOLD;
+
       setPressedKeys(nextPressedKeys);
-      set({ xy: [x2, y2] });
+      set({ xy: [x2 * dxFromCenter, y2 * dyFromCenter] });
     } else {
       setPressedKeys([]);
     }
