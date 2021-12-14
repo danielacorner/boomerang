@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useBox } from "@react-three/cannon";
+import { useSphere } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
@@ -25,6 +25,13 @@ export function usePlayerControls(): [
 ] {
   const MOVE_SPEED = 0.3;
   const { pressedKeys, lastPressedKey } = usePressedKeys();
+  const [hasMoved, setHasMoved] = useState(false);
+  useEffect(() => {
+    if (!hasMoved && pressedKeys.length !== 0) {
+      setHasMoved(true);
+    }
+  }, [pressedKeys]);
+
   const [{ lookAt }] = usePlayerState();
 
   const [movedMouse, setMovedMouse] = useState(false);
@@ -34,9 +41,16 @@ export function usePlayerControls(): [
   }, [pressedKeys]);
 
   const targetRef = useRef<THREE.Mesh>(null);
-  const playerRef = useRef<THREE.Mesh>(null!);
-  const [boxRef, api] = useBox(
-    () => ({ mass: 1, position: [0, 2, 0] }),
+  const playerRef = useRef<THREE.Mesh>(null);
+
+  const [sphereRef, api] = useSphere(
+    () => ({
+      mass: 1,
+      position: [0, 2, 0],
+      onCollide: (e) => {
+        console.log("COLLISION!", e);
+      },
+    }),
     playerRef
   );
 
@@ -51,8 +65,9 @@ export function usePlayerControls(): [
     return unsubscribe;
   }, []);
 
+  // move and rotate the player
   useFrame(() => {
-    if (!boxRef.current) {
+    if (!sphereRef.current || !playerRef.current || !hasMoved) {
       return;
     }
     // move the player
@@ -77,37 +92,32 @@ export function usePlayerControls(): [
     api.position.set(x2, y2, z2);
 
     // rotate the player
-    const p1 = [px, py, pz] as [number, number, number];
-    const p2 = [lookAt[0], lookAt[1], lookAt[2]] as [number, number, number];
     if (movedMouse && targetRef.current) {
       playerRef.current.lookAt(targetRef.current.position);
       return;
     }
-    const newRotY = getPlayerRotation(lastPressedKey);
 
-    const newRX = THREE.MathUtils.lerp(
-      rotation.current[0],
-      0,
-      PLAYER_ROTATION_SPEED
-    );
+    const newRotX = 0;
+    const newRotY = getPlayerRotation(lastPressedKey);
+    const newRotZ = 0;
+
+    // const newRX = THREE.MathUtils.lerp(
+    //   rotation.current[0],
+    //   newRotX,
+    //   PLAYER_ROTATION_SPEED
+    // );
     const newRY = THREE.MathUtils.lerp(
       rotation.current[1],
       newRotY,
       PLAYER_ROTATION_SPEED
     );
-    const newRZ = THREE.MathUtils.lerp(
-      rotation.current[2],
-      0,
-      PLAYER_ROTATION_SPEED
-    );
-    api.rotation.set(
-      newRX,
-      newRY,
-      newRZ
-      // 0,
-      // newRotY,
-      // 0
-    );
+    // const newRZ = THREE.MathUtils.lerp(
+    //   rotation.current[2],
+    //   newRotZ,
+    //   PLAYER_ROTATION_SPEED
+    // );
+    api.rotation.set(0, newRY, 0);
+    api.velocity.set(0, 0, 0);
   });
 
   return [playerRef, targetRef, position.current];

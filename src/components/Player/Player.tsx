@@ -14,8 +14,7 @@ export function Player() {
       </MouseTarget>
 
       <mesh ref={playerRef}>
-        <Bm />
-        {/* <BlackMage /> */}
+        <Bm position={[0, -1, 0]} />
       </mesh>
 
       <BoomerangWithControls playerPosition={playerPosition} ref={playerRef} />
