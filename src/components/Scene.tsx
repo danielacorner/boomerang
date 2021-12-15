@@ -1,10 +1,9 @@
 import { Player } from "./Player/Player";
 import { Ground } from "./Ground";
 import { OrbitControls } from "@react-three/drei";
-import { Enemy } from "./Enemy";
-import JeffBezos from "./GLTFs/JeffBezos";
 import ElonMusk from "./GLTFs/ElonMusk";
-import MarkZuckerberg from "./GLTFs/MarkZuckerberg";
+import { Enemies } from "./Enemies/Enemies";
+import { Collisions } from "./Player/Collisions";
 
 export function Scene() {
   return (
@@ -14,30 +13,9 @@ export function Scene() {
       <pointLight position={[10, 10, 10]} />
       <Player />
       <Enemies />
+      <Collisions />
       <OrbitControls />
     </mesh>
   );
 }
 export type Direction = "ArrowUp" | "ArrowLeft" | "ArrowRight" | "ArrowDown";
-
-function Enemies() {
-  return (
-    <>
-      <Enemy>
-        <group scale={1.8} position={[0, 1, 0]} rotation={[0, 0, 0]}>
-          <JeffBezos />
-        </group>
-      </Enemy>
-      <Enemy>
-        <group scale={1} rotation={[0, 0, 0]}>
-          <MarkZuckerberg />
-        </group>
-      </Enemy>
-      {/* <Enemy>
-        <group scale={1} rotation={[0, 0, 0]}>
-          <ElonMusk />
-        </group>
-      </Enemy> */}
-    </>
-  );
-}
