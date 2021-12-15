@@ -1,6 +1,7 @@
 import { Enemy } from "./Enemy";
 import JeffBezos from "../GLTFs/JeffBezos";
 import MarkZuckerberg from "../GLTFs/MarkZuckerberg";
+import ElonMuskRunning from "../GLTFs/ElonMuskRunning";
 
 export function Enemies() {
   return (
@@ -15,11 +16,11 @@ export function Enemies() {
           <MarkZuckerberg />
         </group>
       </Enemy>
-      {/* <Enemy>
-              <group scale={1} rotation={[0, 0, 0]}>
-                <ElonMusk />
-              </group>
-            </Enemy> */}
+      <Enemy>
+        <group scale={1} rotation={[0, 0, 0]}>
+          <ElonMuskRunning />
+        </group>
+      </Enemy>
     </>
   );
 }
