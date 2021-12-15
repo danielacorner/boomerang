@@ -1,12 +1,11 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
-import JeffBezos from "./GLTFs/JeffBezos";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useSphere } from "@react-three/cannon";
-import { useGLTF } from "@react-three/drei";
 
 const ENEMY_JITTER_SPEED = 2;
 
+// set up collisions on its children
 export function Enemy({ children }) {
   const { viewport } = useThree();
 
