@@ -47,9 +47,9 @@ export function usePlayerControls(): [
     () => ({
       mass: 1,
       position: [0, 2, 0],
-      onCollide: (e) => {
-        console.log("COLLISION!", e);
-      },
+      // onCollide: (e) => {
+      //   console.log("COLLISION!", e);
+      // },
       type: "Static", // https://github.com/pmndrs/use-cannon#types
       // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
     }),

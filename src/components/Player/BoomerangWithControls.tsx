@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
 import { useSphere } from "@react-three/cannon";
 import { useMount } from "react-use";
-
+export const BOOMERANG_NAME = "boomerang";
 const BOOMERANG_SPEED = 0.05;
 const PLAYER_RADIUS = 3;
 const ROTATION_SPEED = -0.2;
@@ -19,7 +19,7 @@ export const BoomerangWithControls = forwardRef(
     const ref = useBoomerang(playerPosition, playerRef);
 
     return (
-      <mesh ref={ref}>
+      <mesh ref={ref} name={BOOMERANG_NAME}>
         <Spin>
           <Boomerang />
         </Spin>
@@ -45,9 +45,15 @@ const INITIAL_POSITION: [number, number, number] = [0, 1, 0];
 /** shoots a boomerang when you click */
 function useBoomerang(playerPosition, playerRef) {
   const [boomerangRef, api] = useSphere(() => ({
+    mass: 1,
+
     position: INITIAL_POSITION,
     type: "Static", // https://github.com/pmndrs/use-cannon#types
     // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
+    material: {
+      restitution: 1,
+      friction: 0,
+    },
   }));
 
   // boomerang state & click position

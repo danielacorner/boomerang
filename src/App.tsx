@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { CanvasAndScene, Controls } from "./CanvasAndScene";
+
 function App() {
   return (
     <AppStyles>
@@ -8,6 +9,7 @@ function App() {
     </AppStyles>
   );
 }
+
 const AppStyles = styled.div`
   height: 100vh;
 `;

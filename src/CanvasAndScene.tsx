@@ -14,7 +14,7 @@ export function CanvasAndScene() {
       }}
     >
       <Suspense fallback={null}>
-        <Physics>
+        <Physics gravity={[0, -9.81, 0]}>
           <DebugMode>
             <Scene />
           </DebugMode>

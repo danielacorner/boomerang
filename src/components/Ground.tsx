@@ -4,7 +4,7 @@ import { useBoomerangState, usePlayerState } from "../store";
 import { getMousePosition } from "./Player/Player";
 import { useThree } from "@react-three/fiber";
 
-const GROUND_PLANE = "groundPlane";
+export const GROUND_NAME = "groundPlane";
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
@@ -13,7 +13,7 @@ export function Ground() {
   const [, setPlayerState] = usePlayerState();
   const { mouse, viewport } = useThree();
   const onClick = (e) => {
-    const ground = e.intersections.find((i) => i.object.name === GROUND_PLANE);
+    const ground = e.intersections.find((i) => i.object.name === GROUND_NAME);
     const point = ground?.point;
     if (!point) {
       ("no intersection found!");
@@ -34,7 +34,7 @@ export function Ground() {
   };
 
   const onMouseMove = (e) => {
-    const ground = e.intersections.find((i) => i.object.name === GROUND_PLANE);
+    const ground = e.intersections.find((i) => i.object.name === GROUND_NAME);
     const point = ground?.point;
     if (!point) {
       ("no intersection found!");
@@ -48,7 +48,7 @@ export function Ground() {
 
   return (
     <Plane
-      name={GROUND_PLANE}
+      name={GROUND_NAME}
       onClick={onClick}
       onPointerMove={onMouseMove}
       ref={planeRef}
