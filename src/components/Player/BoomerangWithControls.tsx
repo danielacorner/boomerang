@@ -7,7 +7,7 @@ import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
 import { useSphere } from "@react-three/cannon";
 
 export const BOOMERANG_NAME = "boomerang";
-const BOOMERANG_SPEED = 0.49;
+const BOOMERANG_SPEED = 0.1;
 const PLAYER_RADIUS = 3;
 const ROTATION_SPEED = -0.2;
 

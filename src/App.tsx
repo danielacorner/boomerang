@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { CanvasAndScene, Controls } from "./CanvasAndScene";
+import { CanvasAndScene } from "./CanvasAndScene";
+import { Controls } from "./Controls";
 
 function App() {
   return (

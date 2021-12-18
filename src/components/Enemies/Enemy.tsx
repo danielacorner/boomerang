@@ -18,13 +18,22 @@ export function Enemy({ children }) {
   const [healthPercent, setHealthPercent] = useState(1);
   const theyDied = healthPercent === 0;
 
-  const [didDropMoney, setDidDropMoney] = useState(false);
-
   const initialPosition: [x: number, y: number, z: number] = [
     (viewport.width / 2) * (Math.random() * 2 - 1),
     CYLINDER_HEIGHT + 1,
     viewport.height / 2 + CYLINDER_HEIGHT,
   ];
+
+  const [droppedMoneyPosition, setDroppedMoneyPosition] = useState<
+    [number, number, number] | null
+  >(null);
+
+  const position = useRef(initialPosition);
+  useEffect(() => {
+    const unsubscribe = api.position.subscribe((v) => (position.current = v));
+    return unsubscribe;
+  }, []);
+
   const [enemyRef, api] = useCylinder(() => ({
     args: [3, 1, CYLINDER_HEIGHT, 6],
     mass: 1,
@@ -39,7 +48,7 @@ export function Enemy({ children }) {
         // after they died, when they hit the ground again, they drop their moneys
         const shouldDropMoneys = _theyDied && isCollisionWithGround;
         if (shouldDropMoneys) {
-          setDidDropMoney(true);
+          setDroppedMoneyPosition((p) => p || position.current);
         }
 
         // subtract some hp when they hit the boomerang
@@ -61,12 +70,6 @@ export function Enemy({ children }) {
     },
   }));
 
-  const position = useRef(initialPosition);
-  useEffect(() => {
-    const unsubscribe = api.position.subscribe((v) => (position.current = v));
-    return unsubscribe;
-  }, []);
-
   // useMoveEnemy(position, api);
 
   // TODO: they gotta drop their moneys
@@ -84,13 +87,17 @@ export function Enemy({ children }) {
   }, [theyDied]);
 
   return (
-    <mesh ref={enemyRef}>
-      {/* <meshBasicMaterial color={"#FFFFFF"} />
+    <>
+      <mesh ref={enemyRef}>
+        {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
-      {children}
-      <HpBar healthPercent={healthPercent} />
-      {didDropMoney ? <DroppedMoney /> : null}
-    </mesh>
+        {children}
+        <HpBar healthPercent={healthPercent} />
+      </mesh>
+      {droppedMoneyPosition ? (
+        <DroppedMoney position={droppedMoneyPosition} />
+      ) : null}
+    </>
   );
 }
 
@@ -136,15 +143,15 @@ function useMoveEnemy(position, api) {
   });
 }
 
-function DroppedMoney() {
+function DroppedMoney({ position }) {
   return (
-    <>
+    <group position={position}>
       <Bag />
       <Bag />
       <Bag />
       <Bag />
       <Bag />
-    </>
+    </group>
   );
 }
 

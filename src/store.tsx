@@ -18,3 +18,6 @@ const playerStateAtom = atom<{
 export function usePlayerState() {
   return useAtom(playerStateAtom);
 }
+
+const isDevAtom = atom<boolean>(process.env.NODE_ENV === "development");
+export const useIsDev = () => useAtom(isDevAtom);
