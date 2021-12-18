@@ -6,11 +6,14 @@ import { useMediaQuery } from "@mui/material";
 import { Suspense } from "react";
 import { DebugMode } from "./DebugMode";
 
+const CAMERA_DISTANCE = 20;
+
 export function CanvasAndScene() {
   return (
     <Canvas
       camera={{
-        position: [0, 10 * (8 / 3), 1],
+        position: [0, CAMERA_DISTANCE, -CAMERA_DISTANCE],
+        // rotation: [1, 0, 0],
       }}
     >
       <Suspense fallback={null}>

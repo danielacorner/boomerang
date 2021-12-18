@@ -5,7 +5,7 @@ import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
 import { useEventListener } from "../../utils/useEventListener";
 import { useBoomerangState, usePlayerState } from "../../store";
-import { useOrbitControlsAngle } from "../Scene";
+import { useOrbitControlsAngle } from "../OrbitControlsWithAngle";
 
 const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
   Math.PI * 1,
@@ -82,18 +82,18 @@ export function usePlayerControls(): [
       position.current[1],
       position.current[2],
     ];
+
+    const [up, right, down, left] = [
+      pressedKeys.includes(UP),
+      pressedKeys.includes(RIGHT),
+      pressedKeys.includes(DOWN),
+      pressedKeys.includes(LEFT),
+    ];
+
     const [x2, y2, z2] = [
-      px +
-        (pressedKeys.includes(RIGHT)
-          ? 1
-          : pressedKeys.includes(LEFT)
-          ? -1
-          : 0) *
-          MOVE_SPEED,
+      px + (right ? -1 : left ? 1 : 0) * MOVE_SPEED,
       py,
-      pz +
-        (pressedKeys.includes(DOWN) ? 1 : pressedKeys.includes(UP) ? -1 : 0) *
-          MOVE_SPEED,
+      pz + (down ? -1 : up ? 1 : 0) * MOVE_SPEED,
     ];
     api.position.set(x2, y2, z2);
 
