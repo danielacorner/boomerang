@@ -1,7 +1,8 @@
-import { Plane } from "@react-three/drei";
+import { Plane, useTexture } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
 import { useBoomerangState, usePlayerState } from "../store";
 import { ThreeEvent } from "@react-three/fiber";
+import * as THREE from "three";
 
 export const GROUND_NAME = "groundPlane";
 
@@ -42,17 +43,32 @@ export function Ground() {
     }
   };
 
+  const { texture } = useTexture({ texture: "/textures/grass.jpg" });
+
+  if (texture) {
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(20, 20);
+    texture.anisotropy = 16;
+  }
+
   return (
     <Plane
       name={GROUND_NAME}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
       ref={planeRef}
+      onPointerDown={onPointerDown}
+      material-map={texture}
+      onPointerMove={onPointerMove}
+      material-transparent={true}
+      material-opacity={0.4}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        console.log("🌟🚨 ~ file: Ground.tsx ~ line 52 ~ Ground ~ e", e);
+      }}
       args={[1000, 1000]}
       position={[0, -1, 0]}
       rotation={[-Math.PI / 2, 0, 0]}
       receiveShadow
-      material-color="#53755a"
+      material-color="#c1e9c9"
     />
   );
 }

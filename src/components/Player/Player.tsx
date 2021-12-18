@@ -5,9 +5,15 @@ import { BoomerangTarget } from "./BoomerangTarget";
 import { MouseTarget } from "./MouseTarget";
 import { useEffect } from "react";
 import { useBoomerangState } from "../../store";
+import { useEventListener } from "../../utils/useEventListener";
 
 export function Player() {
   const [playerRef, targetRef, playerPosition] = usePlayerControls();
+
+  // move on right click?
+  useEventListener("contextmenu", (e) => {
+    console.log("🌟🚨 ~ file: Player.tsx ~ line 15 ~ useEventListener ~ e", e);
+  });
 
   const [{ clickTargetPosition }] = useBoomerangState();
   useEffect(() => {
@@ -25,7 +31,7 @@ export function Player() {
       </MouseTarget>
 
       <mesh ref={playerRef}>
-        <Bm position={[0, -1, 0]} />
+        <Bm position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
       </mesh>
 
       <BoomerangWithControls playerPosition={playerPosition} ref={playerRef} />

@@ -97,13 +97,10 @@ export function usePlayerControls(): [
     ];
     api.position.set(x2, y2, z2);
 
-    const newRotX = 0;
-
     // TODO: account for orbitControls rotation
 
-    const newRotY = getPlayerRotation(lastPressedKey) + orbitControlsAngle;
-
-    const newRotZ = 0;
+    const newRotY = orbitControlsAngle;
+    // const newRotY = getPlayerRotation(lastPressedKey) + orbitControlsAngle;
 
     // const newRX = THREE.MathUtils.lerp(
     //   rotation.current[0],
