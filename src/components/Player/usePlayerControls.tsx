@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
 import { useEventListener } from "../../utils/useEventListener";
 import { useBoomerangState, usePlayerState } from "../../store";
+import { useOrbitControlsAngle } from "../Scene";
 
 const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
   Math.PI * 1,
@@ -26,6 +27,8 @@ export function usePlayerControls(): [
   const [{ clickTargetPosition }] = useBoomerangState();
   const MOVE_SPEED = 0.3;
   const { pressedKeys, lastPressedKey } = usePressedKeys();
+
+  // we'll wait till we've moved to start the useFrame below (forget why)
   const [hasMoved, setHasMoved] = useState(false);
   useEffect(() => {
     if (!hasMoved && pressedKeys.length !== 0) {
@@ -67,9 +70,10 @@ export function usePlayerControls(): [
     const unsubscribe = api.rotation.subscribe((v) => (rotation.current = v));
     return unsubscribe;
   }, []);
+  const [orbitControlsAngle, setOrbitControlsAngle] = useOrbitControlsAngle();
 
   // move  the player
-  useFrame(() => {
+  useFrame(({ camera }) => {
     if (!sphereRef.current || !playerRef.current || !hasMoved) {
       return;
     }
@@ -94,7 +98,11 @@ export function usePlayerControls(): [
     api.position.set(x2, y2, z2);
 
     const newRotX = 0;
-    const newRotY = getPlayerRotation(lastPressedKey);
+
+    // TODO: account for orbitControls rotation
+
+    const newRotY = getPlayerRotation(lastPressedKey) + orbitControlsAngle;
+
     const newRotZ = 0;
 
     // const newRX = THREE.MathUtils.lerp(

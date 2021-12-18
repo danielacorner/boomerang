@@ -1,8 +1,7 @@
 import { Plane } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
 import { useBoomerangState, usePlayerState } from "../store";
-import { ThreeEvent, useThree } from "@react-three/fiber";
-import { useCallback, useState } from "react";
+import { ThreeEvent } from "@react-three/fiber";
 
 export const GROUND_NAME = "groundPlane";
 
