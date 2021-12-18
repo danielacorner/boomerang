@@ -4,7 +4,6 @@ import * as THREE from "three";
 import { useCylinder } from "@react-three/cannon";
 import { BOOMERANG_NAME } from "../Player/BoomerangWithControls";
 import { GROUND_NAME } from "../Ground";
-import { useGLTF } from "@react-three/drei";
 import MoneyBag from "../GLTFs/MoneyBag";
 
 const ENEMY_JITTER_SPEED = 2;
@@ -34,10 +33,6 @@ export function Enemy({ children }) {
       // when the boomerang+enemy collide, subtract some hp
       const isCollisionWithBoomerang = e.body.name === BOOMERANG_NAME;
       const isCollisionWithGround = e.body.name === GROUND_NAME;
-      console.log(
-        "🌟🚨 ~ const[enemyRef,api]=useCylinder ~ isCollisionWithGround",
-        isCollisionWithGround
-      );
 
       setHealthPercent((prevHealthPct) => {
         const _theyDied = prevHealthPct === 0;

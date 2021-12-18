@@ -1,7 +1,7 @@
 import { atom, useAtom } from "jotai";
 
 const boomerangStateAtom = atom<{
-  clickTargetPosition: number[] | null;
+  clickTargetPosition: [number, number, number] | null;
   status: "idle" | "flying" | "returning";
 }>({
   clickTargetPosition: [0, 0, 0],
@@ -11,7 +11,7 @@ export function useBoomerangState() {
   return useAtom(boomerangStateAtom);
 }
 const playerStateAtom = atom<{
-  lookAt: number[];
+  lookAt: [number, number, number];
 }>({
   lookAt: [0, 0, 0],
 });

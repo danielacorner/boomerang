@@ -3,9 +3,20 @@ import { BoomerangWithControls } from "./BoomerangWithControls";
 import Bm from "../GLTFs/Bm";
 import { BoomerangTarget } from "./BoomerangTarget";
 import { MouseTarget } from "./MouseTarget";
+import { useEffect } from "react";
+import { useBoomerangState } from "../../store";
 
 export function Player() {
   const [playerRef, targetRef, playerPosition] = usePlayerControls();
+
+  const [{ clickTargetPosition }] = useBoomerangState();
+  useEffect(() => {
+    // rotate the player
+    if (playerRef.current && clickTargetPosition) {
+      playerRef.current.lookAt(...clickTargetPosition);
+      return;
+    }
+  }, [clickTargetPosition]);
 
   return (
     <>
@@ -22,11 +33,4 @@ export function Player() {
       <BoomerangTarget />
     </>
   );
-}
-export function getMousePosition(mouse: THREE.Vector2, viewport: any) {
-  return {
-    x: (mouse.x * viewport.width) / 2,
-    y: 0,
-    z: -(mouse.y * viewport.height) / 2,
-  };
 }

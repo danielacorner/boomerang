@@ -1,56 +1,46 @@
 import { Plane } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
 import { useBoomerangState, usePlayerState } from "../store";
-import { getMousePosition } from "./Player/Player";
-import { useThree } from "@react-three/fiber";
+import { ThreeEvent, useThree } from "@react-three/fiber";
+import { useState } from "react";
 
 export const GROUND_NAME = "groundPlane";
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
 
-  const [, setBoomerangState] = useBoomerangState();
-  const [, setPlayerState] = usePlayerState();
-  const { mouse, viewport } = useThree();
-  const onClick = (e) => {
-    const ground = e.intersections.find((i) => i.object.name === GROUND_NAME);
-    const point = ground?.point;
-    if (!point) {
-      ("no intersection found!");
-      return;
-    }
-    const { x, y, z } = getMousePosition(mouse, viewport);
-    console.log(e);
+  const [{ status }, setBoomerangState] = useBoomerangState();
+  const [{ lookAt }, setPlayerState] = usePlayerState();
+
+  const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
     setBoomerangState((p) =>
       p.status !== "idle"
         ? p
         : {
             ...p,
             status: "flying",
-            clickTargetPosition: [x, y, z],
+            clickTargetPosition: lookAt,
           }
     );
-    onMouseMove(e);
+    onPointerMove(e);
   };
 
-  const onMouseMove = (e) => {
-    const ground = e.intersections.find((i) => i.object.name === GROUND_NAME);
-    const point = ground?.point;
-    if (!point) {
-      ("no intersection found!");
-      return;
-    }
-    // const targetPosition = [point.x, 0.5, point.z];
-    const { x, y, z } = getMousePosition(mouse, viewport);
+  // const onRightClick=()=>{
 
-    setPlayerState((p) => ({ ...p, lookAt: [x, y, z] }));
+  // }
+
+  const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = (e) => {
+    if (status !== "flying") {
+      const { x, y, z } = getMousePosition(e);
+      setPlayerState((p) => ({ ...p, lookAt: [x, y, z] }));
+    }
   };
 
   return (
     <Plane
       name={GROUND_NAME}
-      onClick={onClick}
-      onPointerMove={onMouseMove}
+      onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
       ref={planeRef}
       args={[200, 200]}
       position={[0, -1, 0]}
@@ -59,4 +49,15 @@ export function Ground() {
       material-color="#53755a"
     />
   );
+}
+export function getMousePosition(e: ThreeEvent<PointerEvent>) {
+  const ground = e.intersections.find((i) => i.object.name === GROUND_NAME);
+
+  const point = e.point;
+  // const point = ground?.point;
+  if (!point) {
+    return { x: 0, y: 0, z: 0 };
+  }
+  const { x, y, z } = point;
+  return { x, y: 1, z };
 }

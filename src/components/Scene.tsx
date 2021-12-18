@@ -12,7 +12,7 @@ export function Scene() {
       <Lighting />
       <Player />
       <Enemies />
-      <Collisions />
+      {/* <Collisions /> */}
       <OrbitControls />
     </mesh>
   );

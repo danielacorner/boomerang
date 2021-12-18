@@ -11,7 +11,7 @@ import { useRef } from "react";
 import { animated, useSpring } from "@react-spring/three";
 import { useBoomerangState } from "../../store";
 
-export default function Boomerang(props) {
+export default function BoomerangModel(props) {
   const group = useRef();
   const { nodes, materials } = useGLTF(
     "/models/zelda_ocarina_of_time_boomerang/scene.gltf"

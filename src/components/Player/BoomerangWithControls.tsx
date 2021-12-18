@@ -1,13 +1,13 @@
 import { forwardRef, useEffect, useRef } from "react";
-import Boomerang from "../GLTFs/Boomerang";
+import BoomerangModel from "../GLTFs/BoomerangModel";
 import * as THREE from "three";
-import { useBoomerangState } from "../../store";
+import { useBoomerangState, usePlayerState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
 import { useSphere } from "@react-three/cannon";
-import { useMount } from "react-use";
+
 export const BOOMERANG_NAME = "boomerang";
-const BOOMERANG_SPEED = 0.05;
+const BOOMERANG_SPEED = 0.49;
 const PLAYER_RADIUS = 3;
 const ROTATION_SPEED = -0.2;
 
@@ -21,7 +21,7 @@ export const BoomerangWithControls = forwardRef(
     return (
       <mesh ref={ref} name={BOOMERANG_NAME}>
         <Spin>
-          <Boomerang />
+          <BoomerangModel />
         </Spin>
         <FlashWhenStatusChanges />
       </mesh>
@@ -44,6 +44,7 @@ const INITIAL_POSITION: [number, number, number] = [0, 1, 0];
 
 /** shoots a boomerang when you click */
 function useBoomerang(playerPosition, playerRef) {
+  const [{ lookAt }] = usePlayerState();
   const [boomerangRef, api] = useSphere(() => ({
     mass: 1,
 
@@ -59,6 +60,10 @@ function useBoomerang(playerPosition, playerRef) {
   // boomerang state & click position
   const [{ status, clickTargetPosition }, setBoomerangState] =
     useBoomerangState();
+  console.log(
+    "🌟🚨 ~ file: BoomerangWithControls.tsx ~ line 62 ~ useBoomerang ~ clickTargetPosition",
+    clickTargetPosition
+  );
 
   // subscribe to the position
   const position = useRef(INITIAL_POSITION);
@@ -102,7 +107,7 @@ function useBoomerang(playerPosition, playerRef) {
       newZ = THREE.MathUtils.lerp(z, z2, BOOMERANG_SPEED);
     } else {
       newX = THREE.MathUtils.lerp(
-        // invert the returning speed: speed up over time (instead of slowing down)
+        // on return, we invert the speed: speed up over time instead of slowing down
         x,
         x2 - Math.abs(dx) * 0.1,
         BOOMERANG_SPEED

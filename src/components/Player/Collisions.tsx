@@ -4,10 +4,10 @@ import { useThree } from "@react-three/fiber";
 const DEPTH = 9;
 export function Collisions() {
   const { viewport } = useThree();
-  const z = viewport.distance * 0.8;
+  const z = viewport.distance * 0.7;
   console.log("🌟🚨 ~ Collisions ~ viewport", viewport);
-  const x = viewport.width * 0.5;
-  const y = viewport.height * 0.5;
+  const x = viewport.width * 0.45;
+  const y = viewport.height * 0.45;
 
   // back, front
   usePlane(() => ({ position: [0, 0, -z], rotation: [0, 0, 0] }));

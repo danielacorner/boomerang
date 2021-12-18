@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
 import { useEventListener } from "../../utils/useEventListener";
-import { usePlayerState } from "../../store";
+import { useBoomerangState, usePlayerState } from "../../store";
 
 const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
   Math.PI * 1,
@@ -23,6 +23,7 @@ export function usePlayerControls(): [
   >>,
   playerPosition: number[]
 ] {
+  const [{ clickTargetPosition }] = useBoomerangState();
   const MOVE_SPEED = 0.3;
   const { pressedKeys, lastPressedKey } = usePressedKeys();
   const [hasMoved, setHasMoved] = useState(false);
@@ -67,12 +68,11 @@ export function usePlayerControls(): [
     return unsubscribe;
   }, []);
 
-  // move and rotate the player
+  // move  the player
   useFrame(() => {
     if (!sphereRef.current || !playerRef.current || !hasMoved) {
       return;
     }
-    // move the player
     const [px, py, pz] = [
       position.current[0],
       position.current[1],
@@ -92,12 +92,6 @@ export function usePlayerControls(): [
           MOVE_SPEED,
     ];
     api.position.set(x2, y2, z2);
-
-    // rotate the player
-    if (movedMouse && targetRef.current) {
-      playerRef.current.lookAt(targetRef.current.position);
-      return;
-    }
 
     const newRotX = 0;
     const newRotY = getPlayerRotation(lastPressedKey);
