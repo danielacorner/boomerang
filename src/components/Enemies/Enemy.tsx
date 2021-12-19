@@ -4,10 +4,12 @@ import * as THREE from "three";
 import { useCylinder } from "@react-three/cannon";
 import { BOOMERANG_NAME } from "../Player/BoomerangWithControls";
 import { GROUND_NAME } from "../Ground";
-import MoneyBag from "../GLTFs/MoneyBag";
+import { useBoomerangState } from "../../store";
+import { HpBar } from "./HpBar";
+import { DroppedMoney } from "./DroppedMoney";
 
 const ENEMY_JITTER_SPEED = 2;
-const CYLINDER_HEIGHT = 4;
+export const CYLINDER_HEIGHT = 4;
 const BOOMERANG_DAMAGE = 1;
 
 const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
@@ -17,6 +19,7 @@ export function Enemy({ children }) {
   const { viewport } = useThree();
   const [healthPercent, setHealthPercent] = useState(1);
   const theyDied = healthPercent === 0;
+  const [{ status }] = useBoomerangState();
 
   const initialPosition: [x: number, y: number, z: number] = [
     (viewport.width / 2) * (Math.random() * 2 - 1),
@@ -34,43 +37,48 @@ export function Enemy({ children }) {
     return unsubscribe;
   }, []);
 
-  const [enemyRef, api] = useCylinder(() => ({
-    args: [3, 1, CYLINDER_HEIGHT, 6],
-    mass: 1,
-    position: initialPosition,
-    onCollide: (e) => {
-      // when the boomerang+enemy collide, subtract some hp
-      const isCollisionWithBoomerang = e.body.name === BOOMERANG_NAME;
-      const isCollisionWithGround = e.body.name === GROUND_NAME;
+  const [enemyRef, api] = useCylinder(
+    () => ({
+      args: [3, 1, CYLINDER_HEIGHT, 6],
+      mass: 1,
+      position: initialPosition,
+      onCollide: (e) => {
+        if (status === "idle") return;
+        // when the boomerang+enemy collide, subtract some hp
+        const isCollisionWithBoomerang = e.body.name === BOOMERANG_NAME;
+        const isCollisionWithGround = e.body.name === GROUND_NAME;
 
-      setHealthPercent((prevHealthPct) => {
-        const _theyDied = prevHealthPct === 0;
-        // after they died, when they hit the ground again, they drop their moneys
-        const shouldDropMoneys = _theyDied && isCollisionWithGround;
-        if (shouldDropMoneys) {
-          setDroppedMoneyPosition((p) => p || position.current);
-        }
+        setHealthPercent((prevHealthPct) => {
+          const _theyDied = prevHealthPct === 0;
+          // after they died, when they hit the ground again, they drop their moneys
+          const shouldDropMoneys = _theyDied && isCollisionWithGround;
+          if (shouldDropMoneys) {
+            setDroppedMoneyPosition((p) => p || position.current);
+          }
 
-        // subtract some hp when they hit the boomerang
-        if (isCollisionWithBoomerang) {
-          const nextHealthPercent = Math.max(
-            0,
-            prevHealthPct - BOOMERANG_DAMAGE
-          );
-          return nextHealthPercent;
-        }
-        return prevHealthPct;
-      });
+          // subtract some hp when they hit the boomerang
+          if (isCollisionWithBoomerang) {
+            const nextHealthPercent = Math.max(
+              0,
+              prevHealthPct - BOOMERANG_DAMAGE
+            );
+            return nextHealthPercent;
+          }
+          return prevHealthPct;
+        });
 
-      console.log("COLLISION", e);
-    },
-    material: {
-      restitution: 1,
-      friction: 0,
-    },
-  }));
+        console.log("COLLISION", e);
+      },
+      material: {
+        restitution: 1,
+        friction: 0,
+      },
+    }),
+    null,
+    [status]
+  );
 
-  // useMoveEnemy(position, api);
+  useMoveEnemy(position, api, theyDied);
 
   // TODO: they gotta drop their moneys
   // when they die, spin around, drop their moneys
@@ -101,21 +109,9 @@ export function Enemy({ children }) {
   );
 }
 
-const FULL_HEALTH = 4;
-
-function HpBar({ healthPercent }) {
-  const width = FULL_HEALTH * healthPercent;
-  return (
-    <mesh position={[0, CYLINDER_HEIGHT / 2 + 1, 0]}>
-      <boxGeometry attach="geometry" args={[width, 0.5, 0.5]} />
-      <meshBasicMaterial attach="material" color={"#810f0f"} />
-    </mesh>
-  );
-}
-
-function useMoveEnemy(position, api) {
+function useMoveEnemy(position, api, theyDied) {
   useFrame(() => {
-    if (!position.current) return;
+    if (!position.current || theyDied) return;
     // random walk
     const randomX = Math.random() * 2 - 1;
     const randomZ = Math.random() * 2 - 0.5;
@@ -141,31 +137,4 @@ function useMoveEnemy(position, api) {
     api.position.set(x2Lerp, y2Lerp, z2Lerp);
     api.rotation.set(0, 0, 0);
   });
-}
-
-function DroppedMoney({ position }) {
-  return (
-    <group position={position}>
-      <Bag />
-      <Bag />
-      <Bag />
-      <Bag />
-      <Bag />
-    </group>
-  );
-}
-
-function Bag() {
-  return (
-    <mesh
-      scale={0.1}
-      position={[
-        Math.random() * 5 - 2,
-        Math.random() * 5 - 2,
-        Math.random() * 5 - 2,
-      ]}
-    >
-      <MoneyBag />
-    </mesh>
-  );
 }

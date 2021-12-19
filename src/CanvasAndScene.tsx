@@ -4,7 +4,7 @@ import { Scene } from "./components/Scene";
 import { Suspense } from "react";
 import { DebugMode } from "./DebugMode";
 
-const CAMERA_DISTANCE = 20;
+const CAMERA_DISTANCE = 25;
 
 export function CanvasAndScene() {
   return (

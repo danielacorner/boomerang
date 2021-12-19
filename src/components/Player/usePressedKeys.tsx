@@ -21,39 +21,36 @@ export function usePressedKeys(): {
   const [pressedKeys, setPressedKeys] = useAtom(pressedKeysAtom);
   const [lastPressedKey, setLastPressedKey] = useAtom(lastPressedKeyAtom);
 
-  useKey("w", () => {
+  const handleUp = () => {
     setPressedKeys((p) => [...p, UP]);
     setLastPressedKey(UP);
-  });
-  useKey("a", () => {
+  };
+  const handleLeft = () => {
     setPressedKeys((p) => [...p, LEFT]);
     setLastPressedKey(LEFT);
-  });
-  useKey("s", () => {
+  };
+  const handleDown = () => {
     setPressedKeys((p) => [...p, DOWN]);
     setLastPressedKey(DOWN);
-  });
-  useKey("d", () => {
+  };
+  const handleRight = () => {
     setPressedKeys((p) => [...p, RIGHT]);
     setLastPressedKey(RIGHT);
-  });
+  };
 
-  useKey(UP, () => {
-    setPressedKeys((p) => [...p, UP]);
-    setLastPressedKey(UP);
-  });
-  useKey(LEFT, () => {
-    setPressedKeys((p) => [...p, LEFT]);
-    setLastPressedKey(LEFT);
-  });
-  useKey(DOWN, () => {
-    setPressedKeys((p) => [...p, DOWN]);
-    setLastPressedKey(DOWN);
-  });
-  useKey(RIGHT, () => {
-    setPressedKeys((p) => [...p, RIGHT]);
-    setLastPressedKey(RIGHT);
-  });
+  useKey("w", handleUp);
+  useKey("a", handleLeft);
+  useKey("s", handleDown);
+  useKey("d", handleRight);
+  useKey("W", handleUp);
+  useKey("A", handleLeft);
+  useKey("S", handleDown);
+  useKey("D", handleRight);
+
+  useKey(UP, handleUp);
+  useKey(LEFT, handleLeft);
+  useKey(DOWN, handleDown);
+  useKey(RIGHT, handleRight);
 
   useKey("w", () => setPressedKeys((p) => p.filter((key) => key !== UP)), {
     event: "keyup",

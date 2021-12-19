@@ -25,7 +25,21 @@ export function usePlayerControls(): [
   playerPosition: number[]
 ] {
   const [{ clickTargetPosition }] = useBoomerangState();
-  const MOVE_SPEED = 0.3;
+
+  const [isShiftDown, setIsShiftDown] = useState(false);
+  useEventListener("keydown", (e) => {
+    if (e.key === "Shift") {
+      setIsShiftDown(true);
+    }
+  });
+  useEventListener("keyup", (e) => {
+    if (e.key === "Shift") {
+      setIsShiftDown(false);
+    }
+  });
+
+  const moveSpeed = isShiftDown ? 0.4 : 0.3;
+
   const { pressedKeys, lastPressedKey } = usePressedKeys();
 
   // we'll wait till we've moved to start the useFrame below (forget why)
@@ -91,9 +105,9 @@ export function usePlayerControls(): [
     ];
 
     const [x2, y2, z2] = [
-      px + (right ? -1 : left ? 1 : 0) * MOVE_SPEED,
+      px + (right ? -1 : left ? 1 : 0) * moveSpeed,
       py,
-      pz + (down ? -1 : up ? 1 : 0) * MOVE_SPEED,
+      pz + (down ? -1 : up ? 1 : 0) * moveSpeed,
     ];
     api.position.set(x2, y2, z2);
 

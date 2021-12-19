@@ -24,5 +24,5 @@ export function OrbitControlsWithAngle() {
       setOrbitControlsAngle(newAngle);
     }
   });
-  return ISDEV ? <OrbitControls ref={ref} /> : null;
+  return ISDEV ? <OrbitControls enableRotate={false} ref={ref} /> : null;
 }
