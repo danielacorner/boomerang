@@ -4,13 +4,16 @@ import * as THREE from "three";
 import { useCylinder } from "@react-three/cannon";
 import { BOOMERANG_NAME } from "../Player/BoomerangWithControls";
 import { GROUND_NAME } from "../Ground";
-import { useBoomerangState } from "../../store";
+import {
+  useBoomerangState,
+  useDroppedMoneyPositions,
+  usePowerupPositions,
+} from "../../store";
 import { HpBar } from "./HpBar";
-import { DroppedMoney } from "./DroppedMoney";
 
 const ENEMY_JITTER_SPEED = 2;
 export const CYLINDER_HEIGHT = 4;
-const BOOMERANG_DAMAGE = 1;
+const BOOMERANG_DAMAGE = 0.5 + Math.random() * 0.2;
 const UNMOUNT_DELAY = 2 * 1000;
 
 const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
@@ -21,10 +24,6 @@ export function Enemy({ children, unmountEnemy }) {
   const [healthPercent, setHealthPercent] = useState(1);
   const theyDied = healthPercent === 0;
   const [theyreDead, setTheyreDead] = useState(false);
-
-  const [droppedMoneyPosition, setDroppedMoneyPosition] = useState<
-    [number, number, number] | null
-  >(null);
 
   const position = useRef<[number, number, number]>([
     (viewport.width / 2) * (Math.random() * 2 - 1),
@@ -40,7 +39,6 @@ export function Enemy({ children, unmountEnemy }) {
     position,
     theyreDead,
     setHealthPercent,
-    setDroppedMoneyPosition,
   });
 
   // TODO: they gotta drop their moneys
@@ -69,21 +67,18 @@ export function Enemy({ children, unmountEnemy }) {
         {children}
         <HpBar healthPercent={healthPercent} />
       </mesh>
-      {droppedMoneyPosition ? (
-        <DroppedMoney position={droppedMoneyPosition} />
-      ) : null}
     </>
   );
 }
 
-function useMoveEnemy({
-  position,
-  theyreDead,
-  setHealthPercent,
-  setDroppedMoneyPosition,
-}) {
+const POWERUP_PROBABILITY = 0.2;
+
+function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
   const [{ status }] = useBoomerangState();
 
+  const [droppedMoneyPositions, setDroppedMoneyPositions] =
+    useDroppedMoneyPositions();
+  const [powerupPositions, setPowerupPositions] = usePowerupPositions();
   const [enemyRef, api] = useCylinder(
     () => ({
       args: [3, 1, CYLINDER_HEIGHT, 6],
@@ -100,7 +95,38 @@ function useMoveEnemy({
           // after they died, when they hit the ground again, they drop their moneys
           const shouldDropMoneys = _theyDied && isCollisionWithGround;
           if (shouldDropMoneys) {
-            setDroppedMoneyPosition((p) => p || position.current);
+            const newMoney = {
+              position: position.current,
+              unmounted: false,
+              unmount: () => {
+                setDroppedMoneyPositions((dmp) =>
+                  dmp.map((dmp) =>
+                    dmp.position === position.current
+                      ? { ...dmp, unmounted: true }
+                      : dmp
+                  )
+                );
+              },
+            };
+            setDroppedMoneyPositions((p) => [...p, newMoney]);
+
+            const powerup = Math.random() > 1 - POWERUP_PROBABILITY;
+            if (powerup) {
+              const newPowerup = {
+                position: position.current,
+                unmounted: false,
+                unmount: () => {
+                  setPowerupPositions((p) =>
+                    p.map((pup) =>
+                      pup.position === position.current
+                        ? { ...pup, unmounted: true }
+                        : pup
+                    )
+                  );
+                },
+              };
+              setPowerupPositions((p) => [...p, newPowerup]);
+            }
           }
 
           // subtract some hp when they hit the boomerang
@@ -147,11 +173,11 @@ function useMoveEnemy({
       z + (Math.random() > 0.4 ? ENEMY_JITTER_SPEED * randomZ * directionZ : 0),
     ];
 
-    // const x2Lerp = THREE.MathUtils.lerp(x, x2, 0.1);
-    // const y2Lerp = THREE.MathUtils.lerp(y, y2, 0.1);
-    // const z2Lerp = THREE.MathUtils.lerp(z, z2, 0.1);
+    const x2Lerp = THREE.MathUtils.lerp(x, fx, 0.1);
+    const y2Lerp = THREE.MathUtils.lerp(y, fy, 0.1);
+    const z2Lerp = THREE.MathUtils.lerp(z, fz, 0.1);
 
-    api.applyForce([fx - x, fy - y, fz - z], [x, y, z]);
+    api.applyForce([x2Lerp - x, y2Lerp - y, z2Lerp - z], [x, y, z]);
     // api.position.set(x2Lerp, y2Lerp, z2Lerp);
     // api.position.set(x2Lerp, y2Lerp, z2Lerp);
     api.rotation.set(0, 0, 0);

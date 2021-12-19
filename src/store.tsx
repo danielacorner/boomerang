@@ -21,3 +21,21 @@ export function usePlayerState() {
 
 const isDevAtom = atom<boolean>(process.env.NODE_ENV === "development");
 export const useIsDev = () => useAtom(isDevAtom);
+
+const droppedMoneyPositionsAtom = atom<
+  {
+    unmounted: boolean;
+    unmount: Function;
+    position: [number, number, number];
+  }[]
+>([]);
+export const useDroppedMoneyPositions = () =>
+  useAtom(droppedMoneyPositionsAtom);
+const powerupPositionsAtom = atom<
+  {
+    unmounted: boolean;
+    unmount: Function;
+    position: [number, number, number];
+  }[]
+>([]);
+export const usePowerupPositions = () => useAtom(powerupPositionsAtom);

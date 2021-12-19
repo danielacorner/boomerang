@@ -3,8 +3,9 @@ import { Ground } from "./Ground";
 import { Enemies } from "./Enemies/Enemies";
 import { Collisions } from "./Player/Collisions";
 import { Lighting } from "./Lighting";
-import { PresentationControls, Sky } from "@react-three/drei";
+import { Sky } from "@react-three/drei";
 import { OrbitControlsWithAngle } from "./OrbitControlsWithAngle";
+import { DroppedItems } from "./DroppedItems/DroppedItems";
 
 export function Scene() {
   const { x, y, z } = { x: -0.02, y: 0.01, z: 0 };
@@ -18,6 +19,7 @@ export function Scene() {
       <Sky sunPosition={[x, y, z]} rayleigh={rayleigh} />
       <Collisions />
       <OrbitControlsWithAngle />
+      <DroppedItems />
     </mesh>
   );
 }
