@@ -6,12 +6,25 @@ source: https://sketchfab.com/models/d6921528881c4776a38a35ba52e328c6
 title: Medieval asset 13\ money bag
 */
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
+import { animated, useSpring } from "@react-spring/three";
+import { useMount } from "react-use";
 
 export default function MoneyBag({ ...props }) {
   const group = useRef();
   const { nodes, materials } = useGLTF("/models/money_bag/scene.gltf") as any;
+
+  const [mounted, setMounted] = useState(false);
+  useMount(() => {
+    setMounted(true);
+  });
+
+  const { opacity } = useSpring({
+    opacity: mounted ? 1 : 0,
+    config: { mass: 100, tension: 50, friction: 20 },
+  });
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
@@ -21,13 +34,17 @@ export default function MoneyBag({ ...props }) {
             rotation={[-Math.PI / 2, 0, 0]}
             scale={[100, 100, 100]}
           >
-            <mesh
+            <animated.mesh
               geometry={nodes.Money_bag_asset_assets_texture_0.geometry}
               material={materials.assets_texture}
+              material-transparent={true}
+              material-opacity={opacity}
             />
-            <mesh
+            <animated.mesh
               geometry={nodes.Money_bag_asset_coin_0.geometry}
               material={materials.coin}
+              material-transparent={true}
+              material-opacity={opacity}
             />
           </group>
         </group>
