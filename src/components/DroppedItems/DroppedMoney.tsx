@@ -6,14 +6,13 @@ import { useSphere } from "@react-three/cannon";
 
 const BAG_RADIUS = 1;
 
+const MAX_BAGS_DROPPED = 10;
 export function DroppedMoney({ position }) {
   return (
     <group>
-      <Bag {...{ position }} />
-      <Bag {...{ position }} />
-      <Bag {...{ position }} />
-      <Bag {...{ position }} />
-      <Bag {...{ position }} />
+      {[...new Array(Math.ceil(Math.random() * MAX_BAGS_DROPPED))].map((_) => (
+        <Bag {...{ position }} />
+      ))}
     </group>
   );
 }

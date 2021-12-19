@@ -76,7 +76,7 @@ const POWERUP_PROBABILITY = 0.2;
 function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
   const [{ status }] = useBoomerangState();
   const [{ poweredUp }] = usePlayerState();
-
+  const [theyDroppedItems, setTheyDroppedItems] = useState(false);
   const [, setDroppedMoneyPositions] = useDroppedMoneyPositions();
   const [, setPowerupPositions] = usePowerupPositions();
   const [enemyRef, api] = useCylinder(
@@ -93,8 +93,10 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
         setHealthPercent((prevHealthPct) => {
           const _theyDied = prevHealthPct === 0;
           // after they died, when they hit the ground again, they drop their moneys
-          const shouldDropMoneys = _theyDied && isCollisionWithGround;
+          const shouldDropMoneys =
+            _theyDied && isCollisionWithGround && !theyDroppedItems;
           if (shouldDropMoneys) {
+            setTheyDroppedItems(true);
             const mPosition: [number, number, number] = [
               position.current[0] + Math.random() - 0.5,
               position.current[1] + Math.random() - 0.5,
