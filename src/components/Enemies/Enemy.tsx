@@ -19,19 +19,18 @@ export function Enemy({ children }) {
   const { viewport } = useThree();
   const [healthPercent, setHealthPercent] = useState(1);
   const theyDied = healthPercent === 0;
+  const [theyreDead, setTheyreDead] = useState(false);
   const [{ status }] = useBoomerangState();
-
-  const initialPosition: [x: number, y: number, z: number] = [
-    (viewport.width / 2) * (Math.random() * 2 - 1),
-    CYLINDER_HEIGHT + 1,
-    viewport.height / 2 + CYLINDER_HEIGHT,
-  ];
 
   const [droppedMoneyPosition, setDroppedMoneyPosition] = useState<
     [number, number, number] | null
   >(null);
 
-  const position = useRef(initialPosition);
+  const position = useRef<[number, number, number]>([
+    (viewport.width / 2) * (Math.random() * 2 - 1),
+    CYLINDER_HEIGHT + 1,
+    viewport.height / 2 + CYLINDER_HEIGHT,
+  ]);
   useEffect(() => {
     const unsubscribe = api.position.subscribe((v) => (position.current = v));
     return unsubscribe;
@@ -41,7 +40,7 @@ export function Enemy({ children }) {
     () => ({
       args: [3, 1, CYLINDER_HEIGHT, 6],
       mass: 1,
-      position: initialPosition,
+      position: position.current,
       onCollide: (e) => {
         if (status === "idle") return;
         // when the boomerang+enemy collide, subtract some hp
@@ -83,7 +82,7 @@ export function Enemy({ children }) {
   // TODO: they gotta drop their moneys
   // when they die, spin around, drop their moneys
   useEffect(() => {
-    if (theyDied) {
+    if (theyDied && !theyreDead) {
       const worldPoint: [number, number, number] = [
         position.current[0],
         position.current[1] - CYLINDER_HEIGHT / 2,
@@ -91,6 +90,7 @@ export function Enemy({ children }) {
       ];
       const kickIntoSpace: [number, number, number] = [0, -10, 0];
       api.applyImpulse(kickIntoSpace, worldPoint);
+      setTheyreDead(true);
     }
   }, [theyDied]);
 
