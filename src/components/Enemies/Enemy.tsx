@@ -11,11 +11,12 @@ import { DroppedMoney } from "./DroppedMoney";
 const ENEMY_JITTER_SPEED = 2;
 export const CYLINDER_HEIGHT = 4;
 const BOOMERANG_DAMAGE = 1;
+const UNMOUNT_DELAY = 2 * 1000;
 
 const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
 
 // set up collisions on its children
-export function Enemy({ children }) {
+export function Enemy({ children, unmountEnemy }) {
   const { viewport } = useThree();
   const [healthPercent, setHealthPercent] = useState(1);
   const theyDied = healthPercent === 0;
@@ -77,7 +78,7 @@ export function Enemy({ children }) {
     [status]
   );
 
-  useMoveEnemy(position, api, theyDied);
+  useMoveEnemy(position, api, theyreDead);
 
   // TODO: they gotta drop their moneys
   // when they die, spin around, drop their moneys
@@ -91,6 +92,9 @@ export function Enemy({ children }) {
       const kickIntoSpace: [number, number, number] = [0, -10, 0];
       api.applyImpulse(kickIntoSpace, worldPoint);
       setTheyreDead(true);
+      setTimeout(() => {
+        unmountEnemy();
+      }, UNMOUNT_DELAY);
     }
   }, [theyDied]);
 
@@ -109,9 +113,9 @@ export function Enemy({ children }) {
   );
 }
 
-function useMoveEnemy(position, api, theyDied) {
+function useMoveEnemy(position, api, theyreDead) {
   useFrame(() => {
-    if (!position.current || theyDied) return;
+    if (!position.current || theyreDead) return;
     // random walk
     const randomX = Math.random() * 2 - 1;
     const randomZ = Math.random() * 2 - 0.5;
