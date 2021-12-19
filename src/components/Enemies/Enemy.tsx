@@ -2,14 +2,13 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useCylinder } from "@react-three/cannon";
-import { BOOMERANG_NAME } from "../Player/BoomerangWithControls";
-import { GROUND_NAME } from "../Ground";
 import {
   useBoomerangState,
   useDroppedMoneyPositions,
   usePowerupPositions,
 } from "../../store";
 import { HpBar } from "./HpBar";
+import { GROUND_NAME, BOOMERANG_NAME } from "../../utils/constants";
 
 const ENEMY_JITTER_SPEED = 2;
 export const CYLINDER_HEIGHT = 4;

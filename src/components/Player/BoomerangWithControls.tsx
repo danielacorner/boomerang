@@ -5,8 +5,8 @@ import { useBoomerangState, usePlayerState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
 import { useSphere } from "@react-three/cannon";
+import { BOOMERANG_NAME } from "../../utils/constants";
 
-export const BOOMERANG_NAME = "boomerang";
 const BOOMERANG_SPEED = 0.1;
 const PLAYER_RADIUS = 3;
 const ROTATION_SPEED = -0.2;
@@ -98,14 +98,6 @@ function useBoomerang(playerPosition, playerRef) {
     let newY = 0;
     let newZ = 0;
     if (status === "flying") {
-      console.log(
-        "🌟🚨 ~ file: BoomerangWithControls.tsx ~ line 81 ~ useFrame ~ target",
-        target
-      );
-      console.log(
-        "🌟🚨 ~ file: BoomerangWithControls.tsx ~ line 81 ~ useFrame ~ clickTargetPosition",
-        clickTargetPosition
-      );
       newX = THREE.MathUtils.lerp(x, x2, BOOMERANG_SPEED);
       newY = THREE.MathUtils.lerp(y, y2, BOOMERANG_SPEED);
       newZ = THREE.MathUtils.lerp(z, z2, BOOMERANG_SPEED);

@@ -3,8 +3,7 @@ import { usePlane } from "@react-three/cannon";
 import { useBoomerangState, usePlayerState } from "../store";
 import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
-
-export const GROUND_NAME = "groundPlane";
+import { GROUND_NAME } from "../utils/constants";
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));

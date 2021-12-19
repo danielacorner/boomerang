@@ -9,18 +9,22 @@ export function DroppedItems() {
   const [powerupPositions] = usePowerupPositions();
   return (
     <>
-      {droppedMoneyPositions.map(({ position, unmounted, unmount }) => (
-        <React.Fragment key={JSON.stringify(position)}>
-          <UnmountHandler {...{ unmount }} />
-          {unmounted ? null : <DroppedMoney {...{ position }} />}
-        </React.Fragment>
-      ))}
-      {powerupPositions.map(({ position, unmounted, unmount }) => (
-        <React.Fragment key={JSON.stringify(position)}>
-          <UnmountHandler {...{ unmount }} />
-          {unmounted ? null : <DroppedPowerup {...{ position }} />}
-        </React.Fragment>
-      ))}
+      {droppedMoneyPositions.map(({ position, unmounted, unmount }) =>
+        unmounted ? null : (
+          <React.Fragment key={JSON.stringify(position)}>
+            <UnmountHandler {...{ unmount }} />
+            <DroppedMoney {...{ position }} />
+          </React.Fragment>
+        )
+      )}
+      {powerupPositions.map(({ position, unmounted, unmount }) =>
+        unmounted ? null : (
+          <React.Fragment key={JSON.stringify(position)}>
+            <UnmountHandler {...{ unmount }} />
+            <DroppedPowerup {...{ position }} />
+          </React.Fragment>
+        )
+      )}
     </>
   );
 }

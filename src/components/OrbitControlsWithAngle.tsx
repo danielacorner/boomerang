@@ -16,10 +16,7 @@ export function OrbitControlsWithAngle() {
   useFrame(() => {
     if (!ref.current || !ISDEV) return;
     const newAngle = ref.current.getAzimuthalAngle();
-    console.log(
-      "🌟🚨 ~ file: Scene.tsx ~ line 34 ~ useFrame ~  ref.current",
-      ref.current
-    );
+
     if (orbitControlsAngle !== newAngle) {
       setOrbitControlsAngle(newAngle);
     }

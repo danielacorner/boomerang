@@ -6,9 +6,10 @@ import { MouseTarget } from "./MouseTarget";
 import { useEffect } from "react";
 import { useBoomerangState } from "../../store";
 import { useEventListener } from "../../utils/useEventListener";
+import { useSpring, animated } from "@react-spring/three";
 
 export function Player() {
-  const [playerRef, targetRef, playerPosition] = usePlayerControls();
+  const [playerRef, targetRef, playerPosition, poweredUp] = usePlayerControls();
 
   // move on right click?
   useEventListener("contextmenu", (e) => {
@@ -23,16 +24,16 @@ export function Player() {
       return;
     }
   }, [clickTargetPosition]);
-
+  const { scale } = useSpring({ scale: poweredUp ? 1.5 : 1 });
   return (
     <>
       <MouseTarget>
         <mesh ref={targetRef} />
       </MouseTarget>
 
-      <mesh ref={playerRef}>
+      <animated.mesh scale={scale} ref={playerRef}>
         <Bm position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
-      </mesh>
+      </animated.mesh>
 
       <BoomerangWithControls playerPosition={playerPosition} ref={playerRef} />
 
