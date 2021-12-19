@@ -24,10 +24,8 @@ export function usePlayerControls(): [
     THREE.BufferGeometry,
     THREE.Material | THREE.Material[]
   >>,
-  playerPosition: number[],
-  poweredUp: boolean
+  playerPosition: number[]
 ] {
-  const [poweredUp, setPoweredUp] = useState(false);
   const [{ clickTargetPosition }] = useBoomerangState();
 
   const [isShiftDown, setIsShiftDown] = useState(false);
@@ -54,14 +52,13 @@ export function usePlayerControls(): [
     }
   }, [pressedKeys]);
 
-  const [{ lookAt }] = usePlayerState();
+  const [{ lookAt }, setPlayerState] = usePlayerState();
 
   const [movedMouse, setMovedMouse] = useState(false);
   useEventListener("mousemove", () => setMovedMouse(true));
   useEffect(() => {
     setMovedMouse(false);
   }, [pressedKeys]);
-
   const targetRef = useRef<THREE.Mesh>(null);
   const playerRef = useRef<THREE.Mesh>(null);
 
@@ -75,9 +72,9 @@ export function usePlayerControls(): [
 
         if (isCollisionWithPowerup) {
           console.log("COLLISION!", e);
-          setPoweredUp(true);
+          setPlayerState((p) => ({ ...p, poweredUp: true }));
           setTimeout(() => {
-            setPoweredUp(false);
+            setPlayerState((p) => ({ ...p, poweredUp: false }));
           }, POWERUP_DURATION);
         }
       },
@@ -148,7 +145,7 @@ export function usePlayerControls(): [
     api.velocity.set(0, 0, 0);
   });
 
-  return [playerRef, targetRef, position.current, poweredUp];
+  return [playerRef, targetRef, position.current];
 }
 const PLAYER_ROTATION_SPEED = 0.08;
 

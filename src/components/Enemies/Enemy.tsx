@@ -5,6 +5,7 @@ import { useCylinder } from "@react-three/cannon";
 import {
   useBoomerangState,
   useDroppedMoneyPositions,
+  usePlayerState,
   usePowerupPositions,
 } from "../../store";
 import { HpBar } from "./HpBar";
@@ -74,10 +75,10 @@ const POWERUP_PROBABILITY = 0.2;
 
 function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
   const [{ status }] = useBoomerangState();
+  const [{ poweredUp }] = usePlayerState();
 
-  const [droppedMoneyPositions, setDroppedMoneyPositions] =
-    useDroppedMoneyPositions();
-  const [powerupPositions, setPowerupPositions] = usePowerupPositions();
+  const [, setDroppedMoneyPositions] = useDroppedMoneyPositions();
+  const [, setPowerupPositions] = usePowerupPositions();
   const [enemyRef, api] = useCylinder(
     () => ({
       args: [3, 1, CYLINDER_HEIGHT, 6],
@@ -94,13 +95,18 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
           // after they died, when they hit the ground again, they drop their moneys
           const shouldDropMoneys = _theyDied && isCollisionWithGround;
           if (shouldDropMoneys) {
+            const mPosition: [number, number, number] = [
+              position.current[0] + Math.random() - 0.5,
+              position.current[1] + Math.random() - 0.5,
+              position.current[2] + Math.random() - 0.5,
+            ];
             const newMoney = {
-              position: position.current,
+              position: mPosition,
               unmounted: false,
               unmount: () => {
                 setDroppedMoneyPositions((dmp) =>
                   dmp.map((dmp) =>
-                    dmp.position === position.current
+                    dmp.position === mPosition
                       ? { ...dmp, unmounted: true }
                       : dmp
                   )
@@ -111,13 +117,18 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
 
             const powerup = Math.random() > 1 - POWERUP_PROBABILITY;
             if (powerup) {
+              const pPosition: [number, number, number] = [
+                position.current[0] + Math.random() - 0.5,
+                position.current[1] + Math.random() - 0.5,
+                position.current[2] + Math.random() - 0.5,
+              ];
               const newPowerup = {
-                position: position.current,
+                position: pPosition,
                 unmounted: false,
                 unmount: () => {
                   setPowerupPositions((p) =>
                     p.map((pup) =>
-                      pup.position === position.current
+                      pup.position === pPosition
                         ? { ...pup, unmounted: true }
                         : pup
                     )
@@ -132,7 +143,7 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
           if (isCollisionWithBoomerang) {
             const nextHealthPercent = Math.max(
               0,
-              prevHealthPct - BOOMERANG_DAMAGE
+              prevHealthPct - BOOMERANG_DAMAGE * (poweredUp ? 2 : 1)
             );
             return nextHealthPercent;
           }

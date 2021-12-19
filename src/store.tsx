@@ -12,8 +12,10 @@ export function useBoomerangState() {
 }
 const playerStateAtom = atom<{
   lookAt: [number, number, number];
+  poweredUp: boolean;
 }>({
   lookAt: [0, 0, 0],
+  poweredUp: false,
 });
 export function usePlayerState() {
   return useAtom(playerStateAtom);

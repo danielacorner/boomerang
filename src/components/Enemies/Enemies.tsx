@@ -33,9 +33,9 @@ export function Enemies() {
 
   return (
     <>
-      {Enemies.map(({ Component, unmountEnemy, unmounted }) =>
+      {Enemies.map(({ id, Component, unmountEnemy, unmounted }) =>
         unmounted ? null : (
-          <Enemy {...{ unmountEnemy }}>
+          <Enemy key={id} {...{ unmountEnemy }}>
             <Component />
           </Enemy>
         )

@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber";
 import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
 import { useSphere } from "@react-three/cannon";
 import { BOOMERANG_NAME } from "../../utils/constants";
-
+import { animated, useSpring } from "@react-spring/three";
 const BOOMERANG_SPEED = 0.1;
 const PLAYER_RADIUS = 3;
 const ROTATION_SPEED = -0.2;
@@ -17,14 +17,20 @@ export const BoomerangWithControls = forwardRef(
     playerRef: React.ForwardedRef<THREE.Mesh>
   ) => {
     const ref = useBoomerang(playerPosition, playerRef);
-
+    const [{ poweredUp }] = usePlayerState();
+    const { scale } = useSpring({ scale: poweredUp ? 4 : 1 });
     return (
-      <mesh ref={ref} name={BOOMERANG_NAME}>
+      <animated.mesh
+        position={[0, -1, 0]}
+        ref={ref}
+        scale={scale}
+        name={BOOMERANG_NAME}
+      >
         <Spin>
           <BoomerangModel />
         </Spin>
         <FlashWhenStatusChanges />
-      </mesh>
+      </animated.mesh>
     );
   }
 );

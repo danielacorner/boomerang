@@ -20,8 +20,8 @@ export function DroppedItems() {
       {powerupPositions.map(({ position, unmounted, unmount }) =>
         unmounted ? null : (
           <React.Fragment key={JSON.stringify(position)}>
-            <UnmountHandler {...{ unmount }} />
-            <DroppedPowerup {...{ position }} />
+            {/* <UnmountHandler {...{ unmount }} /> */}
+            <DroppedPowerup {...{ position, unmount }} />
           </React.Fragment>
         )
       )}
