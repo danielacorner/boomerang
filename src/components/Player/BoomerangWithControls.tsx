@@ -7,9 +7,11 @@ import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
 import { useSphere } from "@react-three/cannon";
 import { BOOMERANG_NAME } from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
+import { Spin } from "./Spin";
 const BOOMERANG_SPEED = 0.1;
 const PLAYER_RADIUS = 3;
-const ROTATION_SPEED = -0.2;
+const BOOMERANG_RADIUS = 1;
+export const ROTATION_SPEED = -0.2;
 
 export const BoomerangWithControls = forwardRef(
   (
@@ -21,7 +23,7 @@ export const BoomerangWithControls = forwardRef(
     const { scale } = useSpring({ scale: poweredUp ? 4 : 1 });
     return (
       <animated.mesh
-        position={[0, -1, 0]}
+        position={[0, 0, 0]}
         ref={ref}
         scale={scale}
         name={BOOMERANG_NAME}
@@ -35,33 +37,26 @@ export const BoomerangWithControls = forwardRef(
   }
 );
 
-function Spin({ children }) {
-  const ref = useRef<THREE.Mesh>(null);
-
-  useFrame(() => {
-    if (!ref.current) return;
-    ref.current.rotation.set(0, ref.current.rotation.y + ROTATION_SPEED, 0);
-  });
-
-  return <mesh ref={ref}>{children}</mesh>;
-}
-
 const INITIAL_POSITION: [number, number, number] = [0, 1, 0];
 
 /** shoots a boomerang when you click */
 function useBoomerang(playerPosition, playerRef) {
-  const [{ lookAt }] = usePlayerState();
-  const [boomerangRef, api] = useSphere(() => ({
-    mass: 1,
-
-    position: INITIAL_POSITION,
-    type: "Static", // https://github.com/pmndrs/use-cannon#types
-    // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
-    material: {
-      restitution: 1,
-      friction: 0,
-    },
-  }));
+  const [{ lookAt, poweredUp }] = usePlayerState();
+  const [boomerangRef, api] = useSphere(
+    () => ({
+      mass: poweredUp ? 4 : 1,
+      args: [BOOMERANG_RADIUS * (poweredUp ? 4 : 1)],
+      position: INITIAL_POSITION,
+      type: "Static", // https://github.com/pmndrs/use-cannon#types
+      // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
+      material: {
+        restitution: 1,
+        friction: 0,
+      },
+    }),
+    null,
+    [poweredUp]
+  );
 
   // boomerang state & click position
   const [{ status, clickTargetPosition }, setBoomerangState] =

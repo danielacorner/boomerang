@@ -18,7 +18,7 @@ export default function BoomerangModel(props) {
   ) as any;
   const { x, y, z } = { x: -0.89, y: 0.64, z: 0.3 };
 
-  const { x2, y2, z2 } = { x2: -18.13, y2: 60, z2: 9 };
+  const { x2, y2, z2 } = { x2: -18.13, y2: 10, z2: 9 };
 
   // fade out the boomerang when we catch it
   const [{ status }, setBoomerangState] = useBoomerangState();

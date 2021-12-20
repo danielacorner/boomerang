@@ -10,6 +10,7 @@ import {
 } from "../../store";
 import { HpBar } from "./HpBar";
 import { GROUND_NAME, BOOMERANG_NAME } from "../../utils/constants";
+import { animated, useSpring } from "@react-spring/three";
 
 const ENEMY_JITTER_SPEED = 2;
 export const CYLINDER_HEIGHT = 4;
@@ -59,14 +60,19 @@ export function Enemy({ children, unmountEnemy }) {
     }
   }, [theyDied]);
 
+  const { opacity } = useSpring({ opacity: theyreDead ? 0 : 1 });
   return (
     <>
-      <mesh ref={enemyRef}>
+      <animated.mesh
+        material-transparent={true}
+        material-opacity={opacity}
+        ref={enemyRef}
+      >
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
         <HpBar healthPercent={healthPercent} />
-      </mesh>
+      </animated.mesh>
     </>
   );
 }
@@ -106,8 +112,8 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
               position: mPosition,
               unmounted: false,
               unmount: () => {
-                setDroppedMoneyPositions((dmp) =>
-                  dmp.map((dmp) =>
+                setDroppedMoneyPositions((prev) =>
+                  prev.map((dmp) =>
                     dmp.position === mPosition
                       ? { ...dmp, unmounted: true }
                       : dmp

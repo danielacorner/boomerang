@@ -4,13 +4,13 @@ import { Scene } from "./components/Scene";
 import { Suspense } from "react";
 import { DebugMode } from "./DebugMode";
 
-const CAMERA_DISTANCE = 25;
+const CAMERA_DISTANCE = 20;
 
 export function CanvasAndScene() {
   return (
     <Canvas
       camera={{
-        position: [0, CAMERA_DISTANCE, -CAMERA_DISTANCE],
+        position: [0, CAMERA_DISTANCE * 1.6, -CAMERA_DISTANCE],
         // rotation: [1, 0, 0],
       }}
     >
