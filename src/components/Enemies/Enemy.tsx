@@ -91,7 +91,7 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
       mass: 1,
       position: position.current,
       onCollide: (e) => {
-        if (status === "idle") return;
+        if (status === "idle" || theyDroppedItems) return;
         // when the boomerang+enemy collide, subtract some hp
         const isCollisionWithBoomerang = e.body.name === BOOMERANG_NAME;
         const isCollisionWithGround = e.body.name === GROUND_NAME;
@@ -99,8 +99,7 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
         setHealthPercent((prevHealthPct) => {
           const _theyDied = prevHealthPct === 0;
           // after they died, when they hit the ground again, they drop their moneys
-          const shouldDropMoneys =
-            _theyDied && isCollisionWithGround && !theyDroppedItems;
+          const shouldDropMoneys = _theyDied && isCollisionWithGround;
           if (shouldDropMoneys) {
             setTheyDroppedItems(true);
             const mPosition: [number, number, number] = [
@@ -114,7 +113,7 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
               unmount: () => {
                 setDroppedMoneyPositions((prev) =>
                   prev.map((dmp) =>
-                    dmp.position === mPosition
+                    dmp.position === mPosition && !dmp.unmounted
                       ? { ...dmp, unmounted: true }
                       : dmp
                   )
@@ -186,16 +185,16 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
     // TODO: use applyForce
 
     const [fx, fy, fz] = [
-      x + (Math.random() > 0.7 ? ENEMY_JITTER_SPEED * randomX * directionX : 0),
-      0,
-      z + (Math.random() > 0.4 ? ENEMY_JITTER_SPEED * randomZ * directionZ : 0),
+      Math.random() > 0.7 ? ENEMY_JITTER_SPEED * randomX * directionX : 0,
+      1,
+      Math.random() > 0.4 ? ENEMY_JITTER_SPEED * randomZ * directionZ : 0,
     ];
 
     const x2Lerp = THREE.MathUtils.lerp(x, fx, 0.1);
     const y2Lerp = THREE.MathUtils.lerp(y, fy, 0.1);
     const z2Lerp = THREE.MathUtils.lerp(z, fz, 0.1);
 
-    api.applyForce([x2Lerp - x, y2Lerp - y, z2Lerp - z], [x, y, z]);
+    api.applyForce([fx, fy, fz], [x, y, z]);
     // api.position.set(x2Lerp, y2Lerp, z2Lerp);
     // api.position.set(x2Lerp, y2Lerp, z2Lerp);
     api.rotation.set(0, 0, 0);

@@ -2,10 +2,11 @@ import { Enemy } from "./Enemy";
 import JeffBezos from "../GLTFs/JeffBezos";
 import MarkZuckerberg from "../GLTFs/MarkZuckerberg";
 import ElonMusk from "../GLTFs/ElonMuskRunning";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { useInterval, useMount } from "react-use";
-import { useGLTF, useAnimations } from "@react-three/drei";
-import { group } from "console";
+import { useGLTF } from "@react-three/drei";
+
+const MAX_ENEMIES = 50;
 
 export function Enemies() {
   const [Enemies, setEnemies] = useState<any>([]);
@@ -24,7 +25,7 @@ export function Enemies() {
     ])[0];
     setEnemies((p) => {
       const id = Math.random() * 10 ** 16;
-      return [
+      const newEnemies = [
         ...p,
         {
           Component,
@@ -36,6 +37,7 @@ export function Enemies() {
             ),
         },
       ];
+      return newEnemies.length > MAX_ENEMIES ? p : newEnemies;
     });
   }, []);
 
