@@ -3,6 +3,7 @@ import MoneyBag from "../GLTFs/MoneyBag";
 import { useSpring, animated } from "@react-spring/three";
 import { useMount } from "react-use";
 import { useSphere } from "@react-three/cannon";
+import { MeshWobbleMaterial } from "@react-three/drei";
 
 const BAG_RADIUS = 1;
 
@@ -10,10 +11,21 @@ const MAX_BAGS_DROPPED = 10;
 export function DroppedMoney({ position }) {
   return (
     <group>
-      {[...new Array(Math.ceil(Math.random() * MAX_BAGS_DROPPED))].map((_) => (
-        <Bag {...{ position }} />
-      ))}
+      {[...new Array(Math.ceil(Math.random() * MAX_BAGS_DROPPED))].map(
+        (_, idx) => (
+          <Bag key={idx} {...{ position }} />
+        )
+      )}
+      <DroppedDollarBills />
     </group>
+  );
+}
+function DroppedDollarBills() {
+  return (
+    <mesh>
+      <boxBufferGeometry attach="geometry" args={[3, 1, 0.001]} />
+      <MeshWobbleMaterial color="#37b830" {...({} as any)} />
+    </mesh>
   );
 }
 function Bag({ position }) {

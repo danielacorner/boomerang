@@ -4,19 +4,31 @@ import MarkZuckerberg from "../GLTFs/MarkZuckerberg";
 import ElonMusk from "../GLTFs/ElonMuskRunning";
 import { useCallback, useState } from "react";
 import { useInterval, useMount } from "react-use";
+import { useGLTF } from "@react-three/drei";
+
+const MAX_ENEMIES = 50;
 
 export function Enemies() {
   const [Enemies, setEnemies] = useState<any>([]);
 
+  const {
+    nodes: zuckNodes,
+    materials: zuckMaterials,
+    animations: zuckAnimations,
+  } = useGLTF("/models/mark_zuckerberg_running/scene.gltf") as any;
+
   const spawnEnemy = useCallback(() => {
-    const NextEnemy = () =>
-      ENEMIES_ARR[Math.floor(Math.random() * ENEMIES_ARR.length)];
+    const Component = shuffle([
+      () => <Bezos />,
+      () => <Zuck />,
+      () => <Musk />,
+    ])[0];
     setEnemies((p) => {
       const id = Math.random() * 10 ** 16;
-      return [
+      const newEnemies = [
         ...p,
         {
-          Component: NextEnemy,
+          Component,
           unmounted: false,
           id,
           unmountEnemy: () =>
@@ -25,6 +37,7 @@ export function Enemies() {
             ),
         },
       ];
+      return newEnemies.length > MAX_ENEMIES ? p : newEnemies;
     });
   }, []);
 
@@ -61,4 +74,22 @@ const Musk = () => (
   </group>
 );
 
-const ENEMIES_ARR = [<Bezos />, <Zuck />, <Musk />];
+function shuffle(array) {
+  let currentIndex = array.length,
+    randomIndex;
+
+  // While there remain elements to shuffle...
+  while (currentIndex != 0) {
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    // And swap it with the current element.
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex],
+      array[currentIndex],
+    ];
+  }
+
+  return array;
+}
