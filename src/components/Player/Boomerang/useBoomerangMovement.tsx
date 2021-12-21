@@ -21,12 +21,12 @@ export function useBoomerangMovement(
   const [{ status, clickTargetPosition }, setBoomerangState] =
     useBoomerangState();
 
+  const isIdle = status === "idle";
+
   const [boomerangRef, api] = useSphere(
     () => ({
       mass: poweredUp ? 4 : 1,
-      args: [
-        BOOMERANG_RADIUS * (poweredUp ? 4 : 1) * (status === "idle" ? 0 : 1),
-      ],
+      args: [BOOMERANG_RADIUS * (poweredUp ? 4 : 1) * (isIdle ? 0 : 1)],
       position: INITIAL_POSITION,
       type: "Kinematic",
       // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
@@ -36,7 +36,7 @@ export function useBoomerangMovement(
       },
     }),
     null,
-    [poweredUp]
+    [poweredUp, isIdle]
   );
 
   // subscribe to the position
