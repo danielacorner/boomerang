@@ -1,6 +1,5 @@
 import { useRef, useState } from "react";
 import MoneyBag from "../GLTFs/MoneyBag";
-import { useSpring, animated } from "@react-spring/three";
 import { useMount } from "react-use";
 import { useSphere } from "@react-three/cannon";
 import { MeshWobbleMaterial } from "@react-three/drei";
@@ -9,13 +8,12 @@ const BAG_RADIUS = 1;
 
 const MAX_BAGS_DROPPED = 10;
 export function DroppedMoney({ position }) {
+  const numBags = useRef(Math.ceil(Math.random() * MAX_BAGS_DROPPED)).current;
   return (
     <group>
-      {[...new Array(Math.ceil(Math.random() * MAX_BAGS_DROPPED))].map(
-        (_, idx) => (
-          <Bag key={idx} {...{ position }} />
-        )
-      )}
+      {[...new Array(numBags)].map((_, idx) => (
+        <Bag key={idx} {...{ position }} />
+      ))}
       <DroppedDollarBills />
     </group>
   );
@@ -28,7 +26,15 @@ function DroppedDollarBills() {
     </mesh>
   );
 }
+
+const UNMOUNT_DELAY = 3 * 1000;
+
 function Bag({ position }) {
+  const [mounted, setMounted] = useState(true);
+
+  return mounted ? <BagContent {...{ position, setMounted }} /> : null;
+}
+function BagContent({ position, setMounted }) {
   const [ref, api] = useSphere(() => ({
     mass: 0.8,
     position,
@@ -50,11 +56,13 @@ function Bag({ position }) {
     ];
 
     api.applyImpulse(kickUp, worldPoint);
+
+    setTimeout(() => setMounted(false), UNMOUNT_DELAY);
   });
 
   return (
-    <animated.mesh ref={ref} scale={0.1}>
+    <mesh ref={ref} scale={0.1}>
       <MoneyBag />
-    </animated.mesh>
+    </mesh>
   );
 }

@@ -9,30 +9,16 @@ export function DroppedItems() {
   const [powerupPositions] = usePowerupPositions();
   return (
     <>
-      {droppedMoneyPositions.map(({ position, unmounted, unmount }) =>
-        unmounted ? null : (
-          <React.Fragment key={JSON.stringify(position)}>
-            <UnmountHandler {...{ unmount }} />
-            <DroppedMoney {...{ position }} />
-          </React.Fragment>
-        )
-      )}
-      {powerupPositions.map(({ position, unmounted, unmount }) =>
-        unmounted ? null : (
-          <React.Fragment key={JSON.stringify(position)}>
-            {/* <UnmountHandler {...{ unmount }} /> */}
-            <DroppedPowerup {...{ position, unmount }} />
-          </React.Fragment>
-        )
-      )}
+      {droppedMoneyPositions.map(({ position }) => (
+        <React.Fragment key={JSON.stringify(position)}>
+          <DroppedMoney {...{ position }} />
+        </React.Fragment>
+      ))}
+      {powerupPositions.map(({ position }) => (
+        <React.Fragment key={JSON.stringify(position)}>
+          <DroppedPowerup {...{ position }} />
+        </React.Fragment>
+      ))}
     </>
   );
-}
-
-const UNMOUNT_DELAY = 3 * 1000;
-function UnmountHandler({ unmount }) {
-  useMount(() => {
-    setTimeout(unmount, UNMOUNT_DELAY);
-  });
-  return null;
 }

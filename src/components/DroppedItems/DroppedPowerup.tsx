@@ -1,9 +1,16 @@
 import { useCylinder } from "@react-three/cannon";
 import { useGLTF } from "@react-three/drei";
+import { useState } from "react";
 import { PLAYER_NAME, POWERUP_NAME } from "../../utils/constants";
 
 const POWERUP_HEIGHT = 1;
-export function DroppedPowerup({ position, unmount }) {
+export function DroppedPowerup({ position }) {
+  const [mounted, setMounted] = useState(false);
+  return mounted ? (
+    <DroppedPowerupContent {...{ position, setMounted }} />
+  ) : null;
+}
+export function DroppedPowerupContent({ position, setMounted }) {
   const [ref, api] = useCylinder(() => ({
     args: [3, 1, POWERUP_HEIGHT, 6],
     mass: 200,
@@ -11,7 +18,7 @@ export function DroppedPowerup({ position, unmount }) {
     onCollide: (e) => {
       const isCollisionWithPlayer = e.body.name === PLAYER_NAME;
       if (isCollisionWithPlayer) {
-        unmount();
+        setMounted(false);
       }
     },
   }));
