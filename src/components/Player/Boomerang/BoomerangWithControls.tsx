@@ -6,28 +6,28 @@ import { FlashWhenStatusChanges } from "./../FlashWhenStatusChanges";
 import { BOOMERANG_NAME } from "../../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 import { Spin } from "./Spin";
-import { useBoomerang } from "./useBoomerang";
+import { useBoomerangMovement } from "./useBoomerangMovement";
 
 export const BoomerangWithControls = forwardRef(
-	(
-		{ playerPosition }: { playerPosition: number[] },
-		playerRef: React.ForwardedRef<THREE.Mesh>
-	) => {
-		const ref = useBoomerang(playerPosition, playerRef);
-		const [{ poweredUp }] = usePlayerState();
-		const { scale } = useSpring({ scale: poweredUp ? 4 : 1 });
-		return (
-			<animated.mesh
-				position={[0, 0, 0]}
-				ref={ref}
-				scale={scale}
-				name={BOOMERANG_NAME}
-			>
-				<Spin>
-					<BoomerangModel />
-				</Spin>
-				<FlashWhenStatusChanges />
-			</animated.mesh>
-		);
-	}
+  (
+    { playerPosition }: { playerPosition: [number, number, number] },
+    playerRef: React.ForwardedRef<THREE.Mesh>
+  ) => {
+    const ref = useBoomerangMovement(playerPosition, playerRef);
+    const [{ poweredUp }] = usePlayerState();
+    const { scale } = useSpring({ scale: poweredUp ? 4 : 1 });
+    return (
+      <animated.mesh
+        position={[0, 0, 0]}
+        ref={ref}
+        scale={scale}
+        name={BOOMERANG_NAME}
+      >
+        <Spin>
+          <BoomerangModel />
+        </Spin>
+        <FlashWhenStatusChanges />
+      </animated.mesh>
+    );
+  }
 );
