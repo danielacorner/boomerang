@@ -21,7 +21,7 @@ export default function BoomerangModel(props) {
   const { x2, y2, z2 } = { x2: -18.13, y2: 10, z2: 9 };
 
   // fade out the boomerang when we catch it
-  const [{ status }, setBoomerangState] = useBoomerangState();
+  const [{ status }] = useBoomerangState();
 
   const { opacity } = useSpring({
     opacity: status === "idle" ? 0 : 1,

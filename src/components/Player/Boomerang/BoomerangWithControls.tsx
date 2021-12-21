@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import BoomerangModel from "../../GLTFs/BoomerangModel";
 import * as THREE from "three";
-import { usePlayerState } from "../../../store";
+import { useBoomerangState, usePlayerState } from "../../../store";
 import { FlashWhenStatusChanges } from "./../FlashWhenStatusChanges";
 import { BOOMERANG_NAME } from "../../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
@@ -14,8 +14,14 @@ export const BoomerangWithControls = forwardRef(
     playerRef: React.ForwardedRef<THREE.Mesh>
   ) => {
     const ref = useBoomerangMovement(playerPosition, playerRef);
+    const [{ status }] = useBoomerangState();
     const [{ poweredUp }] = usePlayerState();
-    const { scale } = useSpring({ scale: poweredUp ? 4 : 1 });
+    const [{ scale }] = useSpring(
+      {
+        scale: status === "idle" ? 0 : poweredUp ? 4 : 1,
+      },
+      [status, poweredUp]
+    );
     return (
       <animated.mesh
         position={[0, 0, 0]}
