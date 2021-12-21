@@ -65,9 +65,9 @@ export function useBoomerangMovement(
         clickTargetPosition[2] - position.current[2],
       ].map((v) => v * THROW_SPEED) as [number, number, number];
       api.velocity.set(...throwVelocity);
-      // setTimeout(() => {
-      //   setBoomerangState((p) => ({ ...p, status: "flying" }));
-      // }, 1000);
+      setTimeout(() => {
+        setBoomerangState((p) => ({ ...p, status: "returning" }));
+      }, 300);
     }
   }, [clickTargetPosition, status]);
 
@@ -78,7 +78,7 @@ export function useBoomerangMovement(
     clickTargetPosition
   );
   useFrame(({ viewport }) => {
-    if (status !== "idle" && clickTargetPosition && thrownTime.current) {
+    if (status === "returning" && clickTargetPosition) {
       if (!thrownTime.current) {
         thrownTime.current = Date.now();
       }

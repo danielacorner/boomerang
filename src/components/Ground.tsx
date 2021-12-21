@@ -19,13 +19,13 @@ export function Ground() {
     }
 
     setBoomerangState((p) =>
-      p.status !== "idle"
-        ? p
-        : {
+      p.status === "idle"
+        ? {
             ...p,
             status: "flying",
             clickTargetPosition: lookAt,
           }
+        : p
     );
     onPointerMove(e);
   };
