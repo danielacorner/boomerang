@@ -7,13 +7,14 @@ import { useBoomerangState, useGameState, usePlayerState } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
 import { PLAYER_NAME } from "../../utils/constants";
 import { BoomerangWithControls } from "./Boomerang/BoomerangWithControls";
+import BoomerangModel from "../GLTFs/BoomerangModel";
+import { Spin } from "./Boomerang/Spin";
 
 export function Player() {
   const [playerRef, targetRef, playerPosition] = usePlayerControls();
 
   return (
     <>
-      w
       <Mage {...{ playerRef, targetRef }} />
       <Boomerang {...{ playerPosition, playerRef }} />
     </>
@@ -67,8 +68,21 @@ function Mage({ playerRef, targetRef }) {
         name={PLAYER_NAME}
       >
         <Bm position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
+        <RangeupIndicator />
       </animated.mesh>
     </>
+  );
+}
+
+function RangeupIndicator() {
+  const [{ rangeUp }] = usePlayerState();
+  const { scale } = useSpring({ scale: rangeUp ? 1 : 0 });
+  return (
+    <animated.mesh scale={scale} position={[0, 2, 0]}>
+      <Spin>
+        <BoomerangModel />
+      </Spin>
+    </animated.mesh>
   );
 }
 

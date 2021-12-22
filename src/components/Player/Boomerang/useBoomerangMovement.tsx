@@ -98,7 +98,7 @@ export function useBoomerangMovement(
 
       api.velocity.set(...newVelocity);
 
-      const playerRadius = PLAYER_RADIUS * (rangeUp ? 2 : 1);
+      const playerRadius = PLAYER_RADIUS * (rangeUp || poweredUp ? 2 : 1);
 
       // if the boomerang is close to the player, set the boomerang to the player's position
       const isAtPlayer =
