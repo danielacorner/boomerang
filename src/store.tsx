@@ -1,4 +1,5 @@
 import { atom, useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
 const boomerangStateAtom = atom<{
   clickTargetPosition: [number, number, number] | null;
@@ -25,9 +26,14 @@ export function usePlayerState() {
   return useAtom(playerStateAtom);
 }
 
-const gameStateAtom = atom<{ money: number; hitpoints: number }>({
+const gameStateAtom = atomWithStorage<{
+  money: number;
+  hitpoints: number;
+  invulnerable: boolean;
+}>("gameState", {
   money: 0,
   hitpoints: 100,
+  invulnerable: false,
 });
 export const useGameState = () => useAtom(gameStateAtom);
 

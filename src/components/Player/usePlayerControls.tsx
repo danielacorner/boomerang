@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
 import { useEventListener } from "../../utils/useEventListener";
-import { useBoomerangState, usePlayerState } from "../../store";
+import { useBoomerangState, useGameState, usePlayerState } from "../../store";
 import { useOrbitControlsAngle } from "../OrbitControlsWithAngle";
-import { POWERUP_NAME } from "../../utils/constants";
+import { ENEMY_NAME, POWERUP_NAME } from "../../utils/constants";
 
 const POWERUP_DURATION = 10 * 1000;
 const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
@@ -28,24 +28,26 @@ export function usePlayerControls(): [
 ] {
   const [{ clickTargetPosition }] = useBoomerangState();
 
-  const [isShiftDown, setIsShiftDown] = useState(false);
-  useEventListener("keydown", (e) => {
-    if (e.key === "Shift") {
-      setIsShiftDown(true);
-    }
-  });
-  useEventListener("keyup", (e) => {
-    if (e.key === "Shift") {
-      setIsShiftDown(false);
-    }
-  });
+  // const [isShiftDown, setIsShiftDown] = useState(false);
+  // useEventListener("keydown", (e) => {
+  //   if (e.key === "Shift") {
+  //     setIsShiftDown(true);
+  //   }
+  // });
+  // useEventListener("keyup", (e) => {
+  //   if (e.key === "Shift") {
+  //     setIsShiftDown(false);
+  //   }
+  // });
 
-  const moveSpeed = isShiftDown ? 0.4 : 0.3;
+  const moveSpeed = 0.35;
+  // const moveSpeed = isShiftDown ? 0.4 : 0.3;
 
   const { pressedKeys, lastPressedKey } = usePressedKeys();
 
   // we'll wait till we've moved to start the useFrame below (forget why)
   const [hasMoved, setHasMoved] = useState(false);
+  const [{ invulnerable }, setGameState] = useGameState();
   useEffect(() => {
     if (!hasMoved && pressedKeys.length !== 0) {
       setHasMoved(true);
@@ -71,11 +73,26 @@ export function usePlayerControls(): [
         const isCollisionWithPowerup = e.body.name === POWERUP_NAME;
 
         if (isCollisionWithPowerup) {
-          console.log("COLLISION!", e);
+          console.log("COLLISION! with POWERUP", e);
           setPlayerState((p) => ({ ...p, poweredUp: true }));
           setTimeout(() => {
             setPlayerState((p) => ({ ...p, poweredUp: false }));
           }, POWERUP_DURATION);
+        }
+
+        // if collides with enemy, take damage
+        const isCollisionWithEnemy = e.body.name === ENEMY_NAME;
+        if (isCollisionWithEnemy && !invulnerable) {
+          console.log("COLLISION! with ENEMY", e);
+          setGameState((p) => ({
+            ...p,
+            hitpoints: p.hitpoints - 1,
+            invulnerable: true,
+          }));
+          const INVULNERABLE_DURATION = 6 * 1000;
+          setTimeout(() => {
+            setGameState((p) => ({ ...p, invulnerable: false }));
+          }, INVULNERABLE_DURATION);
         }
       },
       type: "Static", // https://github.com/pmndrs/use-cannon#types

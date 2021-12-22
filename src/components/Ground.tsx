@@ -52,10 +52,7 @@ export function Ground() {
 
       // if it's above the max distance, shrink it down to the max distance
       const pctAboveMax = Math.abs(distance) / MAX_DISTANCE;
-      console.log(
-        "🌟🚨 ~ file: Ground.tsx ~ line 54 ~ Ground ~ pctAboveMax",
-        pctAboveMax
-      );
+
       const lookAt: [number, number, number] = [x, y, z];
 
       // if (pctAboveMax > 1) {
@@ -75,14 +72,6 @@ export function Ground() {
               normZ * MAX_DISTANCE + playerPosition[2],
             ]
           : lookAt;
-      console.log(
-        "🌟🚨 ~ file: Ground.tsx ~ line 63 ~ Ground ~ lookAt",
-        lookAt
-      );
-      console.log(
-        "🌟🚨 ~ file: Ground.tsx ~ line 60 ~ Ground ~ farthestTargetPosition",
-        farthestTargetPosition
-      );
 
       setPlayerState((p) => ({ ...p, lookAt, farthestTargetPosition }));
     }

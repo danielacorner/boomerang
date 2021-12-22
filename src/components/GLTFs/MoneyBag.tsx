@@ -11,7 +11,7 @@ import { useGLTF } from "@react-three/drei";
 import { animated, useSpring } from "@react-spring/three";
 import { useMount } from "react-use";
 
-export default function MoneyBag({ ...props }) {
+export default function MoneyBag({ fadeOut = false, ...props }) {
   const group = useRef();
   const { nodes, materials } = useGLTF("/models/money_bag/scene.gltf") as any;
 
@@ -20,10 +20,13 @@ export default function MoneyBag({ ...props }) {
     setMounted(true);
   });
 
-  const { opacity } = useSpring({
-    opacity: mounted ? 1 : 0,
-    config: { mass: 100, tension: 50, friction: 20 },
-  });
+  const [{ opacity }] = useSpring(
+    {
+      opacity: mounted && !fadeOut ? 1 : 0,
+      config: { mass: 100, tension: 50, friction: 20 },
+    },
+    [mounted, fadeOut]
+  );
 
   return (
     <group ref={group} {...props} dispose={null}>

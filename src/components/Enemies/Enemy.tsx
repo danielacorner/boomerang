@@ -9,7 +9,7 @@ import {
   usePowerupPositions,
 } from "../../store";
 import { HpBar } from "./HpBar";
-import { GROUND_NAME, BOOMERANG_NAME } from "../../utils/constants";
+import { GROUND_NAME, BOOMERANG_NAME, ENEMY_NAME } from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 
 const ENEMY_JITTER_SPEED = 2;
@@ -67,6 +67,7 @@ export function Enemy({ children, unmountEnemy }) {
         material-transparent={true}
         material-opacity={opacity}
         ref={enemyRef}
+        name={ENEMY_NAME}
       >
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
