@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import MoneyBag from "../GLTFs/MoneyBag";
 import { useMount } from "react-use";
 import { useCylinder } from "@react-three/cannon";
-import { useMoney, usePlayerState } from "../../store";
+import { useGameState, usePlayerState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 
 const BAG_RADIUS = 1;
@@ -10,15 +10,9 @@ const BAG_RADIUS = 1;
 const MAX_BAGS_DROPPED = 10;
 export function DroppedMoney({ position }) {
   const numBags = useRef(Math.ceil(Math.random() * MAX_BAGS_DROPPED)).current;
-  console.log(
-    "🌟🚨 ~ file: DroppedMoney.tsx ~ line 12 ~ DroppedMoney ~ numBags",
-    numBags
-  );
   return (
     <group>
-      {[...new Array(numBags)].map((_, idx) => (
-        <Bag key={idx} {...{ position }} />
-      ))}
+      <Bag {...{ position }} />
     </group>
   );
 }
@@ -30,7 +24,7 @@ function Bag({ position }) {
   return mounted ? <BagContent {...{ position, setMounted }} /> : null;
 }
 function BagContent({ position, setMounted }) {
-  const [money, setMoney] = useMoney();
+  const [, setGameState] = useGameState();
   const [ref, api] = useCylinder(() => ({
     args: [1, 1, BAG_RADIUS, 6],
     mass: 1,
@@ -38,7 +32,7 @@ function BagContent({ position, setMounted }) {
     onCollide: (e) => {
       // when the player touches it, gain +1 money
       if (e.body.name === "player") {
-        setMoney((p) => p + 1);
+        setGameState((p) => ({ ...p, money: p.money + 1 }));
         setMounted(false);
       }
     },

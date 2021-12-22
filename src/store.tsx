@@ -25,8 +25,12 @@ export function usePlayerState() {
   return useAtom(playerStateAtom);
 }
 
-const moneyAtom = atom<number>(0);
-export const useMoney = () => useAtom(moneyAtom);
+const gameStateAtom = atom<{ money: number; hitpoints: number }>({
+  money: 0,
+  hitpoints: 100,
+});
+export const useGameState = () => useAtom(gameStateAtom);
+
 const isDevAtom = atom<boolean>(process.env.NODE_ENV === "development");
 export const useIsDev = () => useAtom(isDevAtom);
 
