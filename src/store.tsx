@@ -28,16 +28,19 @@ export function usePlayerState() {
   return useAtom(playerStateAtom);
 }
 
-const gameStateAtom = atomWithStorage<{
-  money: number;
+const gameStateAtom = atom<{
+  boomerangs: number;
   hitpoints: number;
   invulnerable: boolean;
-}>("gameState", {
-  money: 0,
+}>({
+  boomerangs: 1,
   hitpoints: 100,
   invulnerable: false,
 });
 export const useGameState = () => useAtom(gameStateAtom);
+
+const moneyAtom = atomWithStorage<number>("money", 0);
+export const useMoney = () => useAtom(moneyAtom);
 
 const isDevAtom = atom<boolean>(process.env.NODE_ENV === "development");
 export const useIsDev = () => useAtom(isDevAtom);

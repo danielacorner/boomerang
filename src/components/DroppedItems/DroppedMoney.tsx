@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import MoneyBag from "../GLTFs/MoneyBag";
 import { useMount } from "react-use";
 import { useCylinder } from "@react-three/cannon";
-import { useGameState, usePlayerState } from "../../store";
+import { useMoney, usePlayerState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
 
@@ -34,7 +34,7 @@ function BagContent({ position, setMounted }) {
     [collectedStatus]
   );
 
-  const [, setGameState] = useGameState();
+  const [, setMoney] = useMoney();
   const [ref, api] = useCylinder(() => ({
     args: [1, 1, BAG_RADIUS, 6],
     mass: 1,
@@ -42,7 +42,7 @@ function BagContent({ position, setMounted }) {
     onCollide: (e) => {
       // when the player touches it, gain +1 money
       if (e.body.name === "player") {
-        setGameState((p) => ({ ...p, money: p.money + 1 }));
+        setMoney((p) => p + 1);
         setCollectedStatus("collected");
         setTimeout(() => {
           setMounted(false);

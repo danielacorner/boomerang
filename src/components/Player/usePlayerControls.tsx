@@ -52,7 +52,7 @@ export function usePlayerControls(): [
 
   // we'll wait till we've moved to start the useFrame below (forget why)
   const [hasMoved, setHasMoved] = useState(false);
-  const [{ invulnerable }, setGameState] = useGameState();
+  const [, setGameState] = useGameState();
   useEffect(() => {
     if (!hasMoved && pressedKeys.length !== 0) {
       setHasMoved(true);

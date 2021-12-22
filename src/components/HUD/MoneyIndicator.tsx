@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { useGameState } from "../../store";
+import { useMoney } from "../../store";
 
-export function Score() {
-  const [{ money }] = useGameState();
+export function MoneyIndicator() {
+  const [money] = useMoney();
   return <ScoreStyles>💰 {money}</ScoreStyles>;
 }
 const ScoreStyles = styled.div`
