@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import { CanvasAndScene } from "./CanvasAndScene";
-import { Controls } from "./Controls";
+import HUD from "./components/HUD/HUD";
 
 function App() {
   return (
     <AppStyles>
       <CanvasAndScene />
-      <Controls />
+      <HUD />
     </AppStyles>
   );
 }

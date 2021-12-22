@@ -1,33 +1,28 @@
 import { useRef, useState } from "react";
 import MoneyBag from "../GLTFs/MoneyBag";
 import { useMount } from "react-use";
-import { useSphere } from "@react-three/cannon";
-import { MeshWobbleMaterial } from "@react-three/drei";
+import { useCylinder } from "@react-three/cannon";
+import { useMoney, usePlayerState } from "../../store";
+import { useFrame } from "@react-three/fiber";
 
 const BAG_RADIUS = 1;
 
 const MAX_BAGS_DROPPED = 10;
 export function DroppedMoney({ position }) {
   const numBags = useRef(Math.ceil(Math.random() * MAX_BAGS_DROPPED)).current;
+  console.log(
+    "🌟🚨 ~ file: DroppedMoney.tsx ~ line 12 ~ DroppedMoney ~ numBags",
+    numBags
+  );
   return (
     <group>
       {[...new Array(numBags)].map((_, idx) => (
         <Bag key={idx} {...{ position }} />
       ))}
-      <DroppedDollarBills />
     </group>
   );
 }
-function DroppedDollarBills() {
-  return (
-    <mesh>
-      <boxBufferGeometry attach="geometry" args={[3, 1, 0.001]} />
-      <MeshWobbleMaterial color="#37b830" {...({} as any)} />
-    </mesh>
-  );
-}
-
-const UNMOUNT_DELAY = 3 * 1000;
+const UNMOUNT_DELAY = 10 * 1000;
 
 function Bag({ position }) {
   const [mounted, setMounted] = useState(true);
@@ -35,10 +30,18 @@ function Bag({ position }) {
   return mounted ? <BagContent {...{ position, setMounted }} /> : null;
 }
 function BagContent({ position, setMounted }) {
-  const [ref, api] = useSphere(() => ({
-    mass: 0.8,
+  const [money, setMoney] = useMoney();
+  const [ref, api] = useCylinder(() => ({
+    args: [1, 1, BAG_RADIUS, 6],
+    mass: 1,
     position,
-    args: [BAG_RADIUS],
+    onCollide: (e) => {
+      // when the player touches it, gain +1 money
+      if (e.body.name === "player") {
+        setMoney((p) => p + 1);
+        setMounted(false);
+      }
+    },
   }));
   useMount(() => {
     if (!ref.current) {
@@ -60,9 +63,33 @@ function BagContent({ position, setMounted }) {
     setTimeout(() => setMounted(false), UNMOUNT_DELAY);
   });
 
+  // pull the bag towards the player
+  const [{ playerPosition }] = usePlayerState();
+  useFrame(() => {
+    if (!ref.current || !playerPosition) return;
+    const direction = [
+      playerPosition[0] - position[0],
+      playerPosition[1] - position[1],
+      playerPosition[2] - position[2],
+    ];
+    const distance = Math.sqrt(
+      direction[0] * direction[0] +
+        direction[1] * direction[1] +
+        direction[2] * direction[2]
+    );
+    const force: [number, number, number] = [
+      direction[0] / distance,
+      direction[1] / distance,
+      direction[2] / distance,
+    ];
+    api.applyForce(force, position);
+  });
+
   return (
     <mesh ref={ref} scale={0.1}>
-      <MoneyBag />
+      <mesh position={[0, -4, 0]}>
+        <MoneyBag />
+      </mesh>
     </mesh>
   );
 }

@@ -6,7 +6,7 @@ import { useSphere } from "@react-three/cannon";
 const BOOMERANG_RADIUS = 1;
 const BOOMERANG_PULL_FORCE = 0.1;
 const BOOMERANG_FLY_MAX_DURATION = 12 * 1000;
-const THROW_SPEED = 2;
+const THROW_SPEED = 3;
 const INITIAL_POSITION: [number, number, number] = [0, 1, 0];
 const PLAYER_RADIUS = 1.5;
 
@@ -15,7 +15,7 @@ export function useBoomerangMovement(
   playerPosition: [number, number, number],
   playerRef
 ) {
-  const [{ lookAt, poweredUp }] = usePlayerState();
+  const [{ poweredUp }] = usePlayerState();
 
   // boomerang state & click position
   const [{ status, clickTargetPosition }, setBoomerangState] =

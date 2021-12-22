@@ -6,7 +6,7 @@ import { useCallback, useState } from "react";
 import { useInterval, useMount } from "react-use";
 import { useGLTF } from "@react-three/drei";
 
-const MAX_ENEMIES = 50;
+const MAX_ENEMIES = 16;
 
 export function Enemies() {
   const [Enemies, setEnemies] = useState<any>([]);
