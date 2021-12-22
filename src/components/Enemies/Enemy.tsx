@@ -4,9 +4,9 @@ import * as THREE from "three";
 import { useCylinder } from "@react-three/cannon";
 import {
   useBoomerangState,
-  useDroppedMoneyPositions,
   usePlayerState,
-  usePowerupPositions,
+  useDroppedItems,
+  ITEM_TYPES,
 } from "../../store";
 import { HpBar } from "./HpBar";
 import { GROUND_NAME, BOOMERANG_NAME, ENEMY_NAME } from "../../utils/constants";
@@ -79,13 +79,13 @@ export function Enemy({ children, unmountEnemy }) {
 }
 
 const POWERUP_PROBABILITY = 0.2;
+const RANGEUP_PROBABILITY = 0.1;
 
 function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
   const [{ status }] = useBoomerangState();
   const [{ poweredUp }] = usePlayerState();
   const [theyDroppedItems, setTheyDroppedItems] = useState(false);
-  const [, setDroppedMoneyPositions] = useDroppedMoneyPositions();
-  const [, setPowerupPositions] = usePowerupPositions();
+  const [, setDroppedItems] = useDroppedItems();
   const [enemyRef, api] = useCylinder(
     () => ({
       args: [3, 1, CYLINDER_HEIGHT, 6],
@@ -100,41 +100,49 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
         setHealthPercent((prevHealthPct) => {
           const _theyDied = prevHealthPct === 0;
           // after they died, when they hit the ground again, they drop their moneys
-          const shouldDropMoneys = _theyDied && isCollisionWithGround;
-          if (shouldDropMoneys) {
+          const shouldDropItems = _theyDied && isCollisionWithGround;
+          if (shouldDropItems) {
             setTheyDroppedItems(true);
-            const mPosition: [number, number, number] = [
-              position.current[0] + Math.random() - 0.5,
-              position.current[1] + Math.random() - 0.5,
-              position.current[2] + Math.random() - 0.5,
-            ];
-            const newMoney = {
-              position: mPosition,
-            };
-            setDroppedMoneyPositions((p) => [...p, newMoney]);
-
-            const powerup = Math.random() > 1 - POWERUP_PROBABILITY;
-            if (powerup) {
-              const pPosition: [number, number, number] = [
+            setTimeout(() => {
+              const mPosition: [number, number, number] = [
                 position.current[0] + Math.random() - 0.5,
                 position.current[1] + Math.random() - 0.5,
                 position.current[2] + Math.random() - 0.5,
               ];
-              const newPowerup = {
-                position: pPosition,
-                unmounted: false,
-                unmount: () => {
-                  setPowerupPositions((p) =>
-                    p.map((pup) =>
-                      pup.position === pPosition
-                        ? { ...pup, unmounted: true }
-                        : pup
-                    )
-                  );
-                },
+              const newMoney = {
+                position: mPosition,
+                type: ITEM_TYPES.MONEY,
               };
-              setPowerupPositions((p) => [...p, newPowerup]);
-            }
+              setDroppedItems((p) => [...p, newMoney]);
+
+              const powerup = Math.random() > 1 - POWERUP_PROBABILITY;
+              if (powerup) {
+                const pPosition: [number, number, number] = [
+                  position.current[0] + Math.random() - 0.5,
+                  position.current[1] + Math.random() - 0.5,
+                  position.current[2] + Math.random() - 0.5,
+                ];
+                const newPowerup = {
+                  position: pPosition,
+                  type: ITEM_TYPES.POWERUP,
+                };
+                setDroppedItems((p) => [...p, newPowerup]);
+              }
+
+              const rangeUp = Math.random() > 1 - RANGEUP_PROBABILITY;
+              if (rangeUp) {
+                const rPosition: [number, number, number] = [
+                  position.current[0] + Math.random() - 0.5,
+                  position.current[1] + Math.random() - 0.5,
+                  position.current[2] + Math.random() - 0.5,
+                ];
+                const newPowerup = {
+                  position: rPosition,
+                  type: ITEM_TYPES.RANGEUP,
+                };
+                setDroppedItems((p) => [...p, newPowerup]);
+              }
+            });
           }
 
           // subtract some hp when they hit the boomerang

@@ -7,9 +7,8 @@ import { GROUND_NAME } from "../utils/constants";
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
-
   const [{ status }, setBoomerangState] = useBoomerangState();
-  const [{ farthestTargetPosition, playerPosition }, setPlayerState] =
+  const [{ farthestTargetPosition, playerPosition, rangeUp }, setPlayerState] =
     usePlayerState();
 
   const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
@@ -26,7 +25,7 @@ export function Ground() {
     }
 
     setBoomerangState((p) =>
-      p.status === "idle"
+      p.status === "idle" || rangeUp
         ? {
             ...p,
             status: "flying",
@@ -34,29 +33,28 @@ export function Ground() {
           }
         : p
     );
+
     onPointerMove(e);
   };
 
-  // const onRightClick=()=>{
-
-  // }
-
-  const MAX_DISTANCE = 12;
+  const MAX_THROW_DISTANCE = 12;
 
   const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = (e) => {
-    if (status !== "flying" && playerPosition) {
+    if ((rangeUp || status !== "flying") && playerPosition) {
       const { x, y, z } = getMousePosition(e);
 
       // limit the throw distance
       const distance = distanceBetweenPoints(playerPosition, [x, y, z]);
 
       // if it's above the max distance, shrink it down to the max distance
-      const pctAboveMax = Math.abs(distance) / MAX_DISTANCE;
+      const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
+
+      const pctAboveMax = Math.abs(distance) / maxThrowDistance;
 
       const lookAt: [number, number, number] = [x, y, z];
 
-      // if (pctAboveMax > 1) {
-      // TODO: normalize, then multiply by MAX_DISTANCE
+      // if the distance is above the max distance, scale it down
+      // (normalize, then multiply by maxThrowDistance)
 
       const [normX, normY, normZ] = normalizeVector([
         x - playerPosition[0],
@@ -67,9 +65,9 @@ export function Ground() {
       const farthestTargetPosition: [number, number, number] =
         pctAboveMax > 1
           ? [
-              normX * MAX_DISTANCE + playerPosition[0],
-              normY * MAX_DISTANCE + playerPosition[1],
-              normZ * MAX_DISTANCE + playerPosition[2],
+              normX * maxThrowDistance + playerPosition[0],
+              normY * maxThrowDistance + playerPosition[1],
+              normZ * maxThrowDistance + playerPosition[2],
             ]
           : lookAt;
 

@@ -35,7 +35,13 @@ function Mage({ playerRef, targetRef }) {
 
   const [blinkOn, setBlinkOn] = useState(false);
 
-  const { scale } = useSpring({
+  useEffect(() => {
+    if (invulnerable) {
+      setBlinkOn(true);
+    }
+  }, [invulnerable]);
+
+  const { scale, opacity } = useSpring({
     scale: poweredUp ? 2.4 : 1,
     opacity: blinkOn ? 0 : 1,
     onRest: () => {
@@ -53,7 +59,13 @@ function Mage({ playerRef, targetRef }) {
         <mesh ref={targetRef} />
       </MouseTarget>
 
-      <animated.mesh scale={scale} ref={playerRef} name={PLAYER_NAME}>
+      <animated.mesh
+        scale={scale}
+        material-transparent={true}
+        material-opacity={opacity}
+        ref={playerRef}
+        name={PLAYER_NAME}
+      >
         <Bm position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
       </animated.mesh>
     </>

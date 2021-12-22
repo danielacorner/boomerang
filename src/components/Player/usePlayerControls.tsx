@@ -6,7 +6,12 @@ import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
 import { useEventListener } from "../../utils/useEventListener";
 import { useBoomerangState, useGameState, usePlayerState } from "../../store";
 import { useOrbitControlsAngle } from "../OrbitControlsWithAngle";
-import { ENEMY_NAME, POWERUP_NAME } from "../../utils/constants";
+import {
+  ENEMY_NAME,
+  GROUND_NAME,
+  POWERUP_NAME,
+  RANGEUP_NAME,
+} from "../../utils/constants";
 
 const POWERUP_DURATION = 10 * 1000;
 const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
@@ -68,10 +73,29 @@ export function usePlayerControls(): [
     () => ({
       mass: 1,
       position: [0, 2, 0],
+      // if collides with powerup, power up!
       onCollide: (e) => {
+        // if collides with enemy, take damage
+        const isCollisionWithEnemy = e.body.name === ENEMY_NAME;
+        if (isCollisionWithEnemy) {
+          console.log("COLLISION! with ENEMY", e);
+          setGameState((p) =>
+            p.invulnerable
+              ? p
+              : {
+                  ...p,
+                  hitpoints: p.hitpoints - 1,
+                  invulnerable: true,
+                }
+          );
+          const INVULNERABLE_DURATION = 6 * 1000;
+          setTimeout(() => {
+            setGameState((p) => ({ ...p, invulnerable: false }));
+          }, INVULNERABLE_DURATION);
+        }
+
         // if collides with powerup, power up!
         const isCollisionWithPowerup = e.body.name === POWERUP_NAME;
-
         if (isCollisionWithPowerup) {
           console.log("COLLISION! with POWERUP", e);
           setPlayerState((p) => ({ ...p, poweredUp: true }));
@@ -80,19 +104,14 @@ export function usePlayerControls(): [
           }, POWERUP_DURATION);
         }
 
-        // if collides with enemy, take damage
-        const isCollisionWithEnemy = e.body.name === ENEMY_NAME;
-        if (isCollisionWithEnemy && !invulnerable) {
-          console.log("COLLISION! with ENEMY", e);
-          setGameState((p) => ({
-            ...p,
-            hitpoints: p.hitpoints - 1,
-            invulnerable: true,
-          }));
-          const INVULNERABLE_DURATION = 6 * 1000;
+        // if collides with rangeup, range up!
+        const isCollisionWithRangeup = e.body.name === RANGEUP_NAME;
+        if (isCollisionWithRangeup) {
+          console.log("COLLISION! with RANGEUP", e);
+          setPlayerState((p) => ({ ...p, rangeUp: true }));
           setTimeout(() => {
-            setGameState((p) => ({ ...p, invulnerable: false }));
-          }, INVULNERABLE_DURATION);
+            setPlayerState((p) => ({ ...p, rangeUp: false }));
+          }, POWERUP_DURATION);
         }
       },
       type: "Static", // https://github.com/pmndrs/use-cannon#types

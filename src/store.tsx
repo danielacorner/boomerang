@@ -16,11 +16,13 @@ const playerStateAtom = atom<{
   playerPosition: [number, number, number] | null;
   farthestTargetPosition: [number, number, number] | null;
   poweredUp: boolean;
+  rangeUp: boolean;
 }>({
   lookAt: [0, 0, 0],
   playerPosition: null,
   farthestTargetPosition: null,
   poweredUp: false,
+  rangeUp: false,
 });
 export function usePlayerState() {
   return useAtom(playerStateAtom);
@@ -40,16 +42,16 @@ export const useGameState = () => useAtom(gameStateAtom);
 const isDevAtom = atom<boolean>(process.env.NODE_ENV === "development");
 export const useIsDev = () => useAtom(isDevAtom);
 
-const droppedMoneyPositionsAtom = atom<
+export enum ITEM_TYPES {
+  POWERUP = "powerup",
+  RANGEUP = "rangeup",
+  MONEY = "money",
+}
+
+const droppedItemsAtom = atom<
   {
     position: [number, number, number];
+    type: ITEM_TYPES;
   }[]
 >([]);
-export const useDroppedMoneyPositions = () =>
-  useAtom(droppedMoneyPositionsAtom);
-const powerupPositionsAtom = atom<
-  {
-    position: [number, number, number];
-  }[]
->([]);
-export const usePowerupPositions = () => useAtom(powerupPositionsAtom);
+export const useDroppedItems = () => useAtom(droppedItemsAtom);

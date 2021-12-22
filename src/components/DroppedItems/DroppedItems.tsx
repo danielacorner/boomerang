@@ -1,12 +1,20 @@
 import { DroppedMoney } from "./DroppedMoney";
-import { useDroppedMoneyPositions, usePowerupPositions } from "../../store";
+import { ITEM_TYPES, useDroppedItems } from "../../store";
 import { DroppedPowerup } from "./DroppedPowerup";
 import React from "react";
-import { useMount } from "react-use";
+import { DroppedRangeup } from "./DroppedRangeup";
 
 export function DroppedItems() {
-  const [droppedMoneyPositions] = useDroppedMoneyPositions();
-  const [powerupPositions] = usePowerupPositions();
+  const [droppedItems] = useDroppedItems();
+  const droppedMoneyPositions = droppedItems.filter(
+    ({ type }) => type === ITEM_TYPES.MONEY
+  );
+  const droppedPowerupPositions = droppedItems.filter(
+    ({ type }) => type === ITEM_TYPES.POWERUP
+  );
+  const droppedRangeupPositions = droppedItems.filter(
+    ({ type }) => type === ITEM_TYPES.RANGEUP
+  );
   return (
     <>
       {droppedMoneyPositions.map(({ position }) => (
@@ -14,9 +22,14 @@ export function DroppedItems() {
           <DroppedMoney {...{ position }} />
         </React.Fragment>
       ))}
-      {powerupPositions.map(({ position }) => (
+      {droppedPowerupPositions.map(({ position }) => (
         <React.Fragment key={JSON.stringify(position)}>
           <DroppedPowerup {...{ position }} />
+        </React.Fragment>
+      ))}
+      {droppedRangeupPositions.map(({ position }) => (
+        <React.Fragment key={JSON.stringify(position)}>
+          <DroppedRangeup {...{ position }} />
         </React.Fragment>
       ))}
     </>

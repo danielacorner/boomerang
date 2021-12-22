@@ -19,7 +19,7 @@ export function DroppedPowerup({ position }) {
 }
 export function DroppedPowerupContent({ position, setMounted }) {
   const [ref, api] = useCylinder(() => ({
-    args: [3, 1, POWERUP_HEIGHT, 6],
+    args: [2, 2, POWERUP_HEIGHT, 6],
     mass: 200,
     position,
     onCollide: (e) => {

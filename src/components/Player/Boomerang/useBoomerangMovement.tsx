@@ -15,7 +15,7 @@ export function useBoomerangMovement(
   playerPosition: [number, number, number],
   playerRef
 ) {
-  const [{ poweredUp }] = usePlayerState();
+  const [{ poweredUp, rangeUp }] = usePlayerState();
 
   // boomerang state & click position
   const [{ status, clickTargetPosition }, setBoomerangState] =
@@ -59,8 +59,7 @@ export function useBoomerangMovement(
   // throw on click
   useEffect(() => {
     if (clickTargetPosition && status === "flying") {
-      // TODO: maximum velocity
-
+      thrownTime.current = Date.now();
       const throwVelocity: [number, number, number] = [
         clickTargetPosition[0] - position.current[0],
         clickTargetPosition[1] - position.current[1],
@@ -77,9 +76,6 @@ export function useBoomerangMovement(
 
   useFrame(() => {
     if (status === "returning" && clickTargetPosition) {
-      if (!thrownTime.current) {
-        thrownTime.current = Date.now();
-      }
       const time = Date.now() - thrownTime.current;
       const slowDownPct =
         (1 - Math.min(time / BOOMERANG_FLY_MAX_DURATION, 1)) ** 0.5;
@@ -92,19 +88,23 @@ export function useBoomerangMovement(
         playerPosition[2] - position.current[2],
       ];
 
+      const pullForce = BOOMERANG_PULL_FORCE * (rangeUp ? 0.5 : 1);
+
       const newVelocity: [number, number, number] = [
-        velocity.current[0] + pullBoomerang[0] * BOOMERANG_PULL_FORCE,
-        velocity.current[1] + pullBoomerang[1] * BOOMERANG_PULL_FORCE,
-        velocity.current[2] + pullBoomerang[2] * BOOMERANG_PULL_FORCE,
+        velocity.current[0] + pullBoomerang[0] * pullForce,
+        velocity.current[1] + pullBoomerang[1] * pullForce,
+        velocity.current[2] + pullBoomerang[2] * pullForce,
       ].map((velocity) => velocity * slowDownPct) as [number, number, number];
 
       api.velocity.set(...newVelocity);
 
+      const playerRadius = PLAYER_RADIUS * (rangeUp ? 2 : 1);
+
       // if the boomerang is close to the player, set the boomerang to the player's position
       const isAtPlayer =
-        Math.abs(pullBoomerang[0]) < PLAYER_RADIUS &&
-        Math.abs(pullBoomerang[1]) < PLAYER_RADIUS &&
-        Math.abs(pullBoomerang[2]) < PLAYER_RADIUS;
+        Math.abs(pullBoomerang[0]) < playerRadius &&
+        Math.abs(pullBoomerang[1]) < playerRadius &&
+        Math.abs(pullBoomerang[2]) < playerRadius;
 
       if (isAtPlayer && thrownTime.current > 1500) {
         api.position.set(...playerPosition);
