@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { useBoomerangState } from "../../store";
+import { useHeldBoomerangs } from "../../store";
 import { usePrevious } from "react-use";
 import { useSpring, animated } from "@react-spring/three";
 const FLASH_TIME = 200;
 
-export function FlashWhenStatusChanges() {
-  const [{ status }, setBoomerangState] = useBoomerangState();
+export function FlashWhenStatusChanges({ idx }) {
+  const [heldBoomerangs] = useHeldBoomerangs();
+  const { status } = heldBoomerangs[idx];
   const [flash, setFlash] = useState(false);
   const prevStatus = usePrevious(status);
   useEffect(() => {

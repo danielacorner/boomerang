@@ -4,11 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
 import { useEventListener } from "../../utils/useEventListener";
-import { useBoomerangState, useGameState, usePlayerState } from "../../store";
+import { useHeldBoomerangs, useGameState, usePlayerState } from "../../store";
 import {
   BOOMERANG_ITEM_NAME,
   ENEMY_NAME,
-  GROUND_NAME,
   POWERUP_NAME,
   RANGEUP_NAME,
 } from "../../utils/constants";
@@ -31,7 +30,7 @@ export function usePlayerControls(): [
   >>,
   playerPosition: number[]
 ] {
-  const [{ clickTargetPosition }] = useBoomerangState();
+  const [, setHeldBoomerangs] = useHeldBoomerangs();
 
   // const [isShiftDown, setIsShiftDown] = useState(false);
   // useEventListener("keydown", (e) => {
@@ -115,10 +114,14 @@ export function usePlayerControls(): [
         }
 
         // if collides with dropped boomerang, record it
-        const isCollisionWithboomerang = e.body.name === BOOMERANG_ITEM_NAME;
-        if (isCollisionWithboomerang) {
+        const isCollisionWithBoomerang = e.body.name === BOOMERANG_ITEM_NAME;
+        if (isCollisionWithBoomerang) {
           console.log("COLLISION! with boomerang", e);
-          setGameState((p) => ({ ...p, boomerangs: p.boomerangs + 1 }));
+          const newBoomerang = {
+            status: "idle" as any,
+            clickTargetPosition: null,
+          };
+          setHeldBoomerangs((p) => [...p, newBoomerang]);
         }
       },
       type: "Static", // https://github.com/pmndrs/use-cannon#types
@@ -166,9 +169,8 @@ export function usePlayerControls(): [
     ];
     api.position.set(x2, y2, z2);
 
-    // TODO: account for orbitControls rotation
-
-    const newRotY = getAngleBetweenPoints(
+    // TODO: rotate to lookAt position
+    const newRotY = -getAngleFromCenter(
       [playerRef.current.position.x, playerRef.current.position.z],
       [lookAt[0], lookAt[2]]
     );
@@ -209,10 +211,9 @@ function getPlayerRotation(lastPressedKey) {
     : 0;
 }
 
-function getAngleBetweenPoints([x1, y1], [x2, y2]) {
+function getAngleFromCenter([x1, y1], [x2, y2]) {
   const dx = x2 - x1;
   const dy = y2 - y1;
   const radians = Math.atan2(dy, dx);
-  const degrees = (radians * 180) / Math.PI;
-  return degrees;
+  return radians * (180 / Math.PI);
 }

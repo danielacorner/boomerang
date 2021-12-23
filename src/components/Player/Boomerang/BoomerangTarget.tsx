@@ -1,8 +1,8 @@
-import { useBoomerangState } from "../../../store";
+import { useHeldBoomerangs } from "../../../store";
 import { animated, useSpring } from "@react-spring/three";
 
 export function BoomerangTarget() {
-  const [{ status, clickTargetPosition }] = useBoomerangState();
+  const [[{ status, clickTargetPosition }]] = useHeldBoomerangs();
   const { scale, opacity } = useSpring({
     scale: status === "flying" ? 1 : 0.4,
     opacity: status === "flying" ? 0.2 : 0.1,

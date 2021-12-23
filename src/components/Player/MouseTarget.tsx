@@ -1,6 +1,6 @@
 import { ThreeEvent } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
-import { useBoomerangState, usePlayerState } from "../../store";
+import { useHeldBoomerangs, usePlayerState } from "../../store";
 
 export function MouseTarget({ children }) {
   const ref = useRef<THREE.Mesh | null>(null);
@@ -13,7 +13,8 @@ export function MouseTarget({ children }) {
     ref.current.position.set(x, y, z);
   }, [lookAt]);
   // ref.current.position.set(x, y, z);
-  const [{ status }] = useBoomerangState();
+  const [heldBoomerangs] = useHeldBoomerangs();
+  const { status } = heldBoomerangs[0];
   return (
     <mesh ref={ref}>
       <sphereBufferGeometry args={[0.6, 16, 16]} />

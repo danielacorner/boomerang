@@ -3,7 +3,7 @@ import BlackMage from "../GLTFs/BlackMage";
 import { BoomerangTarget } from "./Boomerang/BoomerangTarget";
 import { MouseTarget } from "./MouseTarget";
 import { useEffect, useState } from "react";
-import { useBoomerangState, useGameState, usePlayerState } from "../../store";
+import { useHeldBoomerangs, useGameState, usePlayerState } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
 import { PLAYER_NAME } from "../../utils/constants";
 import { BoomerangWithControls } from "./Boomerang/BoomerangWithControls";
@@ -24,15 +24,6 @@ export function Player() {
 function Mage({ playerRef, targetRef }) {
   const [{ poweredUp }] = usePlayerState();
   const [{ invulnerable }] = useGameState();
-
-  const [{ clickTargetPosition }] = useBoomerangState();
-  useEffect(() => {
-    // rotate the player
-    if (playerRef.current && clickTargetPosition) {
-      playerRef.current.lookAt(...clickTargetPosition);
-      return;
-    }
-  }, [clickTargetPosition]);
 
   const [blinkOn, setBlinkOn] = useState(false);
 
@@ -80,18 +71,19 @@ function RangeupIndicator() {
   return (
     <animated.mesh scale={scale} position={[0, 2, 0]}>
       <Spin>
-        <BoomerangModel />
+        <BoomerangModel idx={Infinity} />
       </Spin>
     </animated.mesh>
   );
 }
 
 function Boomerang({ playerPosition, playerRef }) {
-  const [{ boomerangs }] = useGameState();
+  const [heldBoomerangs] = useHeldBoomerangs();
   return (
     <>
-      {[...new Array(boomerangs)].map((_, idx) => (
+      {heldBoomerangs.map((_, idx) => (
         <BoomerangWithControls
+          key={idx}
           idx={idx}
           playerPosition={playerPosition}
           ref={playerRef}

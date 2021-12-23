@@ -37,7 +37,9 @@ export function Enemies() {
             ),
         },
       ];
-      return newEnemies.length > MAX_ENEMIES ? p : newEnemies;
+      return newEnemies.filter((e) => !e.unmounted).length > MAX_ENEMIES
+        ? p
+        : newEnemies;
     });
   }, []);
 

@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
-import { useBoomerangState, usePlayerState } from "../../../store";
+import { useHeldBoomerangs, usePlayerState } from "../../../store";
 import { useFrame } from "@react-three/fiber";
 import { useSphere } from "@react-three/cannon";
+import { isEqual } from "@react-spring/shared";
 
 const BOOMERANG_RADIUS = 1;
 const BOOMERANG_PULL_FORCE = 0.1;
@@ -13,13 +14,14 @@ const PLAYER_RADIUS = 1.5;
 /** shoots a boomerang when you click */
 export function useBoomerangMovement(
   playerPosition: [number, number, number],
-  playerRef
+  playerRef,
+  idx
 ) {
   const [{ poweredUp, rangeUp }] = usePlayerState();
 
   // boomerang state & click position
-  const [{ status, clickTargetPosition }, setBoomerangState] =
-    useBoomerangState();
+  const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
+  const { status, clickTargetPosition } = heldBoomerangs[idx];
 
   const isIdle = status === "idle";
 
@@ -67,7 +69,11 @@ export function useBoomerangMovement(
       ].map((v) => v * THROW_SPEED) as [number, number, number];
       api.velocity.set(...throwVelocity);
       setTimeout(() => {
-        setBoomerangState((p) => ({ ...p, status: "returning" }));
+        setHeldBoomerangs((p) =>
+          p.map((boom, bIdx) =>
+            bIdx === idx ? { ...boom, status: "returning" } : boom
+          )
+        );
       }, 300);
     }
   }, [clickTargetPosition, status]);
@@ -109,11 +115,17 @@ export function useBoomerangMovement(
       if (isAtPlayer && thrownTime.current > 1500) {
         api.position.set(...playerPosition);
         thrownTime.current = null;
-        setBoomerangState((p) => ({
-          ...p,
-          status: "idle",
-          clickTargetPosition: null,
-        }));
+        setHeldBoomerangs((p) =>
+          p.map((boom, bIdx) =>
+            isEqual(boom.clickTargetPosition, clickTargetPosition)
+              ? {
+                  ...boom,
+                  status: "idle",
+                  clickTargetPosition: null,
+                }
+              : boom
+          )
+        );
         api.velocity.set(0, 0, 0);
       }
     }

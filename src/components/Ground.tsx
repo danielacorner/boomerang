@@ -1,20 +1,21 @@
 import { Plane, useTexture } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
-import { useBoomerangState, usePlayerState } from "../store";
+import { useHeldBoomerangs, usePlayerState } from "../store";
 import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { GROUND_NAME } from "../utils/constants";
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
-  const [{ status }, setBoomerangState] = useBoomerangState();
+  const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
+  console.log(
+    "🌟🚨 ~ file: Ground.tsx ~ line 11 ~ Ground ~ heldBoomerangs",
+    heldBoomerangs
+  );
   const [{ farthestTargetPosition, playerPosition, rangeUp }, setPlayerState] =
     usePlayerState();
 
   const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
-    // ? for some reason this fires 5 times: 4 times as [0,0,0] and one time as the actual target
-    // (only occurs when clicking the top half of the screen, in the initial camera rotation))
-
     if (
       !farthestTargetPosition ||
       (farthestTargetPosition[0] === 0 &&
@@ -24,14 +25,32 @@ export function Ground() {
       return;
     }
 
-    setBoomerangState((p) =>
-      p.status === "idle" || rangeUp
-        ? {
-            ...p,
-            status: "flying",
-            clickTargetPosition: farthestTargetPosition,
+    setHeldBoomerangs(
+      (currentBoomerangs) => {
+        let found = false;
+        return currentBoomerangs.map((boom) => {
+          if (!found && !boom.clickTargetPosition) {
+            found = true;
+            return {
+              ...boom,
+              status: "flying",
+              clickTargetPosition: farthestTargetPosition,
+            };
           }
-        : p
+          return boom;
+        });
+      }
+
+      // p.status === "idle" || rangeUp
+      //   ? {
+      //       ...p,
+      //       status: "flying",
+      //       clickTargetPositions: [
+      //         ...p.clickTargetPositions,
+      //         farthestTargetPosition,
+      //       ],
+      //     }
+      //   : p
     );
 
     onPointerMove(e);

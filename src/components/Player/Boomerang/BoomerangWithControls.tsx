@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import BoomerangModel from "../../GLTFs/BoomerangModel";
 import * as THREE from "three";
-import { useBoomerangState, usePlayerState } from "../../../store";
+import { useHeldBoomerangs, usePlayerState } from "../../../store";
 import { FlashWhenStatusChanges } from "./../FlashWhenStatusChanges";
 import { BOOMERANG_NAME } from "../../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
@@ -12,12 +12,14 @@ export const BoomerangWithControls = forwardRef(
   (
     {
       playerPosition,
+      // TODO: use idx to only shoot one at a time
       idx,
     }: { playerPosition: [number, number, number]; idx: number },
     playerRef: React.ForwardedRef<THREE.Mesh>
   ) => {
-    const ref = useBoomerangMovement(playerPosition, playerRef);
-    const [{ status }] = useBoomerangState();
+    const ref = useBoomerangMovement(playerPosition, playerRef, idx);
+    const [heldBoomerangs] = useHeldBoomerangs();
+    const { status } = heldBoomerangs[idx];
     const [{ poweredUp }] = usePlayerState();
     const [{ scale }] = useSpring(
       {
@@ -28,9 +30,9 @@ export const BoomerangWithControls = forwardRef(
     return (
       <animated.mesh ref={ref} scale={scale} name={BOOMERANG_NAME}>
         <Spin>
-          <BoomerangModel />
+          <BoomerangModel {...{ idx }} />
         </Spin>
-        <FlashWhenStatusChanges />
+        <FlashWhenStatusChanges {...{ idx }} />
       </animated.mesh>
     );
   }

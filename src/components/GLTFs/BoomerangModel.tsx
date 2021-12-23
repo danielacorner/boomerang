@@ -9,9 +9,9 @@ title: Zelda Ocarina of Time Boomerang
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
 import { animated, useSpring } from "@react-spring/three";
-import { useBoomerangState } from "../../store";
+import { useHeldBoomerangs } from "../../store";
 
-export default function BoomerangModel(props) {
+export default function BoomerangModel({ idx, ...props }) {
   const group = useRef();
   const { nodes, materials } = useGLTF(
     "/models/zelda_ocarina_of_time_boomerang/scene.gltf"
@@ -21,7 +21,8 @@ export default function BoomerangModel(props) {
   const { x2, y2, z2 } = { x2: -18.13, y2: 10, z2: 9 };
 
   // fade out the boomerang when we catch it
-  const [{ status }] = useBoomerangState();
+  const [heldBoomerangs] = useHeldBoomerangs();
+  const { status } = heldBoomerangs[idx] || { status: null };
 
   const { opacity } = useSpring({
     opacity: status === "idle" ? 0 : 1,

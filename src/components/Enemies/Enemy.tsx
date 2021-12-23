@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useCylinder } from "@react-three/cannon";
 import {
-  useBoomerangState,
+  useHeldBoomerangs,
   usePlayerState,
   useDroppedItems,
   ITEM_TYPES,
@@ -85,9 +85,9 @@ const DROPPED_BOOMERANG_PROBABILITY = 0.2;
 const MAX_BOOMERANGS = 6;
 
 function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
-  const [{ status }] = useBoomerangState();
+  const [heldBoomerangs] = useHeldBoomerangs();
+  const [{ status }] = heldBoomerangs;
   const [{ poweredUp }] = usePlayerState();
-  const [{ boomerangs }] = useGameState();
   const [theyDroppedItems, setTheyDroppedItems] = useState(false);
   const [, setDroppedItems] = useDroppedItems();
   const [enemyRef, api] = useCylinder(
@@ -148,7 +148,7 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
               }
 
               const droppedBoomerang =
-                boomerangs < MAX_BOOMERANGS &&
+                heldBoomerangs.length < MAX_BOOMERANGS &&
                 Math.random() > 1 - DROPPED_BOOMERANG_PROBABILITY;
               if (droppedBoomerang) {
                 const rPosition: [number, number, number] = [
@@ -182,7 +182,7 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
       },
     }),
     null,
-    [status, boomerangs, theyDroppedItems, poweredUp]
+    [status, heldBoomerangs, theyDroppedItems, poweredUp]
   );
   useFrame(() => {
     if (!position.current || theyreDead) return;

@@ -1,12 +1,13 @@
 import styled from "styled-components";
-import { useGameState } from "../../store";
+import { useHeldBoomerangs } from "../../store";
 
 export function BoomerangsIndicator() {
-  const [{ boomerangs }] = useGameState();
+  const [heldBoomerangs] = useHeldBoomerangs();
   return (
     <BoomerangsIndicatorStyles>
-      {[...new Array(boomerangs)].map((_, idx) => (
+      {heldBoomerangs.map((_, idx) => (
         <div
+          key={idx}
           style={{
             position: "absolute",
             transform: `translateX(-${idx * 38}px)`,

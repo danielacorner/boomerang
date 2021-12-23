@@ -1,14 +1,18 @@
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-const boomerangStateAtom = atom<{
-  clickTargetPosition: [number, number, number] | null;
-  status: "idle" | "flying" | "returning";
-}>({
-  clickTargetPosition: null,
-  status: "idle",
-});
-export function useBoomerangState() {
+const boomerangStateAtom = atom<
+  {
+    clickTargetPosition: [number, number, number] | null;
+    status: "idle" | "flying" | "returning";
+  }[]
+>([
+  {
+    clickTargetPosition: null,
+    status: "idle",
+  },
+]);
+export function useHeldBoomerangs() {
   return useAtom(boomerangStateAtom);
 }
 const playerStateAtom = atom<{
@@ -29,11 +33,9 @@ export function usePlayerState() {
 }
 
 const gameStateAtom = atom<{
-  boomerangs: number;
   hitpoints: number;
   invulnerable: boolean;
 }>({
-  boomerangs: 1,
   hitpoints: 100,
   invulnerable: false,
 });
