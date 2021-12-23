@@ -27,5 +27,5 @@ const BoomerangsIndicatorStyles = styled.div`
 `;
 
 function BoomerangIcon() {
-  return <img src="/public/images/boomerang.png" width="32" height="32" />;
+  return <img src="/images/boomerang.png" width="32" height="32" />;
 }

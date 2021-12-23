@@ -5,8 +5,8 @@ import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
 import { useEventListener } from "../../utils/useEventListener";
 import { useBoomerangState, useGameState, usePlayerState } from "../../store";
-import { useOrbitControlsAngle } from "../OrbitControlsWithAngle";
 import {
+  BOOMERANG_ITEM_NAME,
   ENEMY_NAME,
   GROUND_NAME,
   POWERUP_NAME,
@@ -113,6 +113,13 @@ export function usePlayerControls(): [
             setPlayerState((p) => ({ ...p, rangeUp: false }));
           }, POWERUP_DURATION);
         }
+
+        // if collides with dropped boomerang, record it
+        const isCollisionWithboomerang = e.body.name === BOOMERANG_ITEM_NAME;
+        if (isCollisionWithboomerang) {
+          console.log("COLLISION! with boomerang", e);
+          setGameState((p) => ({ ...p, boomerangs: p.boomerangs + 1 }));
+        }
       },
       type: "Static", // https://github.com/pmndrs/use-cannon#types
       // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
@@ -133,7 +140,6 @@ export function usePlayerControls(): [
     const unsubscribe = api.rotation.subscribe((v) => (rotation.current = v));
     return unsubscribe;
   }, []);
-  const [orbitControlsAngle, setOrbitControlsAngle] = useOrbitControlsAngle();
 
   // move  the player
   useFrame(({ camera }) => {
@@ -162,7 +168,10 @@ export function usePlayerControls(): [
 
     // TODO: account for orbitControls rotation
 
-    const newRotY = orbitControlsAngle;
+    const newRotY = getAngleBetweenPoints(
+      [playerRef.current.position.x, playerRef.current.position.z],
+      [lookAt[0], lookAt[2]]
+    );
     // const newRotY = getPlayerRotation(lastPressedKey) + orbitControlsAngle;
 
     // const newRX = THREE.MathUtils.lerp(
@@ -198,4 +207,12 @@ function getPlayerRotation(lastPressedKey) {
     : lastPressedKey === UP
     ? ROT_TOP
     : 0;
+}
+
+function getAngleBetweenPoints([x1, y1], [x2, y2]) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const radians = Math.atan2(dy, dx);
+  const degrees = (radians * 180) / Math.PI;
+  return degrees;
 }

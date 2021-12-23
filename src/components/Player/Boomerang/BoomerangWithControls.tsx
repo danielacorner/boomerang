@@ -10,7 +10,10 @@ import { useBoomerangMovement } from "./useBoomerangMovement";
 
 export const BoomerangWithControls = forwardRef(
   (
-    { playerPosition }: { playerPosition: [number, number, number] },
+    {
+      playerPosition,
+      idx,
+    }: { playerPosition: [number, number, number]; idx: number },
     playerRef: React.ForwardedRef<THREE.Mesh>
   ) => {
     const ref = useBoomerangMovement(playerPosition, playerRef);

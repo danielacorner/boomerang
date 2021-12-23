@@ -3,6 +3,7 @@ import { ITEM_TYPES, useDroppedItems } from "../../store";
 import { DroppedPowerup } from "./DroppedPowerup";
 import React from "react";
 import { DroppedRangeup } from "./DroppedRangeup";
+import { DroppedBoomerang } from "./DroppedBoomerang";
 
 export function DroppedItems() {
   const [droppedItems] = useDroppedItems();
@@ -14,6 +15,9 @@ export function DroppedItems() {
   );
   const droppedRangeupPositions = droppedItems.filter(
     ({ type }) => type === ITEM_TYPES.RANGEUP
+  );
+  const droppedBoomerangPositions = droppedItems.filter(
+    ({ type }) => type === ITEM_TYPES.BOOMERANG
   );
   return (
     <>
@@ -30,6 +34,11 @@ export function DroppedItems() {
       {droppedRangeupPositions.map(({ position }) => (
         <React.Fragment key={JSON.stringify(position)}>
           <DroppedRangeup {...{ position }} />
+        </React.Fragment>
+      ))}
+      {droppedBoomerangPositions.map(({ position }) => (
+        <React.Fragment key={JSON.stringify(position)}>
+          <DroppedBoomerang {...{ position }} />
         </React.Fragment>
       ))}
     </>

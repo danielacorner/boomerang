@@ -1,5 +1,5 @@
 import { usePlayerControls } from "./usePlayerControls";
-import Bm from "../GLTFs/Bm";
+import BlackMage from "../GLTFs/BlackMage";
 import { BoomerangTarget } from "./Boomerang/BoomerangTarget";
 import { MouseTarget } from "./MouseTarget";
 import { useEffect, useState } from "react";
@@ -67,7 +67,7 @@ function Mage({ playerRef, targetRef }) {
         ref={playerRef}
         name={PLAYER_NAME}
       >
-        <Bm position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
+        <BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
         <RangeupIndicator />
       </animated.mesh>
     </>
@@ -87,10 +87,16 @@ function RangeupIndicator() {
 }
 
 function Boomerang({ playerPosition, playerRef }) {
+  const [{ boomerangs }] = useGameState();
   return (
     <>
-      <BoomerangWithControls playerPosition={playerPosition} ref={playerRef} />
-
+      {[...new Array(boomerangs)].map((_, idx) => (
+        <BoomerangWithControls
+          idx={idx}
+          playerPosition={playerPosition}
+          ref={playerRef}
+        />
+      ))}
       <BoomerangTarget />
     </>
   );

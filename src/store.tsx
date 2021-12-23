@@ -49,6 +49,7 @@ export enum ITEM_TYPES {
   POWERUP = "powerup",
   RANGEUP = "rangeup",
   MONEY = "money",
+  BOOMERANG = "boomerang",
 }
 
 const droppedItemsAtom = atom<

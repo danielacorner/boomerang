@@ -7,6 +7,7 @@ import {
   usePlayerState,
   useDroppedItems,
   ITEM_TYPES,
+  useGameState,
 } from "../../store";
 import { HpBar } from "./HpBar";
 import { GROUND_NAME, BOOMERANG_NAME, ENEMY_NAME } from "../../utils/constants";
@@ -79,11 +80,14 @@ export function Enemy({ children, unmountEnemy }) {
 }
 
 const POWERUP_PROBABILITY = 0.2;
-const RANGEUP_PROBABILITY = 0.1;
+const RANGEUP_PROBABILITY = 0.2;
+const DROPPED_BOOMERANG_PROBABILITY = 0.2;
+const MAX_BOOMERANGS = 6;
 
 function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
   const [{ status }] = useBoomerangState();
   const [{ poweredUp }] = usePlayerState();
+  const [{ boomerangs }] = useGameState();
   const [theyDroppedItems, setTheyDroppedItems] = useState(false);
   const [, setDroppedItems] = useDroppedItems();
   const [enemyRef, api] = useCylinder(
@@ -142,6 +146,22 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
                 };
                 setDroppedItems((p) => [...p, newPowerup]);
               }
+
+              const droppedBoomerang =
+                boomerangs < MAX_BOOMERANGS &&
+                Math.random() > 1 - DROPPED_BOOMERANG_PROBABILITY;
+              if (droppedBoomerang) {
+                const rPosition: [number, number, number] = [
+                  position.current[0] + Math.random() - 0.5,
+                  position.current[1] + Math.random() - 0.5,
+                  position.current[2] + Math.random() - 0.5,
+                ];
+                const newBoomerang = {
+                  position: rPosition,
+                  type: ITEM_TYPES.BOOMERANG,
+                };
+                setDroppedItems((p) => [...p, newBoomerang]);
+              }
             });
           }
 
@@ -162,7 +182,7 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
       },
     }),
     null,
-    [status]
+    [status, boomerangs, theyDroppedItems, poweredUp]
   );
   useFrame(() => {
     if (!position.current || theyreDead) return;
