@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
 import { usePressedKeys } from "../Player/usePressedKeys";
 import { Direction } from "../Scene";
+import { useMount } from "react-use";
 
 export const JOYSTICK_RADIUS = 64;
 const JOYSTICK_THUMB_RADIUS = JOYSTICK_RADIUS / 2;
@@ -23,6 +24,7 @@ export function Joystick() {
   const onMouseMove = (
     e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
+    e.preventDefault();
     e.stopPropagation();
 
     // x ranges from -JOYSTICK_RADIUS to JOYSTICK_RADIUS
@@ -72,10 +74,25 @@ export function Joystick() {
       setPressedKeys([]);
     }
   };
-  const onMouseUp = () => {
+  const onMouseUp = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
     setPressedKeys([]);
     set({ xy: [0, 0] });
   };
+
+  useMount(() => {
+    window.addEventListener("scroll", (e) => {
+      console.log(
+        "🌟🚨 ~ file: Joystick.tsx ~ line 91 ~ window.addEventListener ~ e",
+        e
+      );
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    });
+  });
   return (
     <JoystickStyles
       {...{
@@ -85,6 +102,12 @@ export function Joystick() {
         onMouseUp,
         onPointerUp: onMouseUp,
         onTouchEnd: onMouseUp,
+        onDrag: onMouseMove,
+        onDragEnd: onMouseUp,
+        onDragStart: onMouseMove,
+        onMouseDown: onMouseMove,
+        onPointerDown: onMouseMove,
+        onTouchStart: onMouseMove,
       }}
     >
       <animated.div
@@ -103,7 +126,9 @@ const JoystickStyles = styled.div`
   width: ${JOYSTICK_RADIUS * 2}px;
   height: ${JOYSTICK_RADIUS * 2}px;
   box-shadow: inset 0 0 4px 4px rgb(68 63 63 / 17%);
+  pointer-events: none;
   .joystickThumb {
+    pointer-events: auto;
     margin-top: ${JOYSTICK_THUMB_RADIUS - 1}px;
     margin-left: ${JOYSTICK_THUMB_RADIUS - 1}px;
     width: ${JOYSTICK_THUMB_RADIUS * 2}px;
