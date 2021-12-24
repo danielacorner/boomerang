@@ -21,7 +21,7 @@ const UNMOUNT_DELAY = 2 * 1000;
 const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
 
 // set up collisions on its children
-export function Enemy({ children, unmountEnemy }) {
+export function Enemy({ children, unmountEnemy, invulnerable }) {
   const { viewport } = useThree();
   const [healthPercent, setHealthPercent] = useState(1);
   const theyDied = healthPercent === 0;
@@ -41,6 +41,7 @@ export function Enemy({ children, unmountEnemy }) {
     position,
     theyreDead,
     setHealthPercent,
+    invulnerable,
   });
 
   // TODO: they gotta drop their moneys
@@ -84,7 +85,12 @@ const RANGEUP_PROBABILITY = 0.2;
 const DROPPED_BOOMERANG_PROBABILITY = 0.2;
 const MAX_BOOMERANGS = 12;
 
-function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
+function useMoveEnemy({
+  position,
+  theyreDead,
+  setHealthPercent,
+  invulnerable,
+}) {
   const [heldBoomerangs] = useHeldBoomerangs();
   const [{ status }] = heldBoomerangs;
   const [{ poweredUp }] = usePlayerState();
@@ -96,7 +102,7 @@ function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
       mass: 1,
       position: position.current,
       onCollide: (e) => {
-        if (status === "idle" || theyDroppedItems) return;
+        if (status === "idle" || theyDroppedItems || invulnerable) return;
         // when the boomerang+enemy collide, subtract some hp
         const isCollisionWithBoomerang = e.body.name === BOOMERANG_NAME;
         const isCollisionWithGround = e.body.name === GROUND_NAME;

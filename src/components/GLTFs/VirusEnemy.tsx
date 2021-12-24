@@ -10,29 +10,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { animated, useSpring } from "@react-spring/three";
 import { useInterval } from "react-use";
+import { useEnemies } from "../../store";
 
-export default function VirusEnemy({ ...props }) {
+export default function VirusEnemy({ id, ...props }) {
   const group = useRef();
   const { nodes, materials, animations } = useGLTF(
     "/models/melee_virus_animations/scene.gltf"
   ) as any;
-  console.log(
-    "🌟🚨 ~ file: VirusEnemy.tsx ~ line 15 ~ VirusEnemy ~ animations",
-    animations
-  );
+
   const { actions, names, ...rest } = useAnimations(animations, group);
-  console.log(
-    "🌟🚨 ~ file: VirusEnemy.tsx ~ line 18 ~ VirusEnemy ~ rest",
-    rest
-  );
-  console.log(
-    "🌟🚨 ~ file: VirusEnemy.tsx ~ line 18 ~ VirusEnemy ~ actions",
-    actions
-  );
-  console.log(
-    "🌟🚨 ~ file: VirusEnemy.tsx ~ line 18 ~ VirusEnemy ~ names",
-    names
-  );
 
   // Change animation when the index changes
   useEffect(() => {
@@ -48,11 +34,24 @@ export default function VirusEnemy({ ...props }) {
   const [shieldInvisible, setShieldInvisible] = useState(true);
   const SHIELD_DURATION = 3 * 1000;
   const SHIELD_INTERVAL = 6 * 1000;
+
+  const [, setEnemies] = useEnemies();
+
+  const setInvulnerable = (isInvulnerable: boolean) => {
+    setEnemies((p) =>
+      p.map((enemy) =>
+        enemy.id === id ? { ...enemy, invulnerable: isInvulnerable } : enemy
+      )
+    );
+  };
+
   useInterval(() => {
     setShieldActive(true);
+    setInvulnerable(true);
     setShieldInvisible(false);
     setTimeout(() => {
       setShieldActive(false);
+      setInvulnerable(false);
       setTimeout(() => {
         setShieldInvisible(true);
       }, 300);

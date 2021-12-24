@@ -2,30 +2,32 @@ import { Enemy } from "./Enemy";
 import JeffBezos from "../GLTFs/JeffBezos";
 import MarkZuckerberg from "../GLTFs/MarkZuckerberg";
 import ElonMusk from "../GLTFs/ElonMuskRunning";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useInterval, useMount } from "react-use";
 import VirusEnemy from "../GLTFs/VirusEnemy";
+import { useEnemies } from "../../store";
 
 const MAX_ENEMIES = 16;
 
 export function Enemies() {
-  const [Enemies, setEnemies] = useState<any>([]);
+  const [Enemies, setEnemies] = useEnemies();
 
   const spawnEnemy = useCallback(() => {
+    const id = Math.random() * 10 ** 16;
     const Component = shuffle([
       // () => <Bezos />,
       // () => <Zuck />,
       // () => <Musk />,
-      () => <Virus />,
+      () => <Virus {...{ id }} />,
     ])[0];
     setEnemies((p) => {
-      const id = Math.random() * 10 ** 16;
       const newEnemies = [
         ...p,
         {
           Component,
           unmounted: false,
           id,
+          invulnerable: false,
           unmountEnemy: () =>
             setEnemies((prev) =>
               prev.map((e) => (e.id === id ? { ...e, unmounted: true } : e))
@@ -43,9 +45,9 @@ export function Enemies() {
 
   return (
     <>
-      {Enemies.map(({ id, Component, unmountEnemy, unmounted }) =>
+      {Enemies.map(({ id, Component, unmountEnemy, unmounted, invulnerable }) =>
         unmounted ? null : (
-          <Enemy key={id} {...{ unmountEnemy }}>
+          <Enemy key={id} {...{ unmountEnemy, invulnerable }}>
             <Component />
           </Enemy>
         )
@@ -70,9 +72,9 @@ const Musk = () => (
     <ElonMusk />
   </group>
 );
-const Virus = () => (
+const Virus = ({ id }) => (
   <group scale={1} position={[0, -1.6, 0]} rotation={[0, 0, 0]}>
-    <VirusEnemy />
+    <VirusEnemy {...{ id }} />
   </group>
 );
 

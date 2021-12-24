@@ -1,6 +1,19 @@
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
+type EnemyType = {
+  Component: any;
+  unmounted: boolean;
+  id: number;
+  invulnerable: boolean;
+  unmountEnemy: Function;
+};
+
+const enemiesAtom = atom<EnemyType[]>([]);
+export function useEnemies() {
+  return useAtom(enemiesAtom);
+}
+
 const boomerangStateAtom = atom<
   {
     clickTargetPosition: [number, number, number] | null;
