@@ -15,9 +15,9 @@ export function Enemies() {
   const spawnEnemy = useCallback(() => {
     const id = Math.random() * 10 ** 16;
     const Component = shuffle([
-      // () => <Bezos />,
-      // () => <Zuck />,
-      // () => <Musk />,
+      () => <Bezos />,
+      () => <Zuck />,
+      () => <Musk />,
       () => <Virus {...{ id }} />,
     ])[0];
     setEnemies((p) => {
