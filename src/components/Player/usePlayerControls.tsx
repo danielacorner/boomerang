@@ -83,7 +83,7 @@ export function usePlayerControls(): [
               ? p
               : {
                   ...p,
-                  hitpoints: p.hitpoints - 1,
+                  hitpoints: Math.max(0, p.hitpoints - 1),
                   invulnerable: true,
                 }
           );

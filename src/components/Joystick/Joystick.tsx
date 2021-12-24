@@ -92,6 +92,11 @@ export function Joystick() {
       e.stopPropagation();
       return;
     });
+    window.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      return;
+    });
   });
   return (
     <JoystickStyles

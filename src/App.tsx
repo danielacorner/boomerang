@@ -7,15 +7,15 @@ function App() {
   const { width, height } = useWindowSize();
   // to prevent dragging up/down the address bar on mobile browsers,
   // record the lowest height it's ever been
-  // const [lowestHeight, setLowestHeight] = useState(height);
-  // useEffect(() => {
-  //   if (height < lowestHeight) {
-  //     setLowestHeight(height);
-  //   }
-  // }, [height, lowestHeight]);
+  const [lowestHeight, setLowestHeight] = useState(height);
+  useEffect(() => {
+    if (height < lowestHeight) {
+      setLowestHeight(height);
+    }
+  }, [height, lowestHeight]);
 
   return (
-    <div style={{ width, height }}>
+    <div style={{ width, height: lowestHeight, overflow: "hidden" }}>
       <CanvasAndScene />
       <HUD />
     </div>

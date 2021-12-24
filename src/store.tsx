@@ -45,11 +45,12 @@ export function usePlayerState() {
   return useAtom(playerStateAtom);
 }
 
+export const INITIAL_HITPOINTS = 5;
 const gameStateAtom = atom<{
   hitpoints: number;
   invulnerable: boolean;
 }>({
-  hitpoints: 5,
+  hitpoints: INITIAL_HITPOINTS,
   invulnerable: false,
 });
 export const useGameState = () => useAtom(gameStateAtom);
