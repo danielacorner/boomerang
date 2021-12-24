@@ -36,6 +36,7 @@ export function DroppedItems() {
           <DroppedRangeup {...{ position }} />
         </React.Fragment>
       ))}
+      <DroppedRangeup {...{ position: [1, 1, 5] }} />
       {droppedBoomerangPositions.map(({ position }) => (
         <React.Fragment key={JSON.stringify(position)}>
           <DroppedBoomerang {...{ position }} />

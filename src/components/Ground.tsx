@@ -7,11 +7,8 @@ import { GROUND_NAME } from "../utils/constants";
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
-  const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 11 ~ Ground ~ heldBoomerangs",
-    heldBoomerangs
-  );
+  const [, setHeldBoomerangs] = useHeldBoomerangs();
+
   const [{ farthestTargetPosition, playerPosition, rangeUp }, setPlayerState] =
     usePlayerState();
 
@@ -27,18 +24,51 @@ export function Ground() {
 
     setHeldBoomerangs(
       (currentBoomerangs) => {
+        // if rangeUp is active, send ALL active boomerangs,
+        // plus the first available boomerang, to the target position
         let found = false;
-        return currentBoomerangs.map((boom) => {
-          if (!found && !boom.clickTargetPosition) {
-            found = true;
-            return {
-              ...boom,
-              status: "flying",
-              clickTargetPosition: farthestTargetPosition,
-            };
-          }
-          return boom;
-        });
+        if (rangeUp) {
+          const newBoomerangs = currentBoomerangs.map((boom) => {
+            if (
+              (!found && !boom.clickTargetPosition) ||
+              boom.status !== "idle"
+            ) {
+              if (!boom.clickTargetPosition) {
+                found = true;
+              }
+
+              return {
+                ...boom,
+                status: "flying" as any,
+                clickTargetPosition: farthestTargetPosition,
+              };
+            }
+            return boom;
+          });
+
+          return newBoomerangs;
+        } else {
+          // normally,
+          // find the first boomerang without a clickTargetPosition,
+          // and set it to the current target position
+          let found = false;
+          const newBoomerangs = currentBoomerangs.map((boom) => {
+            if (!found && !boom.clickTargetPosition) {
+              found = true;
+              return {
+                ...boom,
+                status: "flying" as any,
+                clickTargetPosition: farthestTargetPosition,
+              };
+            }
+            return boom;
+          });
+          console.log(
+            "🌟🚨 ~ file: Ground.tsx ~ line 68 ~ onPointerDown ~ newBoomerangs",
+            newBoomerangs
+          );
+          return newBoomerangs;
+        }
       }
 
       // p.status === "idle" || rangeUp

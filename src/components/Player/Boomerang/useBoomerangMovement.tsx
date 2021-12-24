@@ -61,6 +61,10 @@ export function useBoomerangMovement(
   // throw on click
   useEffect(() => {
     if (clickTargetPosition && status === "flying") {
+      console.log(
+        "🌟🚨 ~ file: useBoomerangMovement.tsx ~ line 64 ~ useEffect ~ clickTargetPosition",
+        clickTargetPosition
+      );
       thrownTime.current = Date.now();
       const throwVelocity: [number, number, number] = [
         clickTargetPosition[0] - position.current[0],

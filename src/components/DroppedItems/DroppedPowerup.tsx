@@ -5,7 +5,7 @@ import { useMount } from "react-use";
 import { PLAYER_NAME, POWERUP_NAME } from "../../utils/constants";
 
 const POWERUP_HEIGHT = 1;
-const POWERUP_DROP_DURATION = 16 * 1000;
+const POWERUP_DROP_DURATION = 24 * 1000;
 export function DroppedPowerup({ position }) {
   const [mounted, setMounted] = useState(true);
   useMount(() => {
