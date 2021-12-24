@@ -1,0 +1,11 @@
+Model Information:
+* title:	Melee Virus Animations
+* source:	https://sketchfab.com/3d-models/melee-virus-animations-92cc1e394ded485cb372927cb0cd10d0
+* author:	Kodie Russell (https://sketchfab.com/AverageGaymer)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Melee Virus Animations" (https://sketchfab.com/3d-models/melee-virus-animations-92cc1e394ded485cb372927cb0cd10d0) by Kodie Russell (https://sketchfab.com/AverageGaymer) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

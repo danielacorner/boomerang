@@ -82,7 +82,7 @@ export function Enemy({ children, unmountEnemy }) {
 const POWERUP_PROBABILITY = 0.2;
 const RANGEUP_PROBABILITY = 0.2;
 const DROPPED_BOOMERANG_PROBABILITY = 0.2;
-const MAX_BOOMERANGS = 6;
+const MAX_BOOMERANGS = 12;
 
 function useMoveEnemy({ position, theyreDead, setHealthPercent }) {
   const [heldBoomerangs] = useHeldBoomerangs();

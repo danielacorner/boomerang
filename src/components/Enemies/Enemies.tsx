@@ -4,24 +4,19 @@ import MarkZuckerberg from "../GLTFs/MarkZuckerberg";
 import ElonMusk from "../GLTFs/ElonMuskRunning";
 import { useCallback, useState } from "react";
 import { useInterval, useMount } from "react-use";
-import { useGLTF } from "@react-three/drei";
+import VirusEnemy from "../GLTFs/VirusEnemy";
 
 const MAX_ENEMIES = 16;
 
 export function Enemies() {
   const [Enemies, setEnemies] = useState<any>([]);
 
-  const {
-    nodes: zuckNodes,
-    materials: zuckMaterials,
-    animations: zuckAnimations,
-  } = useGLTF("/models/mark_zuckerberg_running/scene.gltf") as any;
-
   const spawnEnemy = useCallback(() => {
     const Component = shuffle([
-      () => <Bezos />,
-      () => <Zuck />,
-      () => <Musk />,
+      // () => <Bezos />,
+      // () => <Zuck />,
+      // () => <Musk />,
+      () => <Virus />,
     ])[0];
     setEnemies((p) => {
       const id = Math.random() * 10 ** 16;
@@ -73,6 +68,11 @@ const Bezos = () => (
 const Musk = () => (
   <group scale={1} position={[0, -1.6, 0]} rotation={[0, 0, 0]}>
     <ElonMusk />
+  </group>
+);
+const Virus = () => (
+  <group scale={1} position={[0, -1.6, 0]} rotation={[0, 0, 0]}>
+    <VirusEnemy />
   </group>
 );
 
