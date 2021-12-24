@@ -49,7 +49,7 @@ const gameStateAtom = atom<{
   hitpoints: number;
   invulnerable: boolean;
 }>({
-  hitpoints: 100,
+  hitpoints: 5,
   invulnerable: false,
 });
 export const useGameState = () => useAtom(gameStateAtom);

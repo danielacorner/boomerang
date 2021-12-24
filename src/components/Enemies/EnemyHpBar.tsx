@@ -1,7 +1,7 @@
 import { CYLINDER_HEIGHT } from "./Enemy";
 const FULL_HEALTH = 4;
 
-export function HpBar({ healthPercent }) {
+export function EnemyHpBar({ healthPercent }) {
   const width = FULL_HEALTH * healthPercent;
   return (
     <mesh position={[0, CYLINDER_HEIGHT / 2 + 1, 0]}>

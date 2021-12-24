@@ -9,7 +9,7 @@ import {
   ITEM_TYPES,
   useGameState,
 } from "../../store";
-import { HpBar } from "./HpBar";
+import { EnemyHpBar } from "./EnemyHpBar";
 import { GROUND_NAME, BOOMERANG_NAME, ENEMY_NAME } from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 
@@ -74,7 +74,7 @@ export function Enemy({ children, unmountEnemy, invulnerable }) {
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
-        <HpBar healthPercent={healthPercent} />
+        <EnemyHpBar healthPercent={healthPercent} />
       </animated.mesh>
     </>
   );

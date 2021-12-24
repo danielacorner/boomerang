@@ -3,7 +3,11 @@ import { useGameState } from "../../store";
 
 export function PlayerHPBar() {
   const [{ hitpoints }] = useGameState();
-  return <PlayerHpBarStyles>🧡 {hitpoints} HP</PlayerHpBarStyles>;
+  return (
+    <PlayerHpBarStyles>
+      {[...new Array(hitpoints)].map((_) => "🧡")}
+    </PlayerHpBarStyles>
+  );
 }
 const PlayerHpBarStyles = styled.div`
   position: fixed;
