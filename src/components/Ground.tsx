@@ -7,13 +7,14 @@ import { GROUND_NAME } from "../utils/constants";
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
-  const [, setHeldBoomerangs] = useHeldBoomerangs();
+  const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
 
   const [{ farthestTargetPosition, playerPosition, rangeUp }, setPlayerState] =
     usePlayerState();
 
   const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
     if (
+      !playerPosition ||
       !farthestTargetPosition ||
       (farthestTargetPosition[0] === 0 &&
         farthestTargetPosition[1] === 0 &&
@@ -21,6 +22,11 @@ export function Ground() {
     ) {
       return;
     }
+    const {
+      newFarthestTargetPosition,
+    }: {
+      newFarthestTargetPosition: [number, number, number];
+    } = handlePointerMove(e, playerPosition, MAX_THROW_DISTANCE, rangeUp);
 
     setHeldBoomerangs(
       (currentBoomerangs) => {
@@ -40,7 +46,7 @@ export function Ground() {
               return {
                 ...boom,
                 status: "flying" as any,
-                clickTargetPosition: farthestTargetPosition,
+                clickTargetPosition: newFarthestTargetPosition,
               };
             }
             return boom;
@@ -58,7 +64,7 @@ export function Ground() {
               return {
                 ...boom,
                 status: "flying" as any,
-                clickTargetPosition: farthestTargetPosition,
+                clickTargetPosition: newFarthestTargetPosition,
               };
             }
             return boom;
@@ -82,45 +88,26 @@ export function Ground() {
       //     }
       //   : p
     );
-
-    onPointerMove(e);
   };
 
   const MAX_THROW_DISTANCE = 12;
 
   const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = (e) => {
-    if ((rangeUp || status !== "flying") && playerPosition) {
-      const { x, y, z } = getMousePosition(e);
+    if (playerPosition) {
+      // if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPosition) {
+      const {
+        lookAt,
+        newFarthestTargetPosition,
+      }: {
+        lookAt: [number, number, number];
+        newFarthestTargetPosition: [number, number, number];
+      } = handlePointerMove(e, playerPosition, MAX_THROW_DISTANCE, rangeUp);
 
-      // limit the throw distance
-      const distance = distanceBetweenPoints(playerPosition, [x, y, z]);
-
-      // if it's above the max distance, shrink it down to the max distance
-      const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
-
-      const pctAboveMax = Math.abs(distance) / maxThrowDistance;
-
-      const lookAt: [number, number, number] = [x, y, z];
-
-      // if the distance is above the max distance, scale it down
-      // (normalize, then multiply by maxThrowDistance)
-
-      const [normX, normY, normZ] = normalizeVector([
-        x - playerPosition[0],
-        y - playerPosition[1],
-        z - playerPosition[2],
-      ]);
-
-      const farthestTargetPosition: [number, number, number] =
-        pctAboveMax > 1
-          ? [
-              normX * maxThrowDistance + playerPosition[0],
-              normY * maxThrowDistance + playerPosition[1],
-              normZ * maxThrowDistance + playerPosition[2],
-            ]
-          : lookAt;
-
-      setPlayerState((p) => ({ ...p, lookAt, farthestTargetPosition }));
+      setPlayerState((p) => ({
+        ...p,
+        lookAt,
+        farthestTargetPosition: newFarthestTargetPosition,
+      }));
     }
   };
 
@@ -149,6 +136,43 @@ export function Ground() {
     />
   );
 }
+function handlePointerMove(
+  e: ThreeEvent<PointerEvent>,
+  playerPosition: [number, number, number],
+  MAX_THROW_DISTANCE: number,
+  rangeUp: boolean
+) {
+  const { x, y, z } = getMousePosition(e);
+
+  // limit the throw distance
+  const distance = distanceBetweenPoints(playerPosition, [x, y, z]);
+
+  // if it's above the max distance, shrink it down to the max distance
+  const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
+
+  const pctAboveMax = Math.abs(distance) / maxThrowDistance;
+
+  const lookAt: [number, number, number] = [x, y, z];
+
+  // if the distance is above the max distance, scale it down
+  // (normalize, then multiply by maxThrowDistance)
+  const [normX, normY, normZ] = normalizeVector([
+    x - playerPosition[0],
+    y - playerPosition[1],
+    z - playerPosition[2],
+  ]);
+
+  const newFarthestTargetPosition: [number, number, number] =
+    pctAboveMax > 1
+      ? [
+          normX * maxThrowDistance + playerPosition[0],
+          normY * maxThrowDistance + playerPosition[1],
+          normZ * maxThrowDistance + playerPosition[2],
+        ]
+      : lookAt;
+  return { lookAt, newFarthestTargetPosition };
+}
+
 export function getMousePosition(e: ThreeEvent<PointerEvent>) {
   const ground = e.intersections.find((i) => i.object.name === GROUND_NAME);
 
