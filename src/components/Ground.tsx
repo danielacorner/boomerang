@@ -123,7 +123,7 @@ export function Ground() {
 
   if (texture) {
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(20, 20);
+    texture.repeat.set(38, 38);
     texture.anisotropy = 16;
   }
 
@@ -137,11 +137,11 @@ export function Ground() {
         onPointerMove={onPointerMove}
         {...PLANE_PROPS}
       >
-        <meshToonMaterial color="#ffffff" map={texture} />
+        <meshToonMaterial color="#aaaaaa" map={texture} />
       </Plane>
-      <Plane {...PLANE_PROPS} position={[0, 0, 0]}>
+      {/* <Plane {...PLANE_PROPS} position={[0, 0, 0]}>
         <meshToonMaterial color="#ffffff" opacity={0.5} transparent={true} />
-      </Plane>
+      </Plane> */}
     </>
   );
 }
