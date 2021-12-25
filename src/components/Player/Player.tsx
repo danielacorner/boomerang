@@ -34,7 +34,7 @@ function Mage({ playerRef, targetRef }) {
   }, [invulnerable]);
 
   const { scale, opacity } = useSpring({
-    scale: poweredUp ? 2.4 : 1,
+    scale: poweredUp ? 2.4 : 1.4,
     opacity: blinkOn ? 0 : 1,
     onRest: () => {
       if (invulnerable) {
@@ -50,7 +50,6 @@ function Mage({ playerRef, targetRef }) {
       <MouseTarget>
         <mesh ref={targetRef} />
       </MouseTarget>
-
       <animated.mesh
         scale={scale}
         material-transparent={true}
@@ -69,9 +68,9 @@ function RangeupIndicator() {
   const [{ rangeUp }] = usePlayerState();
   const { scale } = useSpring({ scale: rangeUp ? 1 : 0 });
   return (
-    <animated.mesh scale={scale} position={[0, 2, 0]}>
+    <animated.mesh scale={scale} position={[0, 5, 0]}>
       <Spin>
-        <BoomerangModel idx={Infinity} />
+        <BoomerangModel idx={Infinity} keepFlying={true} />
       </Spin>
     </animated.mesh>
   );

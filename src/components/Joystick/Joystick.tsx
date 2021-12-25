@@ -126,7 +126,7 @@ const JoystickStyles = styled.div`
   position: fixed;
   bottom: ${JOYSTICK_PADDING}px;
   right: ${JOYSTICK_PADDING}px;
-  background: rgb(255 255 255 / 30%);
+  background: rgb(255 255 255 / 35%);
   border-radius: 50%;
   width: ${JOYSTICK_RADIUS * 2}px;
   height: ${JOYSTICK_RADIUS * 2}px;

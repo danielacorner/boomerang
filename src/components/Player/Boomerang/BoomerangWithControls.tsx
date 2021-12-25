@@ -28,7 +28,7 @@ export const BoomerangWithControls = forwardRef(
       [status, poweredUp]
     );
     return (
-      <animated.mesh ref={ref} scale={scale} name={BOOMERANG_NAME}>
+      <animated.mesh castShadow ref={ref} scale={scale} name={BOOMERANG_NAME}>
         <Spin>
           <BoomerangModel {...{ idx }} />
         </Spin>

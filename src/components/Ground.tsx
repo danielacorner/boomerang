@@ -120,20 +120,27 @@ export function Ground() {
   }
 
   return (
-    <Plane
-      name={GROUND_NAME}
-      ref={planeRef}
-      onPointerDown={onPointerDown}
-      material-map={texture}
-      onPointerMove={onPointerMove}
-      material-transparent={true}
-      material-opacity={0.4}
-      args={[1000, 1000]}
-      position={[0, -1, 0]}
-      rotation={[-Math.PI / 2, 0, 0]}
-      receiveShadow
-      material-color="#c1e9c9"
-    />
+    <>
+      <Plane
+        receiveShadow
+        name={GROUND_NAME}
+        ref={planeRef}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        args={[1000, 1000]}
+        position={[0, -1, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+      >
+        <meshToonMaterial color="#ffffff" map={texture} />
+      </Plane>
+      <Plane
+        position={[0, 0, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        args={[1000, 1000]}
+      >
+        <meshToonMaterial color="#ffffff" opacity={0.5} transparent={true} />
+      </Plane>
+    </>
   );
 }
 function handlePointerMove(

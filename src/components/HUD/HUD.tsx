@@ -8,9 +8,11 @@ const HUD = () => {
   return (
     <>
       <Controls />
-      <PlayerHPBar />
-      <MoneyIndicator />
-      <BoomerangsIndicator />
+      <div style={{ pointerEvents: "none" }}>
+        <PlayerHPBar />
+        <MoneyIndicator />
+        <BoomerangsIndicator />
+      </div>
     </>
   );
 };

@@ -56,24 +56,49 @@ export function Enemies() {
   );
 }
 
+const mu = 2;
 const Zuck = () => (
-  <group scale={1} position={[0, -1.3, 0]} rotation={[0, -1, 0]}>
+  <group
+    castShadow={true}
+    receiveShadow={true}
+    scale={1 * mu}
+    position={[0, -1.3, 0]}
+    rotation={[0, -1, 0]}
+  >
     <MarkZuckerberg />
   </group>
 );
 
 const Bezos = () => (
-  <group scale={1.8} position={[0, 0, 0]} rotation={[0, 0, 0]}>
+  <group
+    castShadow={true}
+    receiveShadow={true}
+    scale={1.8 * mu}
+    position={[0, 0, 0]}
+    rotation={[0, 0, 0]}
+  >
     <JeffBezos />
   </group>
 );
 const Musk = () => (
-  <group scale={1} position={[0, -1.6, 0]} rotation={[0, 0, 0]}>
+  <group
+    castShadow={true}
+    receiveShadow={true}
+    scale={1 * mu}
+    position={[0, -1.6, 0]}
+    rotation={[0, 0, 0]}
+  >
     <ElonMusk />
   </group>
 );
 const Virus = ({ id }) => (
-  <group scale={1} position={[0, -1.6, 0]} rotation={[0, 0, 0]}>
+  <group
+    castShadow={true}
+    receiveShadow={true}
+    scale={1 * mu}
+    position={[0, -1.6, 0]}
+    rotation={[0, 0, 0]}
+  >
     <VirusEnemy {...{ id }} />
   </group>
 );

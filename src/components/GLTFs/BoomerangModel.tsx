@@ -11,7 +11,7 @@ import { useRef } from "react";
 import { animated, useSpring } from "@react-spring/three";
 import { useHeldBoomerangs } from "../../store";
 
-export default function BoomerangModel({ idx, ...props }) {
+export default function BoomerangModel({ idx, keepFlying = false, ...props }) {
   const group = useRef();
   const { nodes, materials } = useGLTF(
     "/models/zelda_ocarina_of_time_boomerang/scene.gltf"
@@ -22,7 +22,9 @@ export default function BoomerangModel({ idx, ...props }) {
 
   // fade out the boomerang when we catch it
   const [heldBoomerangs] = useHeldBoomerangs();
-  const { status } = heldBoomerangs[idx] || { status: null };
+  const { status } = keepFlying
+    ? { status: "flying" }
+    : heldBoomerangs[idx] || { status: null };
 
   const { opacity } = useSpring({
     opacity: status === "idle" ? 0 : 1,
@@ -45,12 +47,14 @@ export default function BoomerangModel({ idx, ...props }) {
               rotation={[-Math.PI / 2, 0, -0.78]}
             >
               <animated.mesh
+                castShadow
                 geometry={nodes.Orb_BoomerangOrbHoler_Mat_0.geometry}
                 material={materials.BoomerangOrbHoler_Mat}
                 material-transparent={true}
                 material-opacity={opacity}
               />
               <animated.mesh
+                castShadow
                 geometry={nodes.Orb_BoomerangOrb_Mat_0.geometry}
                 material={materials.BoomerangOrb_Mat}
                 material-transparent={true}
@@ -63,6 +67,7 @@ export default function BoomerangModel({ idx, ...props }) {
               scale={[1, 1, 1]}
             >
               <animated.mesh
+                castShadow
                 geometry={nodes.RangWood_BoomerangWood_Mat_0.geometry}
                 material={materials.BoomerangWood_Mat}
                 material-transparent={true}

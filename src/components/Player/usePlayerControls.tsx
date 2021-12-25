@@ -11,6 +11,7 @@ import {
   POWERUP_NAME,
   RANGEUP_NAME,
 } from "../../utils/constants";
+import { useInterval } from "react-use";
 
 const POWERUP_DURATION = 10 * 1000;
 const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
@@ -134,11 +135,15 @@ export function usePlayerControls(): [
   useEffect(() => {
     const unsubscribe = api.position.subscribe((v) => {
       position.current = v;
-      setPlayerState((p) => ({ ...p, playerPosition: v }));
     });
     return unsubscribe;
   }, []);
   const rotation = useRef([0, 0, 0]);
+
+  useInterval(() => {
+    setPlayerState((p) => ({ ...p, playerPosition: position.current }));
+  }, 400);
+
   useEffect(() => {
     const unsubscribe = api.rotation.subscribe((v) => (rotation.current = v));
     return unsubscribe;
@@ -176,7 +181,7 @@ export function usePlayerControls(): [
     );
     // const newRotY = getPlayerRotation(lastPressedKey) + orbitControlsAngle;
 
-    const PLAYER_ROTATION_SPEED = 0.002;
+    const PLAYER_ROTATION_SPEED = 0.004;
     // const newRX = THREE.MathUtils.lerp(
     //   rotation.current[0],
     //   newRotX,
