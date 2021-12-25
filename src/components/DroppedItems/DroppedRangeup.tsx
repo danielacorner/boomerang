@@ -4,7 +4,7 @@ import { useMount } from "react-use";
 import { PLAYER_NAME, RANGEUP_NAME } from "../../utils/constants";
 import Rangeup from "../GLTFs/Rangeup";
 
-const RANGEUP_HEIGHT = 1;
+const RANGEUP_HEIGHT = 2;
 const RANGEUP_DROP_DURATION = 16 * 1000;
 export function DroppedRangeup({ position }) {
   const [mounted, setMounted] = useState(true);

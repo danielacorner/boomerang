@@ -4,7 +4,7 @@ import { useMount } from "react-use";
 import { PLAYER_NAME, BOOMERANG_ITEM_NAME } from "../../utils/constants";
 import BoomerangModel from "../GLTFs/BoomerangModel";
 
-const BOOMERANG_ITEM_HEIGHT = 1;
+const BOOMERANG_ITEM_HEIGHT = 2;
 const BOOMERANG_ITEM_DROP_DURATION = 32 * 1000;
 export function DroppedBoomerang({ position }) {
   const [mounted, setMounted] = useState(true);

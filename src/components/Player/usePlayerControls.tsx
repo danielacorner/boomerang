@@ -176,6 +176,7 @@ export function usePlayerControls(): [
     );
     // const newRotY = getPlayerRotation(lastPressedKey) + orbitControlsAngle;
 
+    const PLAYER_ROTATION_SPEED = 0.002;
     // const newRX = THREE.MathUtils.lerp(
     //   rotation.current[0],
     //   newRotX,
@@ -197,7 +198,6 @@ export function usePlayerControls(): [
 
   return [playerRef, targetRef, position.current];
 }
-const PLAYER_ROTATION_SPEED = 0.08;
 
 function getPlayerRotation(lastPressedKey) {
   return lastPressedKey === LEFT

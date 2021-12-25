@@ -3,7 +3,7 @@ import { Ground } from "./Ground";
 import { Enemies } from "./Enemies/Enemies";
 import { Collisions } from "./Player/Collisions";
 import { Lighting } from "./Lighting";
-import { Sky } from "@react-three/drei";
+import { Environment, Sky } from "@react-three/drei";
 import { OrbitControlsWithAngle } from "./OrbitControlsWithAngle";
 import { DroppedItems } from "./DroppedItems/DroppedItems";
 
@@ -20,6 +20,7 @@ export function Scene() {
       <Collisions />
       <OrbitControlsWithAngle />
       <DroppedItems />
+      <Environment preset="dawn" />
     </mesh>
   );
 }
