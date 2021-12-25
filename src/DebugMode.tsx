@@ -5,8 +5,8 @@ import { Html } from "@react-three/drei";
 import { useIsDev } from "./store";
 
 export function DebugMode({ children }) {
-  const [isOn, setIsOn] = useState(false);
-  // const [isOn, setIsOn] = useState(process.env.NODE_ENV === "development");
+  // const [isOn, setIsOn] = useState(false);
+  const [isOn, setIsOn] = useState(process.env.NODE_ENV === "development");
   // const isDev = process.env.NODE_ENV === "development";
   const [, setIsDev] = useIsDev();
 

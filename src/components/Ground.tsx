@@ -5,8 +5,16 @@ import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { GROUND_NAME } from "../utils/constants";
 
+const PLANE_PROPS = {
+  args: [1000, 1000] as any,
+  position: [0, -1, 0] as [number, number, number],
+  rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
+};
+
 export function Ground() {
-  const [planeRef] = usePlane(() => ({ rotation: [-Math.PI / 2, 0, 0] }));
+  const [planeRef] = usePlane(() => ({
+    ...PLANE_PROPS,
+  }));
   const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
 
   const [{ farthestTargetPosition, playerPosition, rangeUp }, setPlayerState] =
@@ -127,17 +135,11 @@ export function Ground() {
         ref={planeRef}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
-        args={[1000, 1000]}
-        position={[0, -1, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
+        {...PLANE_PROPS}
       >
         <meshToonMaterial color="#ffffff" map={texture} />
       </Plane>
-      <Plane
-        position={[0, 0, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
-        args={[1000, 1000]}
-      >
+      <Plane {...PLANE_PROPS} position={[0, 0, 0]}>
         <meshToonMaterial color="#ffffff" opacity={0.5} transparent={true} />
       </Plane>
     </>

@@ -23,11 +23,11 @@ export function Lighting() {
         intensity={1}
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
-        // shadow-camera-far={50}
-        // shadow-camera-left={-10}
-        // shadow-camera-right={10}
-        // shadow-camera-top={10}
-        // shadow-camera-bottom={-10}
+        shadow-camera-far={500}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
       />
 
       {/* <pointLight position={[-10, 0, -20]} color="red" intensity={2.5} /> */}

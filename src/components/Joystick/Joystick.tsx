@@ -82,28 +82,29 @@ export function Joystick() {
     set({ xy: [0, 0] });
   };
 
-  useMount(() => {
-    window.addEventListener("scroll", (e) => {
-      console.log(
-        "🌟🚨 ~ file: Joystick.tsx ~ line 91 ~ window.addEventListener ~ e",
-        e
-      );
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    });
-    window.addEventListener("touchstart", (e) => {
-      e.preventDefault();
-      e.stopPropagation();
-      return;
-    });
-  });
+  // useMount(() => {
+  //   window.addEventListener("scroll", (e) => {
+  //     console.log(
+  //       "🌟🚨 ~ file: Joystick.tsx ~ line 91 ~ window.addEventListener ~ e",
+  //       e
+  //     );
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //     return;
+  //   });
+  //   window.addEventListener("touchstart", (e) => {
+  //     e.preventDefault();
+  //     e.stopPropagation();
+  //     return;
+  //   });
+  // });
   return (
     <JoystickStyles
       {...{
         onMouseMove,
         onPointerMove: onMouseMove,
         onTouchMove: onMouseMove,
+        onTouchStart: onMouseMove,
         onMouseUp,
         onPointerUp: onMouseUp,
         onTouchEnd: onMouseUp,
@@ -112,7 +113,6 @@ export function Joystick() {
         onDragStart: onMouseMove,
         onMouseDown: onMouseMove,
         onPointerDown: onMouseMove,
-        onTouchStart: onMouseMove,
       }}
     >
       <animated.div
