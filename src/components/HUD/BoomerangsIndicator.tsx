@@ -33,7 +33,7 @@ function BoomerangIcon({ status }) {
         transform: `rotate(-${rand}deg)`,
       }}
     >
-      <img src="/images/boomerang.png" width="32" height="32" />;
+      <img src="/images/boomerang.png" width="32" height="32" />
     </span>
   );
 }
