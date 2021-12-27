@@ -9,13 +9,13 @@ const PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
   rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
-  collisionFilterGroup: GROUP1,
 };
 const MAX_THROW_DISTANCE = 13;
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({
     ...PLANE_PROPS,
+    collisionFilterGroup: GROUP1,
   }));
   const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
 
@@ -40,66 +40,50 @@ export function Ground() {
       newFarthestTargetPosition: [number, number, number];
     } = handlePointerMove(e, playerPosition, MAX_THROW_DISTANCE, rangeUp);
 
-    setHeldBoomerangs(
-      (currentBoomerangs) => {
-        // if rangeUp is active, send ALL active boomerangs,
-        // plus the first available boomerang, to the target position
-        let found = false;
-        if (rangeUp) {
-          const newBoomerangs = currentBoomerangs.map((boom) => {
-            if (
-              (!found && !boom.clickTargetPosition) ||
-              boom.status !== "idle"
-            ) {
-              if (!boom.clickTargetPosition) {
-                found = true;
-              }
-
-              return {
-                ...boom,
-                status: "flying" as any,
-                clickTargetPosition: newFarthestTargetPosition,
-              };
-            }
-            return boom;
-          });
-
-          return newBoomerangs;
-        } else {
-          // normally,
-          // find the first boomerang without a clickTargetPosition,
-          // and set it to the current target position
-          let found = false;
-          const newBoomerangs = currentBoomerangs.map((boom) => {
-            if (!found && !boom.clickTargetPosition) {
+    setHeldBoomerangs((currentBoomerangs) => {
+      // if rangeUp is active, send ALL active boomerangs,
+      // plus the first available boomerang, to the target position
+      let found = false;
+      if (rangeUp) {
+        const newBoomerangs = currentBoomerangs.map((boom) => {
+          if ((!found && !boom.clickTargetPosition) || boom.status !== "held") {
+            if (!boom.clickTargetPosition) {
               found = true;
-              return {
-                ...boom,
-                status: "flying" as any,
-                clickTargetPosition: newFarthestTargetPosition,
-              };
             }
-            return boom;
-          });
-          console.log(
-            "🌟🚨 ~ file: Ground.tsx ~ line 68 ~ onPointerDown ~ newBoomerangs",
-            newBoomerangs
-          );
-          return newBoomerangs;
-        }
-      }
 
-      // p.status === "idle" || rangeUp
-      //   ? {
-      //       ...p,
-      //       status: "flying",
-      //       clickTargetPositions: [
-      //         ...p.clickTargetPositions,
-      //         farthestTargetPosition,
-      //       ],
-      //     }
-      //   : p
-    );
+            return {
+              ...boom,
+              status: "flying" as any,
+              clickTargetPosition: newFarthestTargetPosition,
+            };
+          }
+          return boom;
+        });
+
+        return newBoomerangs;
+      } else {
+        // normally,
+        // find the first boomerang without a clickTargetPosition,
+        // and set it to the current target position
+        let found = false;
+        const newBoomerangs = currentBoomerangs.map((boom) => {
+          if (!found && !boom.clickTargetPosition) {
+            found = true;
+            return {
+              ...boom,
+              status: "flying" as any,
+              clickTargetPosition: newFarthestTargetPosition,
+            };
+          }
+          return boom;
+        });
+        console.log(
+          "🌟🚨 ~ file: Ground.tsx ~ line 68 ~ onPointerDown ~ newBoomerangs",
+          newBoomerangs
+        );
+        return newBoomerangs;
+      }
+    });
   };
 
   const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = (e) => {

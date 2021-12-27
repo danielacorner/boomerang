@@ -3,7 +3,8 @@ import { useHeldBoomerangs, usePlayerState } from "../../../store";
 import { useFrame } from "@react-three/fiber";
 import { useSphere } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
-import { GROUP1 } from "../../../utils/constants";
+import { GROUP1, PLAYER_NAME } from "../../../utils/constants";
+import * as THREE from "three";
 
 const BOOMERANG_RADIUS = 1;
 const BOOMERANG_PULL_FORCE = 0.1;
@@ -24,23 +25,47 @@ export function useBoomerangMovement(
   const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
   const { status, clickTargetPosition } = heldBoomerangs[idx];
 
-  const isIdle = status === "idle";
+  const isHeld = status === "held";
+  const isBoomerangMoving = !["dropped", "held"].includes(status);
 
   const [boomerangRef, api] = useSphere(
     () => ({
       mass: poweredUp ? 4 : 1,
-      args: [BOOMERANG_RADIUS * (poweredUp ? 4 : 1) * (isIdle ? 0 : 1)],
-      collisionFilterMask: GROUP1, // It can only collide with group 1 (enemies, walls, ground, dropped items)
-      position: playerPosition || INITIAL_POSITION,
-      type: "Kinematic",
+      args: [BOOMERANG_RADIUS * (poweredUp ? 4 : 1) * (isHeld ? 0 : 1)],
+      ...(isBoomerangMoving
+        ? {
+            collisionFilterMask: GROUP1, // while moving, it can only collide with group 1 (enemies, walls, ground, dropped items)
+          }
+        : {}),
+      position: position.current || playerPosition || INITIAL_POSITION,
+      // position: playerPosition || INITIAL_POSITION,
+      type: isBoomerangMoving ? "Kinematic" : "Dynamic",
       // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
       material: {
         restitution: 1,
         friction: 0,
       },
+      // pick it up when collides with the player
+      onCollide: (e) => {
+        const isCollisionWithPlayer = e.body.name === PLAYER_NAME;
+        if (isCollisionWithPlayer) {
+          setHeldBoomerangs((currentBoomerangs) => {
+            return currentBoomerangs.map((boom, bIdx) => {
+              if (bIdx === idx) {
+                return {
+                  ...boom,
+                  status: "held",
+                  clickTargetPosition: null,
+                };
+              }
+              return boom;
+            });
+          });
+        }
+      },
     }),
     null,
-    [poweredUp, isIdle]
+    [poweredUp, isHeld, isBoomerangMoving]
   );
 
   // subscribe to the position
@@ -56,6 +81,23 @@ export function useBoomerangMovement(
     const unsubscribe = api.velocity.subscribe((v) => (velocity.current = v));
     return unsubscribe;
   }, []);
+
+  // after a while, a flying boomerang will drop to the ground
+  const DROP_TIMEOUT = 3.5 * 1000;
+  useEffect(() => {
+    let timer;
+    if (status === "flying") {
+      timer = setTimeout(() => {
+        setHeldBoomerangs((p) =>
+          p.map((boom, bIdx) =>
+            bIdx === idx ? { ...boom, status: "dropped" } : boom
+          )
+        );
+      }, DROP_TIMEOUT);
+    } else if (timer && status === "held") {
+      clearTimeout(timer);
+    }
+  }, [status]);
 
   // decrease the overall velocity when the boomerang is flying
   const thrownTime = useRef<any>(null);
@@ -84,10 +126,21 @@ export function useBoomerangMovement(
     }
   }, [clickTargetPosition, status]);
 
-  // pull the boomerang towards the player
-
+  // drop the boomerang
   useFrame(() => {
-    if (status === "returning" && clickTargetPosition) {
+    if (!isBoomerangMoving) {
+      const slowerVelocity = [
+        THREE.MathUtils.lerp(velocity.current[0], 0, 0.05),
+        THREE.MathUtils.lerp(velocity.current[1], -1, 0.05),
+        THREE.MathUtils.lerp(velocity.current[2], 0, 0.05),
+      ];
+      api.velocity.set(slowerVelocity[0], slowerVelocity[1], slowerVelocity[2]);
+    }
+  });
+
+  // pull the boomerang towards the player
+  useFrame(() => {
+    if (isBoomerangMoving && status === "returning" && clickTargetPosition) {
       const time = Date.now() - thrownTime.current;
       const slowDownPct =
         (1 - Math.min(time / BOOMERANG_FLY_MAX_DURATION, 1)) ** 0.5;
@@ -118,6 +171,7 @@ export function useBoomerangMovement(
         Math.abs(pullBoomerang[1]) < playerRadius &&
         Math.abs(pullBoomerang[2]) < playerRadius;
 
+      // if the boomerang is close to the player, pick up the boomerang
       if (isAtPlayer && thrownTime.current > 1500) {
         api.position.set(...playerPosition);
         thrownTime.current = null;
@@ -126,7 +180,7 @@ export function useBoomerangMovement(
             isEqual(boom.clickTargetPosition, clickTargetPosition)
               ? {
                   ...boom,
-                  status: "idle",
+                  status: "held",
                   clickTargetPosition: null,
                 }
               : boom

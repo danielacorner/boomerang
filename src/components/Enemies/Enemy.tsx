@@ -108,7 +108,7 @@ function useMoveEnemy({
       mass: 1,
       position: position.current,
       onCollide: (e) => {
-        if (status === "idle" || theyDroppedItems || invulnerable) return;
+        if (status === "held" || theyDroppedItems || invulnerable) return;
         // when the boomerang+enemy collide, subtract some hp
         const isCollisionWithBoomerang = e.body.name === BOOMERANG_NAME;
         const isCollisionWithGround = e.body.name === GROUND_NAME;

@@ -27,7 +27,7 @@ export default function BoomerangModel({ idx, keepFlying = false, ...props }) {
     : heldBoomerangs[idx] || { status: null };
 
   const { opacity } = useSpring({
-    opacity: status === "idle" ? 0 : 1,
+    opacity: status === "held" ? 0 : 1,
   });
 
   return (

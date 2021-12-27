@@ -122,7 +122,7 @@ export function usePlayerControls(): [
         if (isCollisionWithBoomerang) {
           console.log("COLLISION! with boomerang", e);
           const newBoomerang = {
-            status: "idle" as any,
+            status: "held" as any,
             clickTargetPosition: null,
           };
           setHeldBoomerangs((p) => [...p, newBoomerang]);

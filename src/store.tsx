@@ -17,12 +17,12 @@ export function useEnemies() {
 const boomerangStateAtom = atom<
   {
     clickTargetPosition: [number, number, number] | null;
-    status: "idle" | "flying" | "returning";
+    status: "held" | "flying" | "returning" | "dropped";
   }[]
 >([
   {
     clickTargetPosition: null,
-    status: "idle",
+    status: "held",
   },
 ]);
 export function useHeldBoomerangs() {

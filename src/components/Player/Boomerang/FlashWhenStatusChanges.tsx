@@ -10,7 +10,7 @@ export function FlashWhenStatusChanges({ idx }) {
   const [flash, setFlash] = useState(false);
   const prevStatus = usePrevious(status);
   useEffect(() => {
-    if (status === "idle" && prevStatus === "returning") {
+    if (status === "held" && prevStatus === "returning") {
       setFlash(true);
       setTimeout(() => {
         setFlash(false);

@@ -17,11 +17,11 @@ export function MouseTarget({ children }) {
   const { status } = heldBoomerangs[0];
   return (
     <mesh ref={ref}>
-      <torusBufferGeometry args={[0.6, 0.6, 0.6]} />
+      <torusBufferGeometry args={[1, 0.1, 16, 16]} />
       <meshBasicMaterial
         color="#831a00"
         transparent={true}
-        opacity={status === "idle" ? 0.4 : 0}
+        opacity={status === "held" ? 0.4 : 0}
       />
       {children}
     </mesh>

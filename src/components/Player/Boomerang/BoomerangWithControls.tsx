@@ -23,13 +23,13 @@ export const BoomerangWithControls = forwardRef(
     const [{ poweredUp }] = usePlayerState();
     const [{ scale }] = useSpring(
       {
-        scale: status === "idle" ? 0 : poweredUp ? 4 : 1,
+        scale: status === "held" ? 0 : poweredUp ? 4 : 1,
       },
       [status, poweredUp]
     );
     return (
       <animated.mesh castShadow ref={ref} scale={scale} name={BOOMERANG_NAME}>
-        <Spin>
+        <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
           <BoomerangModel {...{ idx }} />
         </Spin>
         <FlashWhenStatusChanges {...{ idx }} />

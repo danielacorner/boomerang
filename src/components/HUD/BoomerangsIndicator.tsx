@@ -28,7 +28,7 @@ function BoomerangIcon({ status }) {
   return (
     <span
       style={{
-        opacity: status === "idle" ? 1 : 0.5,
+        opacity: status === "held" ? 1 : 0.5,
         margin: 8,
         transform: `rotate(-${rand}deg)`,
       }}
