@@ -44,3 +44,4 @@ function Powerup(props) {
     </mesh>
   );
 }
+useGLTF.preload("/models/power-up_mushroom/scene.gltf");

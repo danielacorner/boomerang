@@ -5,7 +5,7 @@ export function Lighting() {
   const { rayleigh } = { rayleigh: 0.7 };
   return (
     <>
-      <ambientLight intensity={0.6} />
+      {/* <ambientLight intensity={0.6} /> */}
       {/* <directionalLight
         position={[0, 10, 0]}
         intensity={1.5}

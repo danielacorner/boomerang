@@ -59,6 +59,7 @@ function Mage({ playerRef, targetRef }) {
       >
         <BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
         <RangeupIndicator />
+        <pointLight intensity={0.8} distance={10} />
       </animated.mesh>
     </>
   );

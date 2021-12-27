@@ -10,6 +10,7 @@ const PLANE_PROPS = {
   position: [0, -1, 0] as [number, number, number],
   rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
 };
+const MAX_THROW_DISTANCE = 13;
 
 export function Ground() {
   const [planeRef] = usePlane(() => ({
@@ -31,8 +32,10 @@ export function Ground() {
       return;
     }
     const {
+      lookAt,
       newFarthestTargetPosition,
     }: {
+      lookAt: [number, number, number];
       newFarthestTargetPosition: [number, number, number];
     } = handlePointerMove(e, playerPosition, MAX_THROW_DISTANCE, rangeUp);
 
@@ -98,8 +101,6 @@ export function Ground() {
     );
   };
 
-  const MAX_THROW_DISTANCE = 12;
-
   const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = (e) => {
     if (playerPosition) {
       // if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPosition) {
@@ -159,26 +160,26 @@ function handlePointerMove(
   // if it's above the max distance, shrink it down to the max distance
   const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
 
-  const pctAboveMax = Math.abs(distance) / maxThrowDistance;
+  const pctAboveMax = Math.abs(distance / maxThrowDistance);
 
   const lookAt: [number, number, number] = [x, y, z];
 
   // if the distance is above the max distance, scale it down
   // (normalize, then multiply by maxThrowDistance)
-  const [normX, normY, normZ] = normalizeVector([
-    x - playerPosition[0],
-    y - playerPosition[1],
-    z - playerPosition[2],
-  ]);
+  // const [normX, normY, normZ] = normalizeVector([xx, yy, zz]);
 
   const newFarthestTargetPosition: [number, number, number] =
     pctAboveMax > 1
-      ? [
-          normX * maxThrowDistance + playerPosition[0],
-          normY * maxThrowDistance + playerPosition[1],
-          normZ * maxThrowDistance + playerPosition[2],
-        ]
+      ? // if it's above 1, scale it down
+        [x / pctAboveMax, y / pctAboveMax, z / pctAboveMax]
       : lookAt;
+
+  // can verify distance2 <= maxThrowDistance
+  // const distance2 = distanceBetweenPoints(
+  //   playerPosition,
+  //   newFarthestTargetPosition
+  // );
+
   return { lookAt, newFarthestTargetPosition };
 }
 
@@ -200,6 +201,7 @@ function distanceBetweenPoints([x1, y1, z1], [x2, y2, z2]) {
   );
 }
 
+/** e.g. convert a [1,2,3] array into [1/3,2/3,3/3] */
 function normalizeVector([x, y, z]) {
   const magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
   return [x / magnitude, y / magnitude, z / magnitude];
