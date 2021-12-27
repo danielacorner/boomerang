@@ -3,12 +3,13 @@ import { usePlane } from "@react-three/cannon";
 import { useHeldBoomerangs, usePlayerState } from "../store";
 import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
-import { GROUND_NAME } from "../utils/constants";
+import { GROUND_NAME, GROUP1 } from "../utils/constants";
 
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
   rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
+  collisionFilterGroup: GROUP1,
 };
 const MAX_THROW_DISTANCE = 13;
 

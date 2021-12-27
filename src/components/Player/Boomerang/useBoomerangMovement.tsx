@@ -3,6 +3,7 @@ import { useHeldBoomerangs, usePlayerState } from "../../../store";
 import { useFrame } from "@react-three/fiber";
 import { useSphere } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
+import { GROUP1 } from "../../../utils/constants";
 
 const BOOMERANG_RADIUS = 1;
 const BOOMERANG_PULL_FORCE = 0.1;
@@ -29,6 +30,7 @@ export function useBoomerangMovement(
     () => ({
       mass: poweredUp ? 4 : 1,
       args: [BOOMERANG_RADIUS * (poweredUp ? 4 : 1) * (isIdle ? 0 : 1)],
+      collisionFilterMask: GROUP1, // It can only collide with group 1 (enemies, walls, ground, dropped items)
       position: playerPosition || INITIAL_POSITION,
       type: "Kinematic",
       // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.

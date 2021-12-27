@@ -1,7 +1,11 @@
 import { useCylinder } from "@react-three/cannon";
 import { useState } from "react";
 import { useMount } from "react-use";
-import { PLAYER_NAME, BOOMERANG_ITEM_NAME } from "../../utils/constants";
+import {
+  PLAYER_NAME,
+  BOOMERANG_ITEM_NAME,
+  GROUP1,
+} from "../../utils/constants";
 import BoomerangModel from "../GLTFs/BoomerangModel";
 
 const BOOMERANG_ITEM_HEIGHT = 2;
@@ -22,6 +26,7 @@ export function DroppedBoomerangContent({ position, setMounted }) {
     args: [2, 2, BOOMERANG_ITEM_HEIGHT, 6],
     mass: 200,
     position,
+    collisionFilterGroup: GROUP1,
     onCollide: (e) => {
       const isCollisionWithPlayer = e.body.name === PLAYER_NAME;
       if (isCollisionWithPlayer) {
@@ -31,7 +36,7 @@ export function DroppedBoomerangContent({ position, setMounted }) {
   }));
   return (
     <mesh ref={ref} name={BOOMERANG_ITEM_NAME}>
-      <BoomerangModel />
+      <BoomerangModel idx={null} />
     </mesh>
   );
 }

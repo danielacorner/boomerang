@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useSphere } from "@react-three/cannon";
+import { useCylinder } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
@@ -8,6 +8,7 @@ import { useHeldBoomerangs, useGameState, usePlayerState } from "../../store";
 import {
   BOOMERANG_ITEM_NAME,
   ENEMY_NAME,
+  GROUP2,
   POWERUP_NAME,
   RANGEUP_NAME,
 } from "../../utils/constants";
@@ -69,9 +70,11 @@ export function usePlayerControls(): [
   const targetRef = useRef<THREE.Mesh>(null);
   const playerRef = useRef<THREE.Mesh>(null);
 
-  const [sphereRef, api] = useSphere(
+  const [cylinderRef, api] = useCylinder(
     () => ({
+      collisionFilterGroup: GROUP2,
       mass: 1,
+      args: [1, 1, 3],
       position: [0, 2, 0],
       // if collides with powerup, power up!
       onCollide: (e) => {
@@ -125,7 +128,7 @@ export function usePlayerControls(): [
           setHeldBoomerangs((p) => [...p, newBoomerang]);
         }
       },
-      type: "Static", // https://github.com/pmndrs/use-cannon#types
+      type: "Dynamic", // https://github.com/pmndrs/use-cannon#types
       // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
     }),
     playerRef
@@ -151,7 +154,7 @@ export function usePlayerControls(): [
 
   // move  the player
   useFrame(({ camera }) => {
-    if (!sphereRef.current || !playerRef.current || !hasMoved) {
+    if (!cylinderRef.current || !playerRef.current || !hasMoved) {
       return;
     }
     const [px, py, pz] = [

@@ -1,7 +1,7 @@
 import { useCylinder } from "@react-three/cannon";
 import { useState } from "react";
 import { useMount } from "react-use";
-import { PLAYER_NAME, RANGEUP_NAME } from "../../utils/constants";
+import { GROUP1, PLAYER_NAME, RANGEUP_NAME } from "../../utils/constants";
 import Rangeup from "../GLTFs/Rangeup";
 
 const RANGEUP_HEIGHT = 2;
@@ -19,6 +19,7 @@ export function DroppedRangeup({ position }) {
 }
 export function DroppedRangeupContent({ position, setMounted }) {
   const [ref, api] = useCylinder(() => ({
+    collisionFilterGroup: GROUP1,
     args: [3, 1, RANGEUP_HEIGHT, 6],
     mass: 200,
     position,

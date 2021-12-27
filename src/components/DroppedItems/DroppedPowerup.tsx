@@ -2,7 +2,7 @@ import { useCylinder } from "@react-three/cannon";
 import { useGLTF } from "@react-three/drei";
 import { useState } from "react";
 import { useMount } from "react-use";
-import { PLAYER_NAME, POWERUP_NAME } from "../../utils/constants";
+import { GROUP1, PLAYER_NAME, POWERUP_NAME } from "../../utils/constants";
 
 const POWERUP_HEIGHT = 2;
 const POWERUP_DROP_DURATION = 24 * 1000;
@@ -19,6 +19,7 @@ export function DroppedPowerup({ position }) {
 }
 export function DroppedPowerupContent({ position, setMounted }) {
   const [ref, api] = useCylinder(() => ({
+    collisionFilterGroup: GROUP1,
     args: [2, 2, POWERUP_HEIGHT, 6],
     mass: 200,
     position,

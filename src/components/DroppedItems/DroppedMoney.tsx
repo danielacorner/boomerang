@@ -5,6 +5,7 @@ import { useCylinder } from "@react-three/cannon";
 import { useMoney, usePlayerState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
+import { GROUP1 } from "../../utils/constants";
 
 const BAG_RADIUS = 1;
 const UNMOUNT_DELAY = 16 * 1000;
@@ -36,6 +37,7 @@ function BagContent({ position, setMounted }) {
 
   const [, setMoney] = useMoney();
   const [ref, api] = useCylinder(() => ({
+    collisionFilterGroup: GROUP1,
     args: [1, 1, BAG_RADIUS, 6],
     mass: 1,
     position,

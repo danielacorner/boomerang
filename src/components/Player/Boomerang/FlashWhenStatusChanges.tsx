@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useHeldBoomerangs } from "../../store";
+import { useHeldBoomerangs } from "../../../store";
 import { usePrevious } from "react-use";
 import { useSpring, animated } from "@react-spring/three";
 const FLASH_TIME = 200;

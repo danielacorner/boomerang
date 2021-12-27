@@ -10,7 +10,12 @@ import {
   useGameState,
 } from "../../store";
 import { EnemyHpBar } from "./EnemyHpBar";
-import { GROUND_NAME, BOOMERANG_NAME, ENEMY_NAME } from "../../utils/constants";
+import {
+  GROUND_NAME,
+  BOOMERANG_NAME,
+  ENEMY_NAME,
+  GROUP1,
+} from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 
 const ENEMY_JITTER_SPEED = 2;
@@ -98,6 +103,7 @@ function useMoveEnemy({
   const [, setDroppedItems] = useDroppedItems();
   const [enemyRef, api] = useCylinder(
     () => ({
+      collisionFilterGroup: GROUP1,
       args: [3, 1, CYLINDER_HEIGHT, 6],
       mass: 1,
       position: position.current,

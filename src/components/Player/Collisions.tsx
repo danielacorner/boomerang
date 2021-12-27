@@ -1,5 +1,6 @@
 import { usePlane } from "@react-three/cannon";
 import { useThree } from "@react-three/fiber";
+import { GROUP1 } from "../../utils/constants";
 
 const DEPTH = 9;
 export function Collisions() {
@@ -14,10 +15,12 @@ export function Collisions() {
 
   // left, right
   usePlane(() => ({
+    collisionFilterGroup: GROUP1,
     position: [x, 0, 0],
     rotation: [0, -Math.PI / 2, 0],
   }));
   usePlane(() => ({
+    collisionFilterGroup: GROUP1,
     position: [-x, 0, 0],
     rotation: [0, Math.PI / 2, 0],
   }));

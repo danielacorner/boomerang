@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import BoomerangModel from "../../GLTFs/BoomerangModel";
 import * as THREE from "three";
 import { useHeldBoomerangs, usePlayerState } from "../../../store";
-import { FlashWhenStatusChanges } from "./../FlashWhenStatusChanges";
+import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
 import { BOOMERANG_NAME } from "../../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 import { Spin } from "./Spin";
