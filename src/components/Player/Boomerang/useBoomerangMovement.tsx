@@ -82,22 +82,25 @@ export function useBoomerangMovement(
     return unsubscribe;
   }, []);
 
-  // after a while, a flying boomerang will drop to the ground
+  // after a while, a returning boomerang will drop to the ground
   const DROP_TIMEOUT = 3.5 * 1000;
+  const timer = useRef(null as any);
   useEffect(() => {
-    let timer;
-    if (status === "flying") {
-      timer = setTimeout(() => {
+    const keepFlying =
+      rangeUp || ["held", "dropped", "flying"].includes(status);
+
+    if (timer.current && keepFlying) {
+      clearTimeout(timer.current);
+    } else if (status === "returning") {
+      timer.current = setTimeout(() => {
         setHeldBoomerangs((p) =>
           p.map((boom, bIdx) =>
             bIdx === idx ? { ...boom, status: "dropped" } : boom
           )
         );
       }, DROP_TIMEOUT);
-    } else if (timer && status === "held") {
-      clearTimeout(timer);
     }
-  }, [status]);
+  }, [rangeUp, status]);
 
   // decrease the overall velocity when the boomerang is flying
   const thrownTime = useRef<any>(null);
