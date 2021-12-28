@@ -1,12 +1,14 @@
 import { Debug } from "@react-three/cannon";
 import { Portal, ToggleButton } from "@mui/material";
-import { useState } from "react";
 import { Html } from "@react-three/drei";
 import { useIsDev } from "./store";
+import { useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 
+const isDevModeAtom = atomWithStorage("isDevMode", false);
 export function DebugMode({ children }) {
   // const [isOn, setIsOn] = useState(false);
-  const [isOn, setIsOn] = useState(process.env.NODE_ENV === "development");
+  const [isOn, setIsOn] = useAtom(isDevModeAtom);
   // const isDev = process.env.NODE_ENV === "development";
   const [, setIsDev] = useIsDev();
 

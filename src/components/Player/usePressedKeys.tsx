@@ -14,6 +14,10 @@ const pressedKeysAtom = atom<Direction[]>([]);
 const lastPressedKeyAtom = atom<Direction>(INITIAL_DIRECTION);
 
 export function usePressedKeys(): {
+  up: boolean;
+  right: boolean;
+  down: boolean;
+  left: boolean;
   pressedKeys: Direction[];
   lastPressedKey: Direction;
   setPressedKeys: (update: SetStateAction<Direction[]>) => void;
@@ -78,7 +82,18 @@ export function usePressedKeys(): {
     event: "keyup",
   });
 
+  const [up, right, down, left] = [
+    pressedKeys.includes(UP),
+    pressedKeys.includes(RIGHT),
+    pressedKeys.includes(DOWN),
+    pressedKeys.includes(LEFT),
+  ];
+
   return {
+    up,
+    right,
+    down,
+    left,
     pressedKeys,
     lastPressedKey,
     setPressedKeys,

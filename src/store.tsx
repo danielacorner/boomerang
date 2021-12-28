@@ -31,12 +31,14 @@ export function useHeldBoomerangs() {
 const playerStateAtom = atom<{
   lookAt: [number, number, number];
   playerPosition: [number, number, number] | null;
+  playerVelocity: [number, number, number] | null;
   farthestTargetPosition: [number, number, number] | null;
   poweredUp: boolean;
   rangeUp: boolean;
 }>({
   lookAt: [0, 0, 0],
   playerPosition: null,
+  playerVelocity: null,
   farthestTargetPosition: null,
   poweredUp: false,
   rangeUp: false,
