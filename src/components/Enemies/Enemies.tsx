@@ -7,118 +7,118 @@ import { useInterval, useMount } from "react-use";
 import VirusEnemy from "../GLTFs/VirusEnemy";
 import { useEnemies } from "../../store";
 
-const MAX_ENEMIES = 16;
+const MAX_ENEMIES = 10;
 
 export function Enemies() {
-  const [Enemies, setEnemies] = useEnemies();
+	const [Enemies, setEnemies] = useEnemies();
 
-  const spawnEnemy = useCallback(() => {
-    const id = Math.random() * 10 ** 16;
-    const Component = shuffle([
-      () => <Bezos />,
-      () => <Zuck />,
-      () => <Musk />,
-      () => <Virus {...{ id }} />,
-    ])[0];
-    setEnemies((p) => {
-      const newEnemies = [
-        ...p,
-        {
-          Component,
-          unmounted: false,
-          id,
-          invulnerable: false,
-          unmountEnemy: () =>
-            setEnemies((prev) =>
-              prev.map((e) => (e.id === id ? { ...e, unmounted: true } : e))
-            ),
-        },
-      ];
-      return newEnemies.filter((e) => !e.unmounted).length > MAX_ENEMIES
-        ? p
-        : newEnemies;
-    });
-  }, []);
+	const spawnEnemy = useCallback(() => {
+		const id = Math.random() * 10 ** 16;
+		const Component = shuffle([
+			() => <Bezos />,
+			() => <Zuck />,
+			() => <Musk />,
+			() => <Virus {...{ id }} />,
+		])[0];
+		setEnemies((p) => {
+			const newEnemies = [
+				...p,
+				{
+					Component,
+					unmounted: false,
+					id,
+					invulnerable: false,
+					unmountEnemy: () =>
+						setEnemies((prev) =>
+							prev.map((e) => (e.id === id ? { ...e, unmounted: true } : e))
+						),
+				},
+			];
+			return newEnemies.filter((e) => !e.unmounted).length > MAX_ENEMIES
+				? p
+				: newEnemies;
+		});
+	}, []);
 
-  useInterval(spawnEnemy, 3 * 1000);
-  useMount(spawnEnemy);
+	useInterval(spawnEnemy, 3 * 1000);
+	useMount(spawnEnemy);
 
-  return (
-    <>
-      {Enemies.map(({ id, Component, unmountEnemy, unmounted, invulnerable }) =>
-        unmounted ? null : (
-          <Enemy key={id} {...{ unmountEnemy, invulnerable }}>
-            <Component />
-          </Enemy>
-        )
-      )}
-    </>
-  );
+	return (
+		<>
+			{Enemies.map(({ id, Component, unmountEnemy, unmounted, invulnerable }) =>
+				unmounted ? null : (
+					<Enemy key={id} {...{ unmountEnemy, invulnerable }}>
+						<Component />
+					</Enemy>
+				)
+			)}
+		</>
+	);
 }
 
 const mu = 2;
 const Zuck = () => (
-  <group
-    castShadow={true}
-    receiveShadow={true}
-    scale={1 * mu}
-    position={[0, -1.3, 0]}
-    rotation={[0, -1, 0]}
-  >
-    <MarkZuckerberg />
-  </group>
+	<group
+		castShadow={true}
+		receiveShadow={true}
+		scale={1 * mu}
+		position={[0, -1.3, 0]}
+		rotation={[0, -1, 0]}
+	>
+		<MarkZuckerberg />
+	</group>
 );
 
 const Bezos = () => (
-  <group
-    castShadow={true}
-    receiveShadow={true}
-    scale={1.8 * mu}
-    position={[0, 0, 0]}
-    rotation={[0, 0, 0]}
-  >
-    <JeffBezos />
-  </group>
+	<group
+		castShadow={true}
+		receiveShadow={true}
+		scale={1.8 * mu}
+		position={[0, 0, 0]}
+		rotation={[0, 0, 0]}
+	>
+		<JeffBezos />
+	</group>
 );
 const Musk = () => (
-  <group
-    castShadow={true}
-    receiveShadow={true}
-    scale={1 * mu}
-    position={[0, -1.6, 0]}
-    rotation={[0, 0, 0]}
-  >
-    <ElonMusk />
-  </group>
+	<group
+		castShadow={true}
+		receiveShadow={true}
+		scale={1 * mu}
+		position={[0, -1.6, 0]}
+		rotation={[0, 0, 0]}
+	>
+		<ElonMusk />
+	</group>
 );
 const Virus = ({ id }) => (
-  <group
-    castShadow={true}
-    receiveShadow={true}
-    scale={1 * mu}
-    position={[0, -1.6, 0]}
-    rotation={[0, 0, 0]}
-  >
-    <VirusEnemy {...{ id }} />
-  </group>
+	<group
+		castShadow={true}
+		receiveShadow={true}
+		scale={1 * mu}
+		position={[0, -1.6, 0]}
+		rotation={[0, 0, 0]}
+	>
+		<VirusEnemy {...{ id }} />
+	</group>
 );
 
 function shuffle(array) {
-  let currentIndex = array.length,
-    randomIndex;
+	let currentIndex = array.length,
+		randomIndex;
 
-  // While there remain elements to shuffle...
-  while (currentIndex != 0) {
-    // Pick a remaining element...
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
+	// While there remain elements to shuffle...
+	while (currentIndex != 0) {
+		// Pick a remaining element...
+		randomIndex = Math.floor(Math.random() * currentIndex);
+		currentIndex--;
 
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex],
-      array[currentIndex],
-    ];
-  }
+		// And swap it with the current element.
+		[array[currentIndex], array[randomIndex]] = [
+			array[randomIndex],
+			array[currentIndex],
+		];
+	}
 
-  return array;
+	return array;
 }
