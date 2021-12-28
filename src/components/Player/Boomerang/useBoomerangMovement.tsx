@@ -39,6 +39,7 @@ export function useBoomerangMovement(
 				: {}),
 			position: position.current || playerPosition || INITIAL_POSITION,
 			// position: playerPosition || INITIAL_POSITION,
+			// TODO ? when it hits a wall, set to Dynamic
 			type: isBoomerangMoving ? "Kinematic" : "Dynamic",
 			// A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
 			material: {
