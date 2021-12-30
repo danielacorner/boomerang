@@ -32,8 +32,6 @@ export default function VirusEnemy({ id, ...props }) {
 
   const [shieldActive, setShieldActive] = useState(false);
   const [shieldInvisible, setShieldInvisible] = useState(true);
-  const SHIELD_DURATION = 3 * 1000;
-  const SHIELD_INTERVAL = 6 * 1000;
 
   const [, setEnemies] = useEnemies();
 
@@ -45,6 +43,8 @@ export default function VirusEnemy({ id, ...props }) {
     );
   };
 
+  const SHIELD_DURATION = 3 * 1000;
+  const SHIELD_INTERVAL = 6 * 1000;
   useInterval(() => {
     setShieldActive(true);
     setInvulnerable(true);
@@ -58,7 +58,14 @@ export default function VirusEnemy({ id, ...props }) {
     }, SHIELD_DURATION);
   }, SHIELD_INTERVAL);
 
-  const { shieldOpacity } = useSpring({ shieldOpacity: shieldActive ? 1 : 0 });
+  const { shieldOpacity } = useSpring({
+    shieldOpacity: shieldActive ? 0.5 : 0,
+    config: {
+      mass: 1,
+      tension: 100,
+      friction: 50,
+    },
+  });
 
   return (
     <group ref={group} {...props} dispose={null}>
@@ -185,12 +192,20 @@ export default function VirusEnemy({ id, ...props }) {
               </group>
             </group>
             {shieldInvisible ? null : (
-              <animated.mesh
-                material-transparent={true}
-                material-opacity={shieldOpacity}
+              <mesh
+                // material-transparent={true}
+                // material-opacity={shieldOpacity}
                 geometry={nodes.pCylinder2_Dome_0.geometry}
                 material={materials.Dome}
-              />
+              >
+                <animated.primitive
+                  attach="material"
+                  object={materials.Dome}
+                  transparent={true}
+                  opacity={shieldOpacity}
+                  // color={0x000000}
+                />
+              </mesh>
             )}
           </group>
         </group>
