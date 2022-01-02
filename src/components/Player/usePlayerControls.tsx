@@ -12,7 +12,7 @@ import {
   POWERUP_NAME,
   RANGEUP_NAME,
 } from "../../utils/constants";
-import { useInterval } from "react-use";
+import { useInterval, useMount } from "react-use";
 
 const POWERUP_DURATION = 10 * 1000;
 const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
@@ -37,20 +37,7 @@ export function usePlayerControls(): {
 } {
   const [, setHeldBoomerangs] = useHeldBoomerangs();
 
-  // const [isShiftDown, setIsShiftDown] = useState(false);
-  // useEventListener("keydown", (e) => {
-  //   if (e.key === "Shift") {
-  //     setIsShiftDown(true);
-  //   }
-  // });
-  // useEventListener("keyup", (e) => {
-  //   if (e.key === "Shift") {
-  //     setIsShiftDown(false);
-  //   }
-  // });
-
   const moveSpeed = 0.35;
-  // const moveSpeed = isShiftDown ? 0.4 : 0.3;
 
   const { pressedKeys, up, left, down, right } = usePressedKeys();
 

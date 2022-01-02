@@ -8,7 +8,7 @@ import * as THREE from "three";
 import { useInterval } from "react-use";
 import { usePressedKeys } from "../usePressedKeys";
 
-const BOOMERANG_RADIUS = 1;
+const BOOMERANG_RADIUS = 2;
 const BOOMERANG_PULL_FORCE = 0.1;
 const BOOMERANG_FLY_MAX_DURATION = 12 * 1000;
 const THROW_SPEED = 3;
@@ -56,7 +56,7 @@ export function useBoomerangMovement({
   const [boomerangRef, api] = useSphere(
     () => ({
       mass: poweredUp ? 4 : 1,
-      args: [BOOMERANG_RADIUS * (poweredUp ? 4 : 1) * (isHeld ? 0 : 1)],
+      args: [BOOMERANG_RADIUS * (poweredUp ? 2.5 : 1) * (isHeld ? 0 : 1)],
       ...(isBoomerangMoving
         ? {
             collisionFilterMask: GROUP1, // while moving, it can only collide with group 1 (enemies, walls, ground, dropped items)
@@ -117,7 +117,7 @@ export function useBoomerangMovement({
 
     if (timer.current && keepFlying) {
       clearTimeout(timer.current);
-    } else if (status === "returning") {
+    } else if (status === "returning" && !keepFlying) {
       timer.current = setTimeout(() => {
         setHeldBoomerangs((p) =>
           p.map((boom, bIdx) =>

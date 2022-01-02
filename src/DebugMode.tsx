@@ -5,7 +5,10 @@ import { useIsDev } from "./store";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-const isDevModeAtom = atomWithStorage("isDevMode", false);
+const isDevModeAtom = atomWithStorage(
+  "isDevMode",
+  process.env.NODE_ENV === "development"
+);
 export function DebugMode({ children }) {
   // const [isOn, setIsOn] = useState(false);
   const [isOn, setIsOn] = useAtom(isDevModeAtom);

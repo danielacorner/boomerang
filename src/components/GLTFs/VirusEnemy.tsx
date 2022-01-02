@@ -197,6 +197,7 @@ export default function VirusEnemy({ id, ...props }) {
                 // material-opacity={shieldOpacity}
                 geometry={nodes.pCylinder2_Dome_0.geometry}
                 material={materials.Dome}
+                scale={0.5}
               >
                 <animated.primitive
                   attach="material"

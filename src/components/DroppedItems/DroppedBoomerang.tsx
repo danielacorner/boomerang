@@ -36,7 +36,7 @@ export function DroppedBoomerangContent({ position, setMounted }) {
   }));
   return (
     <mesh ref={ref} name={BOOMERANG_ITEM_NAME}>
-      <BoomerangModel idx={null} />
+      <BoomerangModel idx={null} isDroppedBoomerang={true} />
     </mesh>
   );
 }
