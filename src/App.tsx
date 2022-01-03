@@ -1,10 +1,10 @@
-import { Button } from "@mui/material";
-import { Fullscreen } from "@mui/icons-material";
+import { useMediaQuery } from "@mui/material";
 
 import { useEffect, useRef, useState } from "react";
 import { useFullscreen, useToggle, useWindowSize } from "react-use";
 import { CanvasAndScene } from "./CanvasAndScene";
 import HUD from "./components/HUD/HUD";
+import { StartButton } from "./StartButton";
 
 function App() {
   const { width, height } = useWindowSize();
@@ -23,9 +23,11 @@ function App() {
     onClose: () => toggle(false),
   });
 
+  const isTabletOrLarger = useMediaQuery(`(min-width: ${768}px)`);
+
   return (
     <div ref={ref} style={{ width, height: lowestHeight, overflow: "hidden" }}>
-      {!isFullscreen && (
+      {!isTabletOrLarger && !isFullscreen && (
         <StartButton
           handleStart={() => {
             toggle(true);
@@ -40,32 +42,3 @@ function App() {
 }
 
 export default App;
-
-function StartButton({ handleStart }) {
-  return (
-    <div
-      style={{
-        position: "fixed",
-        zIndex: 999,
-        top: 0,
-        right: 0,
-        left: 0,
-        bottom: 0,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Button
-        onClick={handleStart}
-        style={{
-          textTransform: "none",
-        }}
-        variant="contained"
-        endIcon={<Fullscreen />}
-      >
-        Start
-      </Button>
-    </div>
-  );
-}
