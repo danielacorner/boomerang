@@ -143,9 +143,10 @@ export function usePlayerControls(): {
 
   const rotation = useRef([0, 0, 0]);
 
+  // last known player position... use for innacurate needs only
   useInterval(() => {
     setPlayerState((p) => ({ ...p, playerPosition: positionRef.current }));
-  }, 400);
+  }, 5 * 1000);
 
   useEffect(() => {
     const unsubscribe = cylinderApi.rotation.subscribe(
@@ -159,20 +160,26 @@ export function usePlayerControls(): {
     if (!cylinderRef.current || !playerRef.current || !hasMoved) {
       return;
     }
-    const [px, py, pz] = [
+    const [x1, y1, z1] = [
       positionRef.current[0],
       positionRef.current[1],
       positionRef.current[2],
     ];
 
     const [x2, y2, z2] = [
-      px + (right ? -1 : left ? 1 : 0) * moveSpeed,
-      py,
-      pz + (down ? -1 : up ? 1 : 0) * moveSpeed,
+      x1 + (right ? -1 : left ? 1 : 0) * moveSpeed,
+      y1,
+      z1 + (down ? -1 : up ? 1 : 0) * moveSpeed,
+    ];
+
+    const [x2Lerp, y2Lerp, z2Lerp] = [
+      THREE.MathUtils.lerp(x1, x2, 1),
+      THREE.MathUtils.lerp(y1, y2, 1),
+      THREE.MathUtils.lerp(z1, z2, 1),
     ];
 
     // cylinderApi.velocity.set(0, 0, 0);
-    cylinderApi.position.set(x2, y2, z2);
+    cylinderApi.position.set(x2Lerp, y2Lerp, z2Lerp);
 
     // TODO: rotate to lookAt position
     const newRotY = -getAngleFromCenter(
@@ -181,23 +188,17 @@ export function usePlayerControls(): {
     );
     // const newRotY = getPlayerRotation(lastPressedKey) + orbitControlsAngle;
 
-    const PLAYER_ROTATION_SPEED = 0.004;
-    // const newRX = THREE.MathUtils.lerp(
-    //   rotation.current[0],
-    //   newRotX,
-    //   PLAYER_ROTATION_SPEED
-    // );
-    const newRY = THREE.MathUtils.lerp(
-      rotation.current[1],
-      newRotY,
-      PLAYER_ROTATION_SPEED
-    );
-    // const newRZ = THREE.MathUtils.lerp(
-    //   rotation.current[2],
-    //   newRotZ,
-    //   PLAYER_ROTATION_SPEED
-    // );
-    cylinderApi.rotation.set(0, newRY, 0);
+    const PLAYER_ROTATION_SPEED = 0.1;
+
+    const [rx2, ry2, rz2] = [0, newRotY, 0];
+
+    const [rx2Lerp, ry2Lerp, rz2Lerp] = [
+      THREE.MathUtils.lerp(rotation.current[0], rx2, PLAYER_ROTATION_SPEED),
+      THREE.MathUtils.lerp(rotation.current[1], ry2, PLAYER_ROTATION_SPEED),
+      THREE.MathUtils.lerp(rotation.current[2], rz2, PLAYER_ROTATION_SPEED),
+    ];
+
+    cylinderApi.rotation.set(rx2Lerp, ry2Lerp, rz2Lerp);
   });
 
   return {
