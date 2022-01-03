@@ -172,6 +172,7 @@ export function usePlayerControls(): {
 		];
 
 		cylinderApi.position.set(x2, y2, z2);
+		cylinderApi.velocity.set(0, 0, 0);
 
 		// TODO: rotate to lookAt position
 		const newRotY = -getAngleFromCenter(

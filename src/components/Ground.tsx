@@ -12,14 +12,14 @@ const PLANE_PROPS = {
 };
 const MAX_THROW_DISTANCE = 13;
 
-export function Ground() {
+export function Ground({ playerPositionRef }) {
 	const [planeRef] = usePlane(() => ({
 		...PLANE_PROPS,
 		collisionFilterGroup: GROUP1,
 	}));
 	const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
 
-	const [{ playerPosition, rangeUp }, setPlayerState] = usePlayerState();
+	const [{ rangeUp }, setPlayerState] = usePlayerState();
 
 	const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
 		const {
@@ -28,7 +28,12 @@ export function Ground() {
 		}: {
 			lookAt: [number, number, number];
 			newFarthestTargetPosition: [number, number, number];
-		} = handlePointerMove(e, playerPosition, MAX_THROW_DISTANCE, rangeUp);
+		} = handlePointerMove(
+			e,
+			playerPositionRef.current,
+			MAX_THROW_DISTANCE,
+			rangeUp
+		);
 
 		setHeldBoomerangs((currentBoomerangs) => {
 			// if rangeUp is active, send ALL active boomerangs,
@@ -73,15 +78,20 @@ export function Ground() {
 	};
 
 	const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = (e) => {
-		if (playerPosition) {
-			// if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPosition) {
+		if (playerPositionRef.current) {
+			// if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPositionRef.current) {
 			const {
 				lookAt,
 				newFarthestTargetPosition,
 			}: {
 				lookAt: [number, number, number];
 				newFarthestTargetPosition: [number, number, number];
-			} = handlePointerMove(e, playerPosition, MAX_THROW_DISTANCE, rangeUp);
+			} = handlePointerMove(
+				e,
+				playerPositionRef.current,
+				MAX_THROW_DISTANCE,
+				rangeUp
+			);
 
 			setPlayerState((p) => ({
 				...p,

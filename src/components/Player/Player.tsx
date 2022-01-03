@@ -8,6 +8,7 @@ import { useSpring, animated } from "@react-spring/three";
 import { PLAYER_NAME } from "../../utils/constants";
 import { BoomerangWithControls } from "./Boomerang/BoomerangWithControls";
 import { RangeupIndicator } from "./RangeupIndicator";
+import { Ground } from "../Ground";
 
 export function Player() {
 	const {
@@ -21,6 +22,8 @@ export function Player() {
 
 	return (
 		<>
+			<Ground {...{ playerPositionRef }} />
+
 			<Mage {...{ playerRef, targetRef }} />
 			<Boomerang
 				{...{
