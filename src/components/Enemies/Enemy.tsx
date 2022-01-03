@@ -90,7 +90,7 @@ export function Enemy({ children, unmountEnemy, invulnerable }) {
 const POWERUP_PROBABILITY = 0.2;
 const RANGEUP_PROBABILITY = 0.2;
 const DROPPED_BOOMERANG_PROBABILITY = 0.2;
-const MAX_BOOMERANGS = 12;
+const MAX_BOOMERANGS = 6;
 
 function useMoveEnemy({
 	position,
@@ -177,6 +177,10 @@ function useMoveEnemy({
 						const droppedBoomerang =
 							heldBoomerangs.length < MAX_BOOMERANGS &&
 							Math.random() > 1 - DROPPED_BOOMERANG_PROBABILITY;
+						console.log(
+							"🌟🚨 ~ file: Enemy.tsx ~ line 179 ~ heldBoomerangs",
+							heldBoomerangs
+						);
 						if (droppedBoomerang) {
 							const rPosition: [number, number, number] = [
 								position.current[0] + Math.random() - 0.5,
