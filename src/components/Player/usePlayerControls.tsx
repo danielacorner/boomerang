@@ -15,12 +15,7 @@ import {
 import { useInterval, useMount } from "react-use";
 
 const POWERUP_DURATION = 10 * 1000;
-const [ROT_TOP, ROT_RIGHT, ROT_BOTTOM, ROT_LEFT] = [
-  Math.PI * 1,
-  Math.PI * 0.5,
-  Math.PI * 0,
-  Math.PI * -0.5,
-];
+
 export function usePlayerControls(): {
   cylinderRef: React.RefObject<THREE.Object3D<THREE.Event>>;
   cylinderApi: PublicApi;
@@ -39,7 +34,8 @@ export function usePlayerControls(): {
 
   const moveSpeed = 0.35;
 
-  const { pressedKeys, up, left, down, right } = usePressedKeys();
+  const { lastPressedKey, pressedKeys, up, left, down, right } =
+    usePressedKeys();
 
   // we'll wait till we've moved to start the useFrame below (forget why)
   const [hasMoved, setHasMoved] = useState(false);
@@ -182,11 +178,15 @@ export function usePlayerControls(): {
     cylinderApi.position.set(x2Lerp, y2Lerp, z2Lerp);
 
     // TODO: rotate to lookAt position
-    const newRotY = -getAngleFromCenter(
-      [playerRef.current.position.x, playerRef.current.position.z],
-      [lookAt[0], lookAt[2]]
+    // const newRotY = -getAngleFromCenter(
+    //   [playerRef.current.position.x, playerRef.current.position.z],
+    //   [lookAt[0], lookAt[2]]
+    // );
+    const newRotY = getPlayerRotation(lastPressedKey);
+    console.log(
+      "🌟🚨 ~ file: usePlayerControls.tsx ~ line 186 ~ useFrame ~ newRotY",
+      newRotY
     );
-    // const newRotY = getPlayerRotation(lastPressedKey) + orbitControlsAngle;
 
     const PLAYER_ROTATION_SPEED = 0.1;
 
@@ -210,16 +210,19 @@ export function usePlayerControls(): {
     cylinderApi,
   };
 }
-
+const ROT_DOWN = Math.PI * 0;
+const ROT_RIGHT = Math.PI * 1;
+const ROT_UP = Math.PI * 2;
+const ROT_LEFT = Math.PI * 3;
 function getPlayerRotation(lastPressedKey) {
   return lastPressedKey === LEFT
     ? ROT_LEFT
     : lastPressedKey === DOWN
-    ? ROT_BOTTOM
+    ? ROT_DOWN
     : lastPressedKey === RIGHT
     ? ROT_RIGHT
     : lastPressedKey === UP
-    ? ROT_TOP
+    ? ROT_UP
     : 0;
 }
 

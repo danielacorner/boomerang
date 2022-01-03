@@ -60,7 +60,7 @@ export function Enemy({ children, unmountEnemy, invulnerable }) {
         ref={enemyRef}
         name={ENEMY_NAME}
       >
-        <pointLight intensity={6} distance={5} />
+        <pointLight intensity={4} distance={5} />
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
