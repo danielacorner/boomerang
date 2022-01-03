@@ -175,7 +175,13 @@ export function usePlayerControls(): {
     ];
 
     // cylinderApi.velocity.set(0, 0, 0);
+
+    // prevents twitchy movement
+    // const delta = Math.abs(x2 - x1) + Math.abs(y2 - y1) + Math.abs(z2 - z1);
+    // const isAboveThreshold = delta > 0.1;
+    // if (isAboveThreshold) {
     cylinderApi.position.set(x2Lerp, y2Lerp, z2Lerp);
+    // }
 
     // TODO: rotate to lookAt position
     // const newRotY = -getAngleFromCenter(
@@ -183,22 +189,31 @@ export function usePlayerControls(): {
     //   [lookAt[0], lookAt[2]]
     // );
     const newRotY = getPlayerRotation(lastPressedKey);
-    console.log(
-      "🌟🚨 ~ file: usePlayerControls.tsx ~ line 186 ~ useFrame ~ newRotY",
-      newRotY
-    );
 
-    const PLAYER_ROTATION_SPEED = 0.1;
+    const PLAYER_ROTATION_SPEED = 0.08;
 
-    const [rx2, ry2, rz2] = [0, newRotY, 0];
+    const [, ry1] = rotation.current;
+    const [, ry2] = [0.01, newRotY, 0.01];
+    const ry2Lerp = THREE.MathUtils.lerp(ry1, ry2, PLAYER_ROTATION_SPEED);
+    // TODO: UP not working?
+    // console.log(
+    //   "🌟🚨 ~ file: usePlayerControls.tsx ~ line 186 ~ useFrame ~ newRotY",
+    //   newRotY
+    // );
+    // console.log(
+    //   "🌟🚨 ~ file: usePlayerControls.tsx ~ line 202 ~ useFrame ~ ry2Lerp",
+    //   ry2Lerp
+    // );
+    cylinderApi.rotation.set(0, ry2Lerp, 0);
 
-    const [rx2Lerp, ry2Lerp, rz2Lerp] = [
-      THREE.MathUtils.lerp(rotation.current[0], rx2, PLAYER_ROTATION_SPEED),
-      THREE.MathUtils.lerp(rotation.current[1], ry2, PLAYER_ROTATION_SPEED),
-      THREE.MathUtils.lerp(rotation.current[2], rz2, PLAYER_ROTATION_SPEED),
+    const [vx1, vy1, vz1] = velocityRef.current;
+    const [vx2, vy2, vz2] = [0, 0, 0];
+    const [vx2Lerp, vy2Lerp, vz2Lerp] = [
+      THREE.MathUtils.lerp(vx1, vx2, PLAYER_ROTATION_SPEED),
+      THREE.MathUtils.lerp(vy1, vy2, PLAYER_ROTATION_SPEED),
+      THREE.MathUtils.lerp(vz1, vz2, PLAYER_ROTATION_SPEED),
     ];
-
-    cylinderApi.rotation.set(rx2Lerp, ry2Lerp, rz2Lerp);
+    cylinderApi.velocity.set(vx2Lerp, vy2Lerp, vz2Lerp);
   });
 
   return {
@@ -210,10 +225,10 @@ export function usePlayerControls(): {
     cylinderApi,
   };
 }
+const ROT_LEFT = Math.PI * -1;
 const ROT_DOWN = Math.PI * 0;
 const ROT_RIGHT = Math.PI * 1;
 const ROT_UP = Math.PI * 2;
-const ROT_LEFT = Math.PI * 3;
 function getPlayerRotation(lastPressedKey) {
   return lastPressedKey === LEFT
     ? ROT_LEFT
