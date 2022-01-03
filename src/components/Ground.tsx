@@ -4,6 +4,7 @@ import { useHeldBoomerangs, usePlayerState } from "../store";
 import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { GROUND_NAME, GROUP1 } from "../utils/constants";
+import { useWhyDidYouUpdate } from "./useWhyDidYouUpdate";
 
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
@@ -23,7 +24,6 @@ export function Ground({ playerPositionRef }) {
 
   const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
     const {
-      lookAt,
       newFarthestTargetPosition,
     }: {
       lookAt: [number, number, number];
@@ -109,6 +109,18 @@ export function Ground({ playerPositionRef }) {
     texture.anisotropy = 16;
   }
 
+  useWhyDidYouUpdate("Ground", {
+    playerPositionRef,
+    planeRef,
+    heldBoomerangs,
+    setHeldBoomerangs,
+    rangeUp,
+    setPlayerState,
+    onPointerDown,
+    onPointerMove,
+    texture,
+  });
+
   return (
     <>
       <Plane
@@ -165,14 +177,14 @@ function handlePointerMove(
 }
 
 export function getMousePosition(e: ThreeEvent<PointerEvent>) {
-  const ground = e.intersections.find((i) => i.object.name === GROUND_NAME);
+  // const ground = e.intersections.find((i) => i.object.name === GROUND_NAME);
 
   // const point = ground?.point;
   const point = e.point;
   if (!point) {
     return { x: 0, y: 0, z: 0 };
   }
-  const { x, y, z } = point;
+  const { x, z } = point;
   return { x, y: 1, z };
 }
 
@@ -183,7 +195,7 @@ function distanceBetweenPoints([x1, y1, z1], [x2, y2, z2]) {
 }
 
 /** e.g. convert a [1,2,3] array into [1/3,2/3,3/3] */
-function normalizeVector([x, y, z]) {
-  const magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
-  return [x / magnitude, y / magnitude, z / magnitude];
-}
+// function normalizeVector([x, y, z]) {
+//   const magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
+//   return [x / magnitude, y / magnitude, z / magnitude];
+// }

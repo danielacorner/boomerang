@@ -1,21 +1,14 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
-import * as THREE from "three";
 import { useCylinder } from "@react-three/cannon";
 import {
   useHeldBoomerangs,
   usePlayerState,
   useDroppedItems,
   ITEM_TYPES,
-  useGameState,
 } from "../../store";
 import { EnemyHpBar } from "./EnemyHpBar";
-import {
-  GROUND_NAME,
-  BOOMERANG_NAME,
-  ENEMY_NAME,
-  GROUP1,
-} from "../../utils/constants";
+import { BOOMERANG_NAME, ENEMY_NAME, GROUP1 } from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 
 const ENEMY_JITTER_SPEED = 2;
@@ -23,7 +16,7 @@ export const CYLINDER_HEIGHT = 4;
 const BOOMERANG_DAMAGE = 0.5 + Math.random() * 0.2;
 const UNMOUNT_DELAY = 2 * 1000;
 
-const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
+// const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
 
 // set up collisions on its children
 export function Enemy({ children, unmountEnemy, invulnerable }) {
@@ -109,7 +102,7 @@ function useMoveEnemy({
         }
         // when the boomerang+enemy collide, subtract some hp
         const isCollisionWithBoomerang = e.body.name === BOOMERANG_NAME;
-        const isCollisionWithGround = e.body.name === GROUND_NAME;
+        // const isCollisionWithGround = e.body.name === GROUND_NAME;
 
         // subtract some hp when they hit the boomerang
         if (isCollisionWithBoomerang) {
@@ -220,9 +213,9 @@ function useMoveEnemy({
       Math.random() > 0.4 ? ENEMY_JITTER_SPEED * randomZ * directionZ : 0,
     ];
 
-    const x2Lerp = THREE.MathUtils.lerp(x, fx, 0.1);
-    const y2Lerp = THREE.MathUtils.lerp(y, fy, 0.1);
-    const z2Lerp = THREE.MathUtils.lerp(z, fz, 0.1);
+    // const x2Lerp = THREE.MathUtils.lerp(x, fx, 0.1);
+    // const y2Lerp = THREE.MathUtils.lerp(y, fy, 0.1);
+    // const z2Lerp = THREE.MathUtils.lerp(z, fz, 0.1);
 
     api.applyForce([fx, fy, fz], [x, y, z]);
     // api.position.set(x2Lerp, y2Lerp, z2Lerp);
