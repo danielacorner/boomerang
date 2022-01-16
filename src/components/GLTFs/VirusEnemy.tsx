@@ -18,17 +18,7 @@ export default function VirusEnemy({ id, ...props }) {
     "/models/melee_virus_animations/scene.gltf"
   ) as any;
 
-  const { actions, names, ...rest } = useAnimations(animations, group);
-
-  // Change animation when the index changes
-  useEffect(() => {
-    // Reset and fade in animation after an index has been changed
-    animations[names?.[0]]?.reset().fadeIn(0.5).play();
-    // In the clean-up phase, fade it out
-    return () => {
-      animations[names?.[0]]?.fadeOut(0.5);
-    };
-  }, [animations, names]);
+  const { actions, names } = useAnimations(animations, group);
 
   const [shieldActive, setShieldActive] = useState(false);
   const [shieldInvisible, setShieldInvisible] = useState(true);
@@ -42,6 +32,15 @@ export default function VirusEnemy({ id, ...props }) {
       )
     );
   };
+  // Change animation when the index changes
+  useEffect(() => {
+    // Reset and fade in animation after an index has been changed
+    animations[names?.[0]]?.reset().fadeIn(0.5).play();
+    // In the clean-up phase, fade it out
+    return () => {
+      animations[names?.[0]]?.fadeOut(0.5);
+    };
+  }, [animations, names]);
 
   const SHIELD_DURATION = 3 * 1000;
   const SHIELD_INTERVAL = 6 * 1000;
@@ -72,125 +71,7 @@ export default function VirusEnemy({ id, ...props }) {
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group scale={0.01}>
           <group rotation={[Math.PI / 2, 0, 0]}>
-            <group scale={1.4}>
-              <group position={[-36.81, 0, -63.75]} scale={1.1} />
-              <group position={[-73.78, 0, 0]} scale={1.1} />
-              <group position={[-36.81, 0, 63.75]} scale={1.1} />
-              <group position={[36.81, 0, 63.75]} scale={1.1} />
-              <group position={[73.62, 0, 0]} scale={1.1} />
-              <group position={[36.81, 0, -63.75]} scale={1.1} />
-              <group scale={0.72}>
-                <primitive object={nodes._rootJoint} />
-                <group position={[-26.25, 95.96, 45.46]} scale={0.19} />
-                <group position={[-58.52, 95.96, -10.36]} scale={0.19} />
-                <group position={[-26.25, 95.96, -66.22]} scale={0.19} />
-                <group
-                  position={[26.25, 95.96, -45.46]}
-                  rotation={[-Math.PI, 0, -Math.PI]}
-                  scale={0.19}
-                />
-                <group
-                  position={[58.52, 95.96, 10.36]}
-                  rotation={[-Math.PI, 0, -Math.PI]}
-                  scale={0.19}
-                />
-                <group
-                  position={[26.25, 95.96, 66.22]}
-                  rotation={[-Math.PI, 0, -Math.PI]}
-                  scale={0.19}
-                />
-                <skinnedMesh
-                  geometry={nodes.Upper_Leg_Virus_0.geometry}
-                  material={nodes.Upper_Leg_Virus_0.material}
-                  skeleton={nodes.Upper_Leg_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.lower_Leg_Virus_0.geometry}
-                  material={nodes.lower_Leg_Virus_0.material}
-                  skeleton={nodes.lower_Leg_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Head_blinn3_0.geometry}
-                  material={materials.blinn3}
-                  skeleton={nodes.Head_blinn3_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Head_Virus_0.geometry}
-                  material={nodes.Head_Virus_0.material}
-                  skeleton={nodes.Head_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Collar_Virus_0.geometry}
-                  material={nodes.Collar_Virus_0.material}
-                  skeleton={nodes.Collar_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.spine_Virus_0.geometry}
-                  material={nodes.spine_Virus_0.material}
-                  skeleton={nodes.spine_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.lower_Leg4_Virus_0.geometry}
-                  material={nodes.lower_Leg4_Virus_0.material}
-                  skeleton={nodes.lower_Leg4_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Upper_Leg4_Virus_0.geometry}
-                  material={nodes.Upper_Leg4_Virus_0.material}
-                  skeleton={nodes.Upper_Leg4_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.lower_Leg5_Virus_0.geometry}
-                  material={nodes.lower_Leg5_Virus_0.material}
-                  skeleton={nodes.lower_Leg5_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Upper_Leg5_Virus_0.geometry}
-                  material={nodes.Upper_Leg5_Virus_0.material}
-                  skeleton={nodes.Upper_Leg5_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.lower_Leg6_Virus_0.geometry}
-                  material={nodes.lower_Leg6_Virus_0.material}
-                  skeleton={nodes.lower_Leg6_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Upper_Leg6_Virus_0.geometry}
-                  material={nodes.Upper_Leg6_Virus_0.material}
-                  skeleton={nodes.Upper_Leg6_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.lower_Leg8_Virus_0.geometry}
-                  material={nodes.lower_Leg8_Virus_0.material}
-                  skeleton={nodes.lower_Leg8_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Upper_Leg7_Virus_0.geometry}
-                  material={nodes.Upper_Leg7_Virus_0.material}
-                  skeleton={nodes.Upper_Leg7_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.lower_Leg7_Virus_0.geometry}
-                  material={nodes.lower_Leg7_Virus_0.material}
-                  skeleton={nodes.lower_Leg7_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Upper_Leg8_Virus_0.geometry}
-                  material={nodes.Upper_Leg8_Virus_0.material}
-                  skeleton={nodes.Upper_Leg8_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.base_Virus_0.geometry}
-                  material={nodes.base_Virus_0.material}
-                  skeleton={nodes.base_Virus_0.skeleton}
-                />
-                <skinnedMesh
-                  geometry={nodes.Eye1_Virus_0.geometry}
-                  material={nodes.Eye1_Virus_0.material}
-                  skeleton={nodes.Eye1_Virus_0.skeleton}
-                />
-              </group>
-            </group>
+            <VirusMesh {...{ nodes, materials, group }} />
             {shieldInvisible ? null : (
               <mesh
                 // material-transparent={true}
@@ -216,3 +97,127 @@ export default function VirusEnemy({ id, ...props }) {
 }
 
 useGLTF.preload("/models/melee_virus_animations/scene.gltf");
+
+function VirusMesh({ group, nodes, materials }) {
+  return (
+    <group scale={1.4}>
+      <group position={[-36.81, 0, -63.75]} scale={1.1} />
+      <group position={[-73.78, 0, 0]} scale={1.1} />
+      <group position={[-36.81, 0, 63.75]} scale={1.1} />
+      <group position={[36.81, 0, 63.75]} scale={1.1} />
+      <group position={[73.62, 0, 0]} scale={1.1} />
+      <group position={[36.81, 0, -63.75]} scale={1.1} />
+      <group scale={0.72}>
+        <primitive object={nodes._rootJoint} />
+        <group position={[-26.25, 95.96, 45.46]} scale={0.19} />
+        <group position={[-58.52, 95.96, -10.36]} scale={0.19} />
+        <group position={[-26.25, 95.96, -66.22]} scale={0.19} />
+        <group
+          position={[26.25, 95.96, -45.46]}
+          rotation={[-Math.PI, 0, -Math.PI]}
+          scale={0.19}
+        />
+        <group
+          position={[58.52, 95.96, 10.36]}
+          rotation={[-Math.PI, 0, -Math.PI]}
+          scale={0.19}
+        />
+        <group
+          position={[26.25, 95.96, 66.22]}
+          rotation={[-Math.PI, 0, -Math.PI]}
+          scale={0.19}
+        />
+        <skinnedMesh
+          geometry={nodes.Upper_Leg_Virus_0.geometry}
+          material={nodes.Upper_Leg_Virus_0.material}
+          skeleton={nodes.Upper_Leg_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.lower_Leg_Virus_0.geometry}
+          material={nodes.lower_Leg_Virus_0.material}
+          skeleton={nodes.lower_Leg_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Head_blinn3_0.geometry}
+          material={materials.blinn3}
+          skeleton={nodes.Head_blinn3_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Head_Virus_0.geometry}
+          material={nodes.Head_Virus_0.material}
+          skeleton={nodes.Head_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Collar_Virus_0.geometry}
+          material={nodes.Collar_Virus_0.material}
+          skeleton={nodes.Collar_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.spine_Virus_0.geometry}
+          material={nodes.spine_Virus_0.material}
+          skeleton={nodes.spine_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.lower_Leg4_Virus_0.geometry}
+          material={nodes.lower_Leg4_Virus_0.material}
+          skeleton={nodes.lower_Leg4_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Upper_Leg4_Virus_0.geometry}
+          material={nodes.Upper_Leg4_Virus_0.material}
+          skeleton={nodes.Upper_Leg4_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.lower_Leg5_Virus_0.geometry}
+          material={nodes.lower_Leg5_Virus_0.material}
+          skeleton={nodes.lower_Leg5_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Upper_Leg5_Virus_0.geometry}
+          material={nodes.Upper_Leg5_Virus_0.material}
+          skeleton={nodes.Upper_Leg5_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.lower_Leg6_Virus_0.geometry}
+          material={nodes.lower_Leg6_Virus_0.material}
+          skeleton={nodes.lower_Leg6_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Upper_Leg6_Virus_0.geometry}
+          material={nodes.Upper_Leg6_Virus_0.material}
+          skeleton={nodes.Upper_Leg6_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.lower_Leg8_Virus_0.geometry}
+          material={nodes.lower_Leg8_Virus_0.material}
+          skeleton={nodes.lower_Leg8_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Upper_Leg7_Virus_0.geometry}
+          material={nodes.Upper_Leg7_Virus_0.material}
+          skeleton={nodes.Upper_Leg7_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.lower_Leg7_Virus_0.geometry}
+          material={nodes.lower_Leg7_Virus_0.material}
+          skeleton={nodes.lower_Leg7_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Upper_Leg8_Virus_0.geometry}
+          material={nodes.Upper_Leg8_Virus_0.material}
+          skeleton={nodes.Upper_Leg8_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.base_Virus_0.geometry}
+          material={nodes.base_Virus_0.material}
+          skeleton={nodes.base_Virus_0.skeleton}
+        />
+        <skinnedMesh
+          geometry={nodes.Eye1_Virus_0.geometry}
+          material={nodes.Eye1_Virus_0.material}
+          skeleton={nodes.Eye1_Virus_0.skeleton}
+        />
+      </group>
+    </group>
+  );
+}

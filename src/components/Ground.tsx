@@ -3,7 +3,7 @@ import { usePlane } from "@react-three/cannon";
 import { useHeldBoomerangs, usePlayerState } from "../store";
 import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
-import { GROUND_NAME, GROUP1 } from "../utils/constants";
+import { GROUND_NAME, GROUP1, MAX_THROW_DISTANCE } from "../utils/constants";
 import { useWhyDidYouUpdate } from "./useWhyDidYouUpdate";
 import { useCallback } from "react";
 
@@ -12,7 +12,6 @@ const PLANE_PROPS = {
   position: [0, -1, 0] as [number, number, number],
   rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
 };
-const MAX_THROW_DISTANCE = 13;
 
 export function Ground({ playerPositionRef }) {
   const [planeRef] = usePlane(() => ({
@@ -23,6 +22,8 @@ export function Ground({ playerPositionRef }) {
 
   const [{ rangeUp }, setPlayerState] = usePlayerState();
 
+  // TODO: instead of going straight to the mouse + maximum distance,
+  // TODO: aim at the mouse, then hold to charge velocity, let go to shoot
   const onPointerDown = useCallback(
     (e: ThreeEvent<PointerEvent>) => {
       const {
@@ -35,6 +36,14 @@ export function Ground({ playerPositionRef }) {
         playerPositionRef.current,
         MAX_THROW_DISTANCE,
         rangeUp
+      );
+      console.log(
+        "🌟🚨 ~ file: Ground.tsx ~ line 36 ~ Ground ~ newFarthestTargetPosition",
+        newFarthestTargetPosition
+      );
+      console.log(
+        "🌟🚨 ~ file: Ground.tsx ~ line 38 ~ Ground ~ playerPositionRef.current",
+        playerPositionRef.current
       );
 
       setHeldBoomerangs((currentBoomerangs) => {
@@ -137,7 +146,7 @@ export function Ground({ playerPositionRef }) {
         onPointerMove={onPointerMove}
         {...PLANE_PROPS}
       >
-        <meshToonMaterial color="#525252" map={texture} />
+        {/* <meshToonMaterial color="#525252" map={texture} /> */}
       </Plane>
       {/* <Plane {...PLANE_PROPS} position={[0, 0, 0]}>
         <meshToonMaterial color="#ffffff" opacity={0.5} transparent={true} />
@@ -155,11 +164,19 @@ function handlePointerMove(
 
   // limit the throw distance
   const distance = distanceBetweenPoints(playerPosition, [x, y, z]);
+  console.log(
+    "🌟🚨 ~ file: Ground.tsx ~ line 168 ~ Ground ~ distance",
+    distance
+  );
 
   // if it's above the max distance, shrink it down to the max distance
   const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
 
-  const pctAboveMax = Math.abs(distance / maxThrowDistance);
+  const pctOfMax = Math.abs(distance / maxThrowDistance);
+  console.log(
+    "🌟🚨 ~ file: Ground.tsx ~ line 173 ~ Ground ~ pctOfMax",
+    pctOfMax
+  );
 
   const lookAt: [number, number, number] = [x, y, z];
 
@@ -168,9 +185,9 @@ function handlePointerMove(
   // const [normX, normY, normZ] = normalizeVector([xx, yy, zz]);
 
   const newFarthestTargetPosition: [number, number, number] =
-    pctAboveMax > 1
+    pctOfMax > 1
       ? // if it's above 1, scale it down
-        [x / pctAboveMax, y / pctAboveMax, z / pctAboveMax]
+        [x / pctOfMax, y / pctOfMax, z / pctOfMax]
       : lookAt;
 
   // can verify distance2 <= maxThrowDistance

@@ -14,3 +14,5 @@ export const GROUP1 = 1;
 
 export const GROUP2 = 2;
 export const GROUP3 = 4;
+
+export const MAX_THROW_DISTANCE = 13;
