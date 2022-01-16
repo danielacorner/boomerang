@@ -5,6 +5,7 @@ import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { GROUND_NAME, GROUP1 } from "../utils/constants";
 import { useWhyDidYouUpdate } from "./useWhyDidYouUpdate";
+import { useCallback } from "react";
 
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
@@ -18,70 +19,13 @@ export function Ground({ playerPositionRef }) {
     ...PLANE_PROPS,
     collisionFilterGroup: GROUP1,
   }));
-  const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
+  const [, setHeldBoomerangs] = useHeldBoomerangs();
 
   const [{ rangeUp }, setPlayerState] = usePlayerState();
 
-  const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
-    const {
-      newFarthestTargetPosition,
-    }: {
-      lookAt: [number, number, number];
-      newFarthestTargetPosition: [number, number, number];
-    } = handlePointerMove(
-      e,
-      playerPositionRef.current,
-      MAX_THROW_DISTANCE,
-      rangeUp
-    );
-
-    setHeldBoomerangs((currentBoomerangs) => {
-      // if rangeUp is active, send ALL active boomerangs,
-      // plus the first available boomerang, to the target position
-      let found = false;
-      if (rangeUp) {
-        const newBoomerangs = currentBoomerangs.map((boom) => {
-          if ((!found && boom.status === "held") || boom.status !== "held") {
-            if (boom.status === "held") {
-              found = true;
-            }
-
-            return {
-              ...boom,
-              status: "flying" as any,
-              clickTargetPosition: newFarthestTargetPosition,
-            };
-          }
-          return boom;
-        });
-
-        return newBoomerangs;
-      } else {
-        // normally,
-        // find the first boomerang without a clickTargetPosition,
-        // and set it to the current target position
-        let found = false;
-        const newBoomerangs = currentBoomerangs.map((boom) => {
-          if (!found && boom.status === "held") {
-            found = true;
-            return {
-              ...boom,
-              status: "flying" as any,
-              clickTargetPosition: newFarthestTargetPosition,
-            };
-          }
-          return boom;
-        });
-        return newBoomerangs;
-      }
-    });
-  };
-
-  const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = (e) => {
-    if (playerPositionRef.current) {
-      // if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPositionRef.current) {
+  const onPointerDown = useCallback(
+    (e: ThreeEvent<PointerEvent>) => {
       const {
-        lookAt,
         newFarthestTargetPosition,
       }: {
         lookAt: [number, number, number];
@@ -93,13 +37,76 @@ export function Ground({ playerPositionRef }) {
         rangeUp
       );
 
-      setPlayerState((p) => ({
-        ...p,
-        lookAt,
-        farthestTargetPosition: newFarthestTargetPosition,
-      }));
-    }
-  };
+      setHeldBoomerangs((currentBoomerangs) => {
+        // if rangeUp is active, send ALL active boomerangs,
+        // plus the first available boomerang, to the target position
+        let found = false;
+        if (rangeUp) {
+          const newBoomerangs = currentBoomerangs.map((boom) => {
+            if ((!found && boom.status === "held") || boom.status !== "held") {
+              if (boom.status === "held") {
+                found = true;
+              }
+
+              return {
+                ...boom,
+                status: "flying" as any,
+                clickTargetPosition: newFarthestTargetPosition,
+              };
+            }
+            return boom;
+          });
+
+          return newBoomerangs;
+        } else {
+          // normally,
+          // find the first boomerang without a clickTargetPosition,
+          // and set it to the current target position
+          let found = false;
+          const newBoomerangs = currentBoomerangs.map((boom) => {
+            if (!found && boom.status === "held") {
+              found = true;
+              return {
+                ...boom,
+                status: "flying" as any,
+                clickTargetPosition: newFarthestTargetPosition,
+              };
+            }
+            return boom;
+          });
+          return newBoomerangs;
+        }
+      });
+    },
+    [rangeUp]
+  );
+
+  const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = useCallback(
+    (e) => {
+      if (playerPositionRef.current) {
+        // if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPositionRef.current) {
+        const {
+          lookAt,
+          newFarthestTargetPosition,
+        }: {
+          lookAt: [number, number, number];
+          newFarthestTargetPosition: [number, number, number];
+        } = handlePointerMove(
+          e,
+          playerPositionRef.current,
+          MAX_THROW_DISTANCE,
+          rangeUp
+        );
+
+        setPlayerState((p) => ({
+          ...p,
+          lookAt,
+          farthestTargetPosition: newFarthestTargetPosition,
+        }));
+      }
+    },
+    [rangeUp]
+  );
 
   const { texture } = useTexture({ texture: "/textures/grass.jpg" });
 
@@ -112,7 +119,6 @@ export function Ground({ playerPositionRef }) {
   useWhyDidYouUpdate("Ground", {
     playerPositionRef,
     planeRef,
-    heldBoomerangs,
     setHeldBoomerangs,
     rangeUp,
     setPlayerState,

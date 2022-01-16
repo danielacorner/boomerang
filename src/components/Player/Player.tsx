@@ -11,98 +11,99 @@ import { RangeupIndicator } from "./RangeupIndicator";
 import { Ground } from "../Ground";
 
 export function Player() {
-	const {
-		playerRef,
-		targetRef,
-		positionRef: playerPositionRef,
-		velocityRef: playerVelocityRef,
-		cylinderRef: playerCylinderRef,
-		cylinderApi: playerCylinderApi,
-	} = usePlayerControls();
+  const {
+    playerRef,
+    targetRef,
+    positionRef: playerPositionRef,
+    velocityRef: playerVelocityRef,
+    cylinderRef: playerCylinderRef,
+    cylinderApi: playerCylinderApi,
+  } = usePlayerControls();
 
-	return (
-		<>
-			<Ground {...{ playerPositionRef }} />
+  // TODO: try putting a ref into jotai?
+  return (
+    <>
+      <Ground {...{ playerPositionRef }} />
 
-			<Mage {...{ playerRef, targetRef }} />
-			<Boomerang
-				{...{
-					playerPositionRef,
-					playerVelocityRef,
-					playerCylinderApi,
-					playerRef,
-				}}
-			/>
-		</>
-	);
+      <Mage {...{ playerRef, targetRef }} />
+      <Boomerang
+        {...{
+          playerPositionRef,
+          playerVelocityRef,
+          playerCylinderApi,
+          playerRef,
+        }}
+      />
+    </>
+  );
 }
 
 function Mage({ playerRef, targetRef }) {
-	const [{ poweredUp }] = usePlayerState();
-	const [{ invulnerable }] = useGameState();
+  const [{ poweredUp }] = usePlayerState();
+  const [{ invulnerable }] = useGameState();
 
-	const [blinkOn, setBlinkOn] = useState(false);
+  const [blinkOn, setBlinkOn] = useState(false);
 
-	useEffect(() => {
-		if (invulnerable) {
-			setBlinkOn(true);
-		}
-	}, [invulnerable]);
+  useEffect(() => {
+    if (invulnerable) {
+      setBlinkOn(true);
+    }
+  }, [invulnerable]);
 
-	const { scale, opacity } = useSpring({
-		scale: poweredUp ? 2.4 : 1.4,
-		opacity: blinkOn ? 0 : 1,
-		onRest: () => {
-			if (invulnerable) {
-				setBlinkOn(!blinkOn);
-			}
-			if (!invulnerable && blinkOn) {
-				setBlinkOn(false);
-			}
-		},
-	});
-	return (
-		<>
-			<MouseTarget>
-				<mesh ref={targetRef} />
-			</MouseTarget>
-			<animated.mesh
-				scale={scale}
-				material-transparent={true}
-				material-opacity={opacity}
-				ref={playerRef}
-				name={PLAYER_NAME}
-			>
-				<BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
-				<RangeupIndicator />
-				<pointLight intensity={4} distance={10} />
-			</animated.mesh>
-		</>
-	);
+  const { scale, opacity } = useSpring({
+    scale: poweredUp ? 2.4 : 1.4,
+    opacity: blinkOn ? 0 : 1,
+    onRest: () => {
+      if (invulnerable) {
+        setBlinkOn(!blinkOn);
+      }
+      if (!invulnerable && blinkOn) {
+        setBlinkOn(false);
+      }
+    },
+  });
+  return (
+    <>
+      <MouseTarget>
+        <mesh ref={targetRef} />
+      </MouseTarget>
+      <animated.mesh
+        scale={scale}
+        material-transparent={true}
+        material-opacity={opacity}
+        ref={playerRef}
+        name={PLAYER_NAME}
+      >
+        <BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
+        <RangeupIndicator />
+        <pointLight intensity={4} distance={10} />
+      </animated.mesh>
+    </>
+  );
 }
 
 function Boomerang({
-	playerPositionRef,
-	playerCylinderApi,
-	playerRef,
-	playerVelocityRef,
+  playerPositionRef,
+  playerCylinderApi,
+  playerRef,
+  playerVelocityRef,
 }) {
-	const [heldBoomerangs] = useHeldBoomerangs();
-	return (
-		<>
-			{heldBoomerangs.map((_, idx) => (
-				<BoomerangWithControls
-					key={idx}
-					ref={playerRef}
-					{...{
-						idx,
-						playerPositionRef,
-						playerCylinderApi,
-						playerVelocityRef,
-					}}
-				/>
-			))}
-			<BoomerangTarget />
-		</>
-	);
+  const [heldBoomerangs] = useHeldBoomerangs();
+  return (
+    <>
+      {heldBoomerangs.map((_, idx) => (
+        <BoomerangWithControls
+          key={idx}
+          ref={playerRef}
+          {...{
+            idx,
+            playerPositionRef,
+            playerCylinderApi,
+            playerVelocityRef,
+          }}
+        />
+      ))}
+      <BoomerangTarget />
+    </>
+  );
 }

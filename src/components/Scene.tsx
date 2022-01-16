@@ -1,5 +1,4 @@
 import { Player } from "./Player/Player";
-import { Ground } from "./Ground";
 import { Enemies } from "./Enemies/Enemies";
 import { Walls } from "./Player/Walls";
 import { Lighting } from "./Lighting";
@@ -12,8 +11,8 @@ export function Scene() {
       <Lighting />
       <Player />
       <Enemies />
-      {/* <Walls /> */}
-      <Levels />
+      <Walls />
+      {/* <Levels /> */}
       <OrbitControlsWithAngle />
       <DroppedItems />
     </mesh>
