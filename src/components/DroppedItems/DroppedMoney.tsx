@@ -5,7 +5,7 @@ import { useCylinder } from "@react-three/cannon";
 import { useMoney, usePlayerState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
-import { GROUP1 } from "../../utils/constants";
+import { BOOMERANG_NAME, GROUP1, ITEM_TYPES } from "../../utils/constants";
 
 const BAG_RADIUS = 1;
 const UNMOUNT_DELAY = 16 * 1000;
@@ -50,6 +50,10 @@ function BagContent({ position, setMounted }) {
         setTimeout(() => {
           setMounted(false);
         }, 1000);
+      }
+
+      if (e.body.name.includes(BOOMERANG_NAME)) {
+        setMounted(false);
       }
     },
   }));
@@ -133,7 +137,7 @@ function BagContent({ position, setMounted }) {
   });
 
   return (
-    <animated.mesh ref={ref} scale={0.1}>
+    <animated.mesh ref={ref} name={ITEM_TYPES.MONEY}>
       <animated.mesh
         scale={scaleAnimated}
         material-transparent={true}

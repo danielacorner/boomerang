@@ -16,3 +16,13 @@ export const GROUP2 = 2;
 export const GROUP3 = 4;
 
 export const MAX_THROW_DISTANCE = 13;
+export const HELD_ITEMS = {
+  MONEYBAG: "moneybag",
+};
+
+export enum ITEM_TYPES {
+  POWERUP = "powerup",
+  RANGEUP = "rangeup",
+  MONEY = "money",
+  BOOMERANG = "boomerang",
+}

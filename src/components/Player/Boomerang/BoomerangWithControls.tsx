@@ -4,11 +4,14 @@ import BoomerangModel from "../../GLTFs/BoomerangModel";
 import * as THREE from "three";
 import { useHeldBoomerangs, usePlayerState } from "../../../store";
 import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
-import { BOOMERANG_NAME } from "../../../utils/constants";
+import { BOOMERANG_NAME, ITEM_TYPES } from "../../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 import { Spin } from "./Spin";
 import { useBoomerangMovement } from "./useBoomerangMovement";
 import { PublicApi } from "@react-three/cannon";
+import { Powerup } from "../../DroppedItems/Powerup";
+import MoneyBag from "../../GLTFs/MoneyBag";
+import Rangeup from "../../GLTFs/Rangeup";
 
 export const BoomerangWithControls = forwardRef(
   (
@@ -26,7 +29,7 @@ export const BoomerangWithControls = forwardRef(
     },
     playerRef: React.ForwardedRef<THREE.Mesh>
   ) => {
-    const ref = useBoomerangMovement({
+    const { boomerangRef: ref, carriedItems } = useBoomerangMovement({
       playerPositionRef,
       playerVelocityRef,
       playerCylinderApi,
@@ -43,13 +46,36 @@ export const BoomerangWithControls = forwardRef(
       },
       [status, poweredUp]
     );
+
     return (
-      <animated.mesh castShadow ref={ref} scale={scale} name={BOOMERANG_NAME}>
+      <animated.mesh
+        castShadow
+        ref={ref}
+        scale={scale}
+        name={`${BOOMERANG_NAME}_${idx}`}
+      >
         <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
           <BoomerangModel {...{ idx }} />
+          <CarriedItems {...{ carriedItems }} />
         </Spin>
         <FlashWhenStatusChanges {...{ idx }} />
       </animated.mesh>
     );
   }
 );
+
+function CarriedItems({ carriedItems }: { carriedItems: ITEM_TYPES[] }) {
+  return (
+    <>
+      {carriedItems.map((item) =>
+        item === ITEM_TYPES.MONEY ? (
+          <MoneyBag />
+        ) : item === ITEM_TYPES.POWERUP ? (
+          <Powerup />
+        ) : item === ITEM_TYPES.RANGEUP ? (
+          <Rangeup />
+        ) : null
+      )}
+    </>
+  );
+}

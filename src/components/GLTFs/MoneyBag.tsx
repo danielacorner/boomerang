@@ -29,7 +29,7 @@ export default function MoneyBag({ fadeOut = false, ...props }) {
   );
 
   return (
-    <group ref={group} {...props} dispose={null}>
+    <group ref={group} {...props} dispose={null} scale={0.1}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group rotation={[Math.PI / 2, 0, 0]}>
           <group

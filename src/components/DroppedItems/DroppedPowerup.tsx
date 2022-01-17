@@ -1,8 +1,13 @@
 import { useCylinder } from "@react-three/cannon";
-import { useGLTF } from "@react-three/drei";
 import { useState } from "react";
 import { useMount } from "react-use";
-import { GROUP1, PLAYER_NAME, POWERUP_NAME } from "../../utils/constants";
+import {
+  BOOMERANG_NAME,
+  GROUP1,
+  PLAYER_NAME,
+  POWERUP_NAME,
+} from "../../utils/constants";
+import { Powerup } from "./Powerup";
 
 const POWERUP_HEIGHT = 2;
 const POWERUP_DROP_DURATION = 24 * 1000;
@@ -28,6 +33,10 @@ export function DroppedPowerupContent({ position, setMounted }) {
       if (isCollisionWithPlayer) {
         setMounted(false);
       }
+
+      if (e.body.name.includes(BOOMERANG_NAME)) {
+        setMounted(false);
+      }
     },
   }));
   return (
@@ -36,13 +45,3 @@ export function DroppedPowerupContent({ position, setMounted }) {
     </mesh>
   );
 }
-
-function Powerup(props) {
-  const { scene } = useGLTF("/models/power-up_mushroom/scene.gltf");
-  return (
-    <mesh {...props}>
-      <primitive object={scene} />
-    </mesh>
-  );
-}
-useGLTF.preload("/models/power-up_mushroom/scene.gltf");
