@@ -96,7 +96,12 @@ function MaxThrowDistanceIndicator() {
         attach="geometry"
         args={[maxThrowDistance, 0.2, 8, 32]}
       />
-      <meshBasicMaterial attach="material" color={0xdcfcfc} />
+      <meshBasicMaterial
+        attach="material"
+        transparent={true}
+        opacity={0.2}
+        color={0xdcfcfc}
+      />
     </mesh>
   );
 }

@@ -13,21 +13,21 @@ export const Virus = ({ id }) => {
       (p) => (
         <Bacteriophage_phi29_prohead_80_cleaned_draco
           scale={VIRUS_SCALE}
-          position={[0, 2, 0]}
+          position={[0, 3, 0]}
           {...p}
         />
       ),
       (p) => (
         <Herpes_600_cleaned_draco
           scale={VIRUS_SCALE}
-          position={[0, 3.5, 0]}
+          position={[0, 4.5, 0]}
           {...p}
         />
       ),
       (p) => (
         <HIV_200_cleaned_draco
           scale={VIRUS_SCALE}
-          position={[0, 2, 0]}
+          position={[0, 3, 0]}
           {...p}
         />
       ),
