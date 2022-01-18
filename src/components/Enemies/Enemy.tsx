@@ -5,10 +5,14 @@ import {
   useHeldBoomerangs,
   usePlayerState,
   useDroppedItems,
-  ITEM_TYPES,
 } from "../../store";
 import { EnemyHpBar } from "./EnemyHpBar";
-import { BOOMERANG_NAME, ENEMY_NAME, GROUP1 } from "../../utils/constants";
+import {
+  BOOMERANG_NAME,
+  ENEMY_NAME,
+  GROUP1,
+  ITEM_TYPES,
+} from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 
 const ENEMY_JITTER_SPEED = 2;
@@ -101,7 +105,7 @@ function useMoveEnemy({
           return;
         }
         // when the boomerang+enemy collide, subtract some hp
-        const isCollisionWithBoomerang = e.body.name === BOOMERANG_NAME;
+        const isCollisionWithBoomerang = e.body.name.includes(BOOMERANG_NAME);
         // const isCollisionWithGround = e.body.name === GROUND_NAME;
 
         // subtract some hp when they hit the boomerang

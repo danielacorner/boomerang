@@ -1,7 +1,12 @@
 import { useCylinder } from "@react-three/cannon";
 import { useState } from "react";
 import { useMount } from "react-use";
-import { GROUP1, PLAYER_NAME, RANGEUP_NAME } from "../../utils/constants";
+import {
+  BOOMERANG_NAME,
+  GROUP1,
+  PLAYER_NAME,
+  RANGEUP_NAME,
+} from "../../utils/constants";
 import Rangeup from "../GLTFs/Rangeup";
 
 const RANGEUP_HEIGHT = 2;
@@ -26,6 +31,10 @@ export function DroppedRangeupContent({ position, setMounted }) {
     onCollide: (e) => {
       const isCollisionWithPlayer = e.body.name === PLAYER_NAME;
       if (isCollisionWithPlayer) {
+        setMounted(false);
+      }
+
+      if (e.body.name.includes(BOOMERANG_NAME)) {
         setMounted(false);
       }
     },

@@ -1,9 +1,22 @@
-import { usePlane } from "@react-three/cannon";
+import { useConvexPolyhedron, usePlane } from "@react-three/cannon";
 import { useThree } from "@react-three/fiber";
-import { GROUP1, WALL_NAME } from "../../utils/constants";
+import { useState } from "react";
+import { useMount } from "react-use";
+import { GROUP1, WALL_NAME } from "../utils/constants";
 
-const DEPTH = 9;
-export function Collisions() {
+/** the walls and enemies of each level */
+export function Levels() {
+  const [level, setLevel] = useState(0);
+  return <>{level === 0 && <Level0 />}</>;
+}
+function Level0() {
+  useMount(() => {
+    // setEnemies(enemies=>[...enemies,<Enemy0/>])
+  });
+  return <Level1Walls />;
+}
+
+export function Level1Walls() {
   const { viewport } = useThree();
   const z = viewport.distance * 1;
   const x = viewport.width * 0.45;

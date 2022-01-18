@@ -1,5 +1,6 @@
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import { ITEM_TYPES } from "./utils/constants";
 
 type EnemyType = {
   Component: any;
@@ -60,13 +61,6 @@ export const useMoney = () => useAtom(moneyAtom);
 
 const isDevAtom = atom<boolean>(process.env.NODE_ENV === "development");
 export const useIsDev = () => useAtom(isDevAtom);
-
-export enum ITEM_TYPES {
-  POWERUP = "powerup",
-  RANGEUP = "rangeup",
-  MONEY = "money",
-  BOOMERANG = "boomerang",
-}
 
 const droppedItemsAtom = atom<
   {
