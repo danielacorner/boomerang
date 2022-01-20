@@ -8,7 +8,7 @@ export function getRandomVirus(id) {
   return shuffle([
     {
       enemyName: "Bacteriophage Phi29 Prohead",
-      maxHp: 5,
+      maxHp: 9,
       enemyHeight: 8,
       enemyUrl: "https://www.rcsb.org/structure/6QVK",
       RandomVirus: (p) => (
@@ -24,22 +24,8 @@ export function getRandomVirus(id) {
       ),
     },
     {
-      enemyName: "Herpes",
-      maxHp: 20,
-      enemyHeight: 12,
-      enemyUrl: "https://www.rcsb.org/structure/6CGR",
-      RandomVirus: (p) => (
-        <>
-          <group position={[0, 3.5, 0]}>
-            <Herpes_600_cleaned_draco scale={VIRUS_SCALE} {...p} />
-            <SphereShield {...{ id }} scale={4} />
-          </group>
-        </>
-      ),
-    },
-    {
       enemyName: "HIV",
-      maxHp: 8,
+      maxHp: 14,
       enemyHeight: 8,
       enemyUrl: "https://www.rcsb.org/structure/3J3Y/",
 
@@ -48,6 +34,20 @@ export function getRandomVirus(id) {
           <group position={[0, 2, 0]}>
             <HIV_200_cleaned_draco scale={VIRUS_SCALE} {...p} />
             {/* <SphereShield {...{ id }} scale={3} /> */}
+          </group>
+        </>
+      ),
+    },
+    {
+      enemyName: "Herpes",
+      maxHp: 21,
+      enemyHeight: 12,
+      enemyUrl: "https://www.rcsb.org/structure/6CGR",
+      RandomVirus: (p) => (
+        <>
+          <group position={[0, 3.5, 0]}>
+            <Herpes_600_cleaned_draco scale={VIRUS_SCALE} {...p} />
+            <SphereShield {...{ id }} scale={4} />
           </group>
         </>
       ),

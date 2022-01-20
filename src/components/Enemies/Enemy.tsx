@@ -17,7 +17,7 @@ import {
 import { animated, useSpring } from "@react-spring/three";
 
 const ENEMY_JITTER_SPEED = 2;
-const BOOMERANG_DAMAGE = 0.75 + Math.random() * 0.5;
+const BOOMERANG_BASE_DAMAGE = 0.75;
 const UNMOUNT_DELAY = 2 * 1000;
 
 // const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
@@ -33,7 +33,7 @@ export function Enemy({
   enemyName,
 }) {
   const { viewport } = useThree();
-  const [healthPercent, setHealthPercent] = useState(maxHp);
+  const [health, setHealth] = useState(maxHp);
   const [theyreDead, setTheyreDead] = useState(false);
 
   const position = useRef<[number, number, number]>([
@@ -50,8 +50,8 @@ export function Enemy({
     position,
     theyreDead,
     setTheyreDead,
-    healthPercent,
-    setHealthPercent,
+    health,
+    setHealth,
     unmountEnemy,
     invulnerable,
   });
@@ -69,9 +69,7 @@ export function Enemy({
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
-        <EnemyHpBar
-          {...{ healthPercent, maxHp, enemyHeight, enemyUrl, enemyName }}
-        />
+        <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
       </animated.mesh>
     </>
   );
@@ -86,8 +84,8 @@ function useMoveEnemy({
   position,
   theyreDead,
   setTheyreDead,
-  healthPercent,
-  setHealthPercent,
+  health,
+  setHealth,
   unmountEnemy,
   invulnerable,
 }) {
@@ -120,12 +118,15 @@ function useMoveEnemy({
 
         // subtract some hp when they hit the boomerang
         if (isCollisionWithBoomerang) {
-          const nextHealthPercent = Math.max(
+          const nextHealth = Math.max(
             0,
-            healthPercent - BOOMERANG_DAMAGE * (poweredUp ? 2 : 1)
+            health -
+              BOOMERANG_BASE_DAMAGE *
+                (1 + Math.random() * 0.5) *
+                (poweredUp ? 2 : 1)
           );
-          setHealthPercent(nextHealthPercent);
-          const didTheyDied = nextHealthPercent === 0;
+          setHealth(nextHealth);
+          const didTheyDied = nextHealth === 0;
           if (didTheyDied) {
             setTheyDied(true);
           }
@@ -200,7 +201,7 @@ function useMoveEnemy({
       },
     }),
     null,
-    [status, heldBoomerangs, theyDroppedItems, poweredUp, healthPercent]
+    [status, heldBoomerangs, theyDroppedItems, poweredUp, health]
   );
 
   // movement
