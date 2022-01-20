@@ -8,7 +8,6 @@ title: Wizard Cat
 
 import React, { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { useControls } from "leva";
 
 export default function Model({ ...props }) {
   const group = useRef();

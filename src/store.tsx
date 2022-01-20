@@ -8,6 +8,10 @@ type EnemyType = {
   id: number;
   invulnerable: boolean;
   unmountEnemy: Function;
+  maxHp: number;
+  enemyHeight: number;
+  enemyUrl: string;
+  enemyName: string;
 };
 
 const enemiesAtom = atom<EnemyType[]>([]);

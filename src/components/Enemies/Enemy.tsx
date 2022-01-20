@@ -9,6 +9,7 @@ import {
 import { EnemyHpBar } from "./EnemyHpBar";
 import {
   BOOMERANG_NAME,
+  ENEMY_CYLINDER_HEIGHT,
   ENEMY_NAME,
   GROUP1,
   ITEM_TYPES,
@@ -16,22 +17,29 @@ import {
 import { animated, useSpring } from "@react-spring/three";
 
 const ENEMY_JITTER_SPEED = 2;
-export const CYLINDER_HEIGHT = 4;
 const BOOMERANG_DAMAGE = 0.5 + Math.random() * 0.2;
 const UNMOUNT_DELAY = 2 * 1000;
 
 // const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
 
 // set up collisions on its children
-export function Enemy({ children, unmountEnemy, invulnerable, maxHp }) {
+export function Enemy({
+  children,
+  unmountEnemy,
+  invulnerable,
+  maxHp,
+  enemyHeight,
+  enemyUrl,
+  enemyName,
+}) {
   const { viewport } = useThree();
   const [healthPercent, setHealthPercent] = useState(maxHp);
   const [theyreDead, setTheyreDead] = useState(false);
 
   const position = useRef<[number, number, number]>([
     (viewport.width / 2) * (Math.random() * 2 - 1),
-    CYLINDER_HEIGHT + 1,
-    viewport.height / 2 + CYLINDER_HEIGHT,
+    ENEMY_CYLINDER_HEIGHT + 1,
+    viewport.height / 2 + ENEMY_CYLINDER_HEIGHT,
   ]);
   useEffect(() => {
     const unsubscribe = api.position.subscribe((v) => (position.current = v));
@@ -61,7 +69,9 @@ export function Enemy({ children, unmountEnemy, invulnerable, maxHp }) {
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
-        <EnemyHpBar healthPercent={healthPercent} />
+        <EnemyHpBar
+          {...{ healthPercent, maxHp, enemyHeight, enemyUrl, enemyName }}
+        />
       </animated.mesh>
     </>
   );
@@ -92,7 +102,7 @@ function useMoveEnemy({
   const [enemyRef, api] = useCylinder(
     () => ({
       collisionFilterGroup: GROUP1,
-      args: [3, 1, CYLINDER_HEIGHT, 6],
+      args: [3, 1, ENEMY_CYLINDER_HEIGHT, 6],
       mass: 1,
       position: position.current,
       onCollide: (e) => {
@@ -205,7 +215,7 @@ function useMoveEnemy({
 
     const [x, y, z] = [
       position.current[0],
-      CYLINDER_HEIGHT / 2 + 1,
+      ENEMY_CYLINDER_HEIGHT / 2 + 1,
       position.current[2],
     ];
 
@@ -232,7 +242,7 @@ function useMoveEnemy({
     if (theyDied && !theyreDead) {
       const worldPoint: [number, number, number] = [
         position.current[0],
-        position.current[1] - CYLINDER_HEIGHT / 2,
+        position.current[1] - ENEMY_CYLINDER_HEIGHT / 2,
         position.current[2],
       ];
       const kickIntoSpace: [number, number, number] = [0, -10, 0];

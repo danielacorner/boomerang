@@ -26,3 +26,4 @@ export enum ITEM_TYPES {
   MONEY = "money",
   BOOMERANG = "boomerang",
 }
+export const ENEMY_CYLINDER_HEIGHT = 4;
