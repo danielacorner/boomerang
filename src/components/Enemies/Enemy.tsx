@@ -17,7 +17,7 @@ import {
 import { animated, useSpring } from "@react-spring/three";
 
 const ENEMY_JITTER_SPEED = 2;
-const BOOMERANG_DAMAGE = 0.5 + Math.random() * 0.2;
+const BOOMERANG_DAMAGE = 0.75 + Math.random() * 0.5;
 const UNMOUNT_DELAY = 2 * 1000;
 
 // const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;

@@ -1,8 +1,8 @@
 import { Billboard, Html } from "@react-three/drei";
 
-export function Nametag({ name, url, translateY }) {
+export function Nametag({ name, url }) {
   return (
-    <group position={[0, translateY, 0]}>
+    <group position={[0, 0.75, 0]}>
       <Billboard>
         <Html
           style={{

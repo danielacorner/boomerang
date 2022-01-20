@@ -16,8 +16,8 @@ export default function SphereShield({ id, ...meshProps }) {
       )
     );
   };
-  const SHIELD_DURATION = 3 * 1000;
-  const SHIELD_INTERVAL = 6 * 1000;
+  const SHIELD_DURATION = 2 * 1000;
+  const SHIELD_INTERVAL = 9 * 1000;
   useInterval(() => {
     setShieldActive(true);
     setInvulnerable(true);
