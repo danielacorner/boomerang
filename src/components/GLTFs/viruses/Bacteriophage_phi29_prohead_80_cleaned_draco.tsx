@@ -9,7 +9,7 @@ export default function Model(props) {
   const group = useRef();
   const { nodes, materials } = useGLTF(
     "/models/viruses/bacteriophage_phi29_prohead_80_cleaned_draco.glb"
-  );
+  ) as any;
   return (
     <group ref={group} {...props} dispose={null}>
       <mesh
@@ -20,6 +20,6 @@ export default function Model(props) {
   );
 }
 
-// useGLTF.preload(
-//   "/models/viruses/bacteriophage_phi29_prohead_80_cleaned_draco.glb"
-// );
+useGLTF.preload(
+  "/models/viruses/bacteriophage_phi29_prohead_80_cleaned_draco.glb"
+);
