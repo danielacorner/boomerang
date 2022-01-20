@@ -1,15 +1,16 @@
 import { usePlayerControls } from "./usePlayerControls";
 import BlackMage from "../GLTFs/BlackMage";
-import { BoomerangTarget } from "./Boomerang/BoomerangTarget";
 import { MouseTarget } from "./MouseTarget";
 import { useEffect, useState } from "react";
-import { useHeldBoomerangs, useGameState, usePlayerState } from "../../store";
+import { useGameState, usePlayerState } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
-import { MAX_THROW_DISTANCE, PLAYER_NAME } from "../../utils/constants";
-import { BoomerangWithControls } from "./Boomerang/BoomerangWithControls";
+import { PLAYER_NAME } from "../../utils/constants";
 import { RangeupIndicator } from "./RangeupIndicator";
 import { Ground } from "../Ground";
-import { useControls } from "leva";
+import {
+  Boomerang,
+  MaxThrowDistanceIndicator,
+} from "./MaxThrowDistanceIndicator";
 
 export function Player() {
   const {
@@ -80,54 +81,6 @@ function Mage({ playerRef, targetRef }) {
         <MaxThrowDistanceIndicator />
         <pointLight intensity={5} distance={24} />
       </animated.mesh>
-    </>
-  );
-}
-
-/** a white torus of radius MAX_THROW_DISTANCE */
-function MaxThrowDistanceIndicator() {
-  const [{ rangeUp }] = usePlayerState();
-  // if it's above the max distance, shrink it down to the max distance
-  const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
-  const { x, y, z } = useControls({ x: 0, y: 0, z: 0 });
-  return (
-    <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      <torusBufferGeometry
-        attach="geometry"
-        args={[maxThrowDistance, 0.2, 8, 32]}
-      />
-      <meshBasicMaterial
-        attach="material"
-        transparent={true}
-        opacity={0.2}
-        color={0xdcfcfc}
-      />
-    </mesh>
-  );
-}
-
-function Boomerang({
-  playerPositionRef,
-  playerCylinderApi,
-  playerRef,
-  playerVelocityRef,
-}) {
-  const [heldBoomerangs] = useHeldBoomerangs();
-  return (
-    <>
-      {heldBoomerangs.map((_, idx) => (
-        <BoomerangWithControls
-          key={idx}
-          ref={playerRef}
-          {...{
-            idx,
-            playerPositionRef,
-            playerCylinderApi,
-            playerVelocityRef,
-          }}
-        />
-      ))}
-      <BoomerangTarget />
     </>
   );
 }

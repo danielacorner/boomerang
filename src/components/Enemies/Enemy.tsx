@@ -23,9 +23,9 @@ const UNMOUNT_DELAY = 2 * 1000;
 // const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
 
 // set up collisions on its children
-export function Enemy({ children, unmountEnemy, invulnerable }) {
+export function Enemy({ children, unmountEnemy, invulnerable, maxHp }) {
   const { viewport } = useThree();
-  const [healthPercent, setHealthPercent] = useState(1);
+  const [healthPercent, setHealthPercent] = useState(maxHp);
   const [theyreDead, setTheyreDead] = useState(false);
 
   const position = useRef<[number, number, number]>([
