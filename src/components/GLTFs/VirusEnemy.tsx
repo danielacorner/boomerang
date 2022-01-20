@@ -18,8 +18,18 @@ export default function VirusEnemy({ id, ...props }) {
     "/models/melee_virus_animations/scene.gltf"
   ) as any;
 
+  // Change animation when the index changes
   const { actions, names } = useAnimations(animations, group);
+  useEffect(() => {
+    // Reset and fade in animation after an index has been changed
+    animations[names?.[0]]?.reset().fadeIn(0.5).play();
+    // In the clean-up phase, fade it out
+    return () => {
+      animations[names?.[0]]?.fadeOut(0.5);
+    };
+  }, [animations, names]);
 
+  // shield
   const [shieldActive, setShieldActive] = useState(false);
   const [shieldInvisible, setShieldInvisible] = useState(true);
 
@@ -32,15 +42,6 @@ export default function VirusEnemy({ id, ...props }) {
       )
     );
   };
-  // Change animation when the index changes
-  useEffect(() => {
-    // Reset and fade in animation after an index has been changed
-    animations[names?.[0]]?.reset().fadeIn(0.5).play();
-    // In the clean-up phase, fade it out
-    return () => {
-      animations[names?.[0]]?.fadeOut(0.5);
-    };
-  }, [animations, names]);
 
   const SHIELD_DURATION = 3 * 1000;
   const SHIELD_INTERVAL = 6 * 1000;

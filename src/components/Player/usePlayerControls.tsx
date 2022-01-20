@@ -15,6 +15,7 @@ import {
 import { useInterval, useMount } from "react-use";
 
 const POWERUP_DURATION = 10 * 1000;
+const MOVE_SPEED = 0.37;
 
 export function usePlayerControls(): {
   cylinderRef: React.RefObject<THREE.Object3D<THREE.Event>>;
@@ -32,8 +33,6 @@ export function usePlayerControls(): {
 } {
   const [, setHeldBoomerangs] = useHeldBoomerangs();
 
-  const moveSpeed = 0.35;
-
   const { lastPressedKey, pressedKeys, up, left, down, right } =
     usePressedKeys();
 
@@ -47,6 +46,7 @@ export function usePlayerControls(): {
   }, [pressedKeys]);
 
   const [{ lookAt, poweredUp }, setPlayerState] = usePlayerState();
+  const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1);
 
   const [movedMouse, setMovedMouse] = useState(false);
   useEventListener("mousemove", () => setMovedMouse(true));

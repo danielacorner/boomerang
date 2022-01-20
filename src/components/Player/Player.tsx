@@ -78,7 +78,7 @@ function Mage({ playerRef, targetRef }) {
         <BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
         <RangeupIndicator />
         <MaxThrowDistanceIndicator />
-        <pointLight intensity={4} distance={10} />
+        <pointLight intensity={5} distance={24} />
       </animated.mesh>
     </>
   );
