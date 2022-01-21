@@ -164,19 +164,11 @@ function handlePointerMove(
 
   // limit the throw distance
   const distance = distanceBetweenPoints(playerPosition, [x, y, z]);
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 168 ~ Ground ~ distance",
-    distance
-  );
 
   // if it's above the max distance, shrink it down to the max distance
   const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
 
   const pctOfMax = Math.abs(distance / maxThrowDistance);
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 173 ~ Ground ~ pctOfMax",
-    pctOfMax
-  );
 
   const lookAt: [number, number, number] = [x, y, z];
 

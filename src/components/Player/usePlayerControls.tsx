@@ -45,6 +45,17 @@ export function usePlayerControls(): {
     }
   }, [pressedKeys]);
 
+  // record a "ramp-up" speed from 0 to 1 as long as at least one key is pressed
+  const [speed, setSpeed] = useState(0);
+  useInterval(
+    () => {
+      if (speed < 1) {
+        setSpeed(speed + 0.01);
+      }
+    },
+    pressedKeys.length > 0 ? 10 : null
+  );
+
   const [{ lookAt, poweredUp }, setPlayerState] = usePlayerState();
   const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1);
 

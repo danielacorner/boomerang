@@ -1,20 +1,26 @@
 import { Enemy } from "./Enemy";
-import { useCallback } from "react";
-import { useInterval, useMount } from "react-use";
+import { useCallback, useEffect, useState } from "react";
+import { useInterval, useMount, usePrevious } from "react-use";
 import { useEnemies } from "../../store";
 import { Virus } from "./Virus";
-import { getRandomVirus } from "./getRandomVirus";
+import {
+  BACTERIOPHAGE_PHI29_PROHEAD,
+  getRandomVirus,
+  HERPES,
+  HIV,
+} from "./getRandomVirus";
+import { atom, useAtom } from "jotai";
 
 const MAX_ENEMIES = 6;
 
 export function Enemies() {
   const [Enemies, setEnemies] = useEnemies();
 
-  const spawnEnemy = useCallback(() => {
-    const id = Math.random() * 10 ** 16;
+  const spawnEnemy = useCallback((virus, randId) => {
+    const id = randId || Math.random() * 10 ** 16;
 
     const { RandomVirus, maxHp, enemyHeight, enemyName, enemyUrl } =
-      getRandomVirus(id);
+      virus || getRandomVirus(id);
 
     setEnemies((p) => {
       const newEnemies = [
@@ -40,8 +46,7 @@ export function Enemies() {
     });
   }, []);
 
-  useInterval(spawnEnemy, 3 * 1000);
-  useMount(spawnEnemy);
+  useSpawnWavesOfEnemies(spawnEnemy);
 
   return (
     <>
@@ -75,4 +80,60 @@ export function Enemies() {
       )}
     </>
   );
+}
+
+const WAVES = [
+  {
+    enemies: [
+      BACTERIOPHAGE_PHI29_PROHEAD,
+      BACTERIOPHAGE_PHI29_PROHEAD,
+      BACTERIOPHAGE_PHI29_PROHEAD,
+      BACTERIOPHAGE_PHI29_PROHEAD,
+    ],
+  },
+  {
+    enemies: [
+      BACTERIOPHAGE_PHI29_PROHEAD,
+      BACTERIOPHAGE_PHI29_PROHEAD,
+      HIV,
+      HIV,
+    ],
+  },
+  {
+    enemies: [
+      BACTERIOPHAGE_PHI29_PROHEAD,
+      BACTERIOPHAGE_PHI29_PROHEAD,
+      HIV,
+      HIV,
+      (id) => HERPES(id),
+      (id) => HERPES(id),
+    ],
+  },
+];
+const currentWaveAtom = atom(0);
+export const useCurrentWave = () => useAtom(currentWaveAtom);
+function useSpawnWavesOfEnemies(spawnEnemy) {
+  const [currentWave, setCurrentWave] = useCurrentWave();
+  const prevWave = usePrevious(currentWave);
+  // 1. spawn a wave of enemies
+
+  // when the wave changes,
+  // spawn the associated enemies
+  useEffect(() => {
+    if (prevWave !== currentWave) {
+      WAVES[currentWave].enemies.forEach((enemy, idx) => {
+        const id = Math.round(Math.random() * 10 ** 16);
+        spawnEnemy(typeof enemy === "function" ? enemy(id) : enemy, id);
+        // setTimeout(() => spawnEnemy(enemy), idx * 1000);
+      });
+    }
+  }, [currentWave]);
+
+  // 2. when all enemies are unmounted, spawn the next wave
+  const [Enemies, setEnemies] = useEnemies();
+  useEffect(() => {
+    if (Enemies.length > 0 && Enemies.every((enemy) => enemy.unmounted)) {
+      setCurrentWave(currentWave + 1);
+    }
+  }, [Enemies]);
 }

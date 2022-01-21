@@ -1,4 +1,5 @@
 /* eslint-disable react/display-name */
+import React from "react";
 import { forwardRef } from "react";
 import BoomerangModel from "../../GLTFs/BoomerangModel";
 import * as THREE from "three";
@@ -67,15 +68,17 @@ export const BoomerangWithControls = forwardRef(
 function CarriedItems({ carriedItems }: { carriedItems: ITEM_TYPES[] }) {
   return (
     <>
-      {carriedItems.map((item) =>
-        item === ITEM_TYPES.MONEY ? (
-          <MoneyBag />
-        ) : item === ITEM_TYPES.POWERUP ? (
-          <Powerup />
-        ) : item === ITEM_TYPES.RANGEUP ? (
-          <Rangeup />
-        ) : null
-      )}
+      {carriedItems.map((item, idx) => (
+        <React.Fragment key={idx}>
+          {item === ITEM_TYPES.MONEY ? (
+            <MoneyBag />
+          ) : item === ITEM_TYPES.POWERUP ? (
+            <Powerup />
+          ) : item === ITEM_TYPES.RANGEUP ? (
+            <Rangeup />
+          ) : null}
+        </React.Fragment>
+      ))}
     </>
   );
 }

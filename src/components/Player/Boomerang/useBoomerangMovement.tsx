@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { useHeldBoomerangs, usePlayerState } from "../../../store";
+import { useHeldBoomerangs, useMoney, usePlayerState } from "../../../store";
 import { useFrame } from "@react-three/fiber";
 import { PublicApi, useCylinder, useSphere } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
@@ -36,7 +36,8 @@ export function useBoomerangMovement({
   playerRef;
   idx;
 }) {
-  const [{ poweredUp, rangeUp }] = usePlayerState();
+  const [{ poweredUp, rangeUp }, setPlayerState] = usePlayerState();
+  const [, setMoney] = useMoney();
 
   // subscribe to the position
   const position = useRef(INITIAL_POSITION);
@@ -95,9 +96,13 @@ export function useBoomerangMovement({
           );
         }
 
-        // pick it up when collides with the player
+        // pick up the boomerang when it collides with the player
         const isCollisionWithPlayer = e.body.name === PLAYER_NAME;
         if (isCollisionWithPlayer) {
+          console.log(
+            "🌟🚨 ~ file: useBoomerangMovement.tsx ~ line 102 ~ isCollisionWithPlayer",
+            isCollisionWithPlayer
+          );
           setHeldBoomerangs((currentBoomerangs) => {
             return currentBoomerangs.map((boom, bIdx) => {
               if (bIdx === idx) {
@@ -111,17 +116,32 @@ export function useBoomerangMovement({
             });
           });
 
+          // also pick up any items on the boomerang
           if (carriedItems.length) {
-            // TODO: apply each item's effect
+            // apply each item's effect
+            carriedItems.forEach((item) => {
+              if (item === ITEM_TYPES.MONEY) {
+                setMoney((p) => p + 1);
+              } else if (item === ITEM_TYPES.RANGEUP) {
+                setPlayerState((p) => ({ ...p, rangeUp: true }));
+              } else if (item === ITEM_TYPES.POWERUP) {
+                setPlayerState((p) => ({ ...p, poweredUp: true }));
+              }
+            });
             setCarriedItems([]);
           }
         }
 
-        if (
-          [ITEM_TYPES.MONEY, ITEM_TYPES.POWERUP, ITEM_TYPES.RANGEUP].includes(
-            e.body.name as any
-          )
-        ) {
+        const isCollisionWithDroppedItem = [
+          ITEM_TYPES.MONEY,
+          ITEM_TYPES.POWERUP,
+          ITEM_TYPES.RANGEUP,
+        ].includes(e.body.name as any);
+        if (isCollisionWithDroppedItem) {
+          console.log(
+            "🌟🚨 ~ file: useBoomerangMovement.tsx ~ line 137 ~ isCollisionWithDroppedItem",
+            isCollisionWithDroppedItem
+          );
           setCarriedItems((p) => [...p, e.body.name as ITEM_TYPES]);
         }
       },
