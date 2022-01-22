@@ -1,6 +1,8 @@
 import { atom, SetStateAction, useAtom } from "jotai";
 import { useKey } from "react-use";
 import { Direction } from "../Scene";
+import { uniq } from "lodash";
+import { useCallback } from "react";
 export const [UP, LEFT, RIGHT, DOWN]: Direction[] = [
   "ArrowUp",
   "ArrowLeft",
@@ -25,22 +27,22 @@ export function usePressedKeys(): {
   const [pressedKeys, setPressedKeys] = useAtom(pressedKeysAtom);
   const [lastPressedKey, setLastPressedKey] = useAtom(lastPressedKeyAtom);
 
-  const handleUp = () => {
-    setPressedKeys((p) => [...p, UP]);
+  const handleUp = useCallback(() => {
+    setPressedKeys((p) => uniq([...p, UP]));
     setLastPressedKey(UP);
-  };
-  const handleLeft = () => {
-    setPressedKeys((p) => [...p, LEFT]);
+  }, []);
+  const handleLeft = useCallback(() => {
+    setPressedKeys((p) => uniq([...p, LEFT]));
     setLastPressedKey(LEFT);
-  };
-  const handleDown = () => {
-    setPressedKeys((p) => [...p, DOWN]);
+  }, []);
+  const handleDown = useCallback(() => {
+    setPressedKeys((p) => uniq([...p, DOWN]));
     setLastPressedKey(DOWN);
-  };
-  const handleRight = () => {
-    setPressedKeys((p) => [...p, RIGHT]);
+  }, []);
+  const handleRight = useCallback(() => {
+    setPressedKeys((p) => uniq([...p, RIGHT]));
     setLastPressedKey(RIGHT);
-  };
+  }, []);
 
   useKey("w", handleUp);
   useKey("a", handleLeft);

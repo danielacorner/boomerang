@@ -18,6 +18,10 @@ const enemiesAtom = atom<EnemyType[]>([]);
 export function useEnemies() {
   return useAtom(enemiesAtom);
 }
+const playerRefAtom = atom<{ current: THREE.Mesh | null }>({ current: null });
+export function usePlayerRef() {
+  return useAtom(playerRefAtom);
+}
 
 const boomerangStateAtom = atom<
   {

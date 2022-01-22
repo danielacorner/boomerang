@@ -1,8 +1,6 @@
 /* eslint-disable react/display-name */
 import React from "react";
-import { forwardRef } from "react";
 import BoomerangModel from "../../GLTFs/BoomerangModel";
-import * as THREE from "three";
 import { useHeldBoomerangs, usePlayerState } from "../../../store";
 import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
 import { BOOMERANG_NAME, ITEM_TYPES } from "../../../utils/constants";
@@ -14,56 +12,50 @@ import { Powerup } from "../../DroppedItems/Powerup";
 import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
 
-export const BoomerangWithControls = forwardRef(
-  (
+export const BoomerangWithControls = ({
+  playerVelocityRef,
+  playerPositionRef,
+  playerCylinderApi,
+  // TODO: use idx to only shoot one at a time
+  idx,
+}: {
+  playerPositionRef: { current: [number, number, number] };
+  playerVelocityRef: { current: [number, number, number] };
+  idx: number;
+  playerCylinderApi: PublicApi;
+}) => {
+  const { boomerangRef: ref, carriedItems } = useBoomerangMovement({
+    playerPositionRef,
+    playerVelocityRef,
+    playerCylinderApi,
+    idx,
+  });
+  const [heldBoomerangs] = useHeldBoomerangs();
+  const { status } = heldBoomerangs[idx];
+  const [{ poweredUp }] = usePlayerState();
+
+  const [{ scale }] = useSpring(
     {
-      playerVelocityRef,
-      playerPositionRef,
-      playerCylinderApi,
-      // TODO: use idx to only shoot one at a time
-      idx,
-    }: {
-      playerPositionRef: { current: [number, number, number] };
-      playerVelocityRef: { current: [number, number, number] };
-      idx: number;
-      playerCylinderApi: PublicApi;
+      scale: status === "held" ? 0.75 : poweredUp ? 2.5 : 1,
     },
-    playerRef: React.ForwardedRef<THREE.Mesh>
-  ) => {
-    const { boomerangRef: ref, carriedItems } = useBoomerangMovement({
-      playerPositionRef,
-      playerVelocityRef,
-      playerCylinderApi,
-      playerRef,
-      idx,
-    });
-    const [heldBoomerangs] = useHeldBoomerangs();
-    const { status } = heldBoomerangs[idx];
-    const [{ poweredUp }] = usePlayerState();
+    [status, poweredUp]
+  );
 
-    const [{ scale }] = useSpring(
-      {
-        scale: status === "held" ? 0.75 : poweredUp ? 2.5 : 1,
-      },
-      [status, poweredUp]
-    );
-
-    return (
-      <animated.mesh
-        castShadow
-        ref={ref}
-        scale={scale}
-        name={`${BOOMERANG_NAME}_${idx}`}
-      >
-        <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
-          <BoomerangModel {...{ idx }} />
-          <CarriedItems {...{ carriedItems }} />
-        </Spin>
-        <FlashWhenStatusChanges {...{ idx }} />
-      </animated.mesh>
-    );
-  }
-);
+  return (
+    <animated.mesh
+      castShadow
+      ref={ref}
+      scale={scale}
+      name={`${BOOMERANG_NAME}_${idx}`}
+    >
+      <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
+        <BoomerangModel {...{ idx }} />
+        <CarriedItems {...{ carriedItems }} />
+      </Spin>
+      <FlashWhenStatusChanges {...{ idx }} />
+    </animated.mesh>
+  );
+};
 
 function CarriedItems({ carriedItems }: { carriedItems: ITEM_TYPES[] }) {
   return (

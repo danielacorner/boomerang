@@ -5,7 +5,7 @@ import HIV_200_cleaned_draco from "../GLTFs/viruses/HIV_200_cleaned_draco";
 import SphereShield from "./SphereShield";
 
 export const BACTERIOPHAGE_PHI29_PROHEAD = {
-  enemyName: "Bacteriophage Phi29 Prohead",
+  enemyName: "Bacteriophage",
   maxHp: 9,
   enemyHeight: 8,
   enemyUrl: "https://www.rcsb.org/structure/6QVK",

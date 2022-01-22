@@ -204,7 +204,7 @@ function useMoveEnemy({
     [status, heldBoomerangs, theyDroppedItems, poweredUp, health]
   );
 
-  // movement
+  // movement: move towards player
   useFrame(() => {
     if (!position.current || theyreDead) return;
     // random walk

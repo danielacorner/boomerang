@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
 import { useEventListener } from "../../utils/useEventListener";
-import { useHeldBoomerangs, useGameState, usePlayerState } from "../../store";
+import {
+  useHeldBoomerangs,
+  useGameState,
+  usePlayerState,
+  usePlayerRef,
+} from "../../store";
 import {
   BOOMERANG_ITEM_NAME,
   ENEMY_NAME,
@@ -20,10 +25,6 @@ const MOVE_SPEED = 0.37;
 export function usePlayerControls(): {
   cylinderRef: React.RefObject<THREE.Object3D<THREE.Event>>;
   cylinderApi: PublicApi;
-  playerRef: React.MutableRefObject<null | THREE.Mesh<
-    THREE.BufferGeometry,
-    THREE.Material | THREE.Material[]
-  >>;
   targetRef: React.MutableRefObject<null | THREE.Mesh<
     THREE.BufferGeometry,
     THREE.Material | THREE.Material[]
@@ -56,8 +57,12 @@ export function usePlayerControls(): {
     pressedKeys.length > 0 ? 10 : null
   );
 
+  console.log(
+    "🌟🚨 ~ file: usePlayerControls.tsx ~ line 62 ~ usePlayerControls ~ speed",
+    speed
+  );
   const [{ lookAt, poweredUp }, setPlayerState] = usePlayerState();
-  const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1);
+  const moveSpeed = speed * MOVE_SPEED * (poweredUp ? 1.5 : 1);
 
   const [movedMouse, setMovedMouse] = useState(false);
   useEventListener("mousemove", () => setMovedMouse(true));
@@ -66,6 +71,10 @@ export function usePlayerControls(): {
   }, [pressedKeys]);
   const targetRef = useRef<THREE.Mesh>(null);
   const playerRef = useRef<THREE.Mesh>(null);
+  const [, setPlayerRef] = usePlayerRef();
+  useMount(() => {
+    setPlayerRef(playerRef);
+  });
 
   const [cylinderRef, cylinderApi] = useCylinder(
     () => ({
@@ -162,9 +171,21 @@ export function usePlayerControls(): {
     return unsubscribe;
   }, []);
 
-  // move  the player
+  // move the player
   useFrame(({ camera }) => {
     if (!cylinderRef.current || !playerRef.current || !hasMoved) {
+      console.log(
+        "🌟🚨 ~ file: usePlayerControls.tsx ~ line 173 ~ useFrame ~ playerRef.current",
+        playerRef.current
+      );
+      console.log(
+        "🌟🚨 ~ file: usePlayerControls.tsx ~ line 173 ~ useFrame ~ cylinderRef.current",
+        cylinderRef.current
+      );
+      console.log(
+        "🌟🚨 ~ file: usePlayerControls.tsx ~ line 173 ~ useFrame ~ hasMoved",
+        hasMoved
+      );
       return;
     }
     const [x1, y1, z1] = [
@@ -216,6 +237,10 @@ export function usePlayerControls(): {
     //   ry2Lerp
     // );
     cylinderApi.rotation.set(0, ry2Lerp, 0);
+    console.log(
+      "🌟🚨 ~ file: usePlayerControls.tsx ~ line 240 ~ useFrame ~ cylinderApi",
+      cylinderApi
+    );
 
     const [vx1, vy1, vz1] = velocityRef.current;
     const [vx2, vy2, vz2] = [0, 0, 0];
@@ -228,7 +253,6 @@ export function usePlayerControls(): {
   });
 
   return {
-    playerRef,
     cylinderRef,
     targetRef,
     positionRef,

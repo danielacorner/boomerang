@@ -1,5 +1,10 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { useHeldBoomerangs, useMoney, usePlayerState } from "../../../store";
+import {
+  useHeldBoomerangs,
+  useMoney,
+  usePlayerRef,
+  usePlayerState,
+} from "../../../store";
 import { useFrame } from "@react-three/fiber";
 import { PublicApi, useCylinder, useSphere } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
@@ -27,15 +32,14 @@ export function useBoomerangMovement({
   playerPositionRef,
   playerVelocityRef,
   playerCylinderApi,
-  playerRef,
   idx,
 }: {
   playerPositionRef: { current: [number, number, number] };
   playerVelocityRef: { current: [number, number, number] };
   playerCylinderApi: PublicApi;
-  playerRef;
   idx;
 }) {
+  const [playerRef] = usePlayerRef();
   const [{ poweredUp, rangeUp }, setPlayerState] = usePlayerState();
   const [, setMoney] = useMoney();
 
@@ -176,7 +180,7 @@ export function useBoomerangMovement({
   // throw on click
   const { up, left, down, right } = usePressedKeys();
   useEffect(() => {
-    if (!playerRef.current) {
+    if (!playerRef?.current) {
       return;
     }
 

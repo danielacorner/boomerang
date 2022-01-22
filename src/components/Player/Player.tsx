@@ -2,7 +2,7 @@ import { usePlayerControls } from "./usePlayerControls";
 import BlackMage from "../GLTFs/BlackMage";
 import { MouseTarget } from "./MouseTarget";
 import { useEffect, useState } from "react";
-import { useGameState, usePlayerState } from "../../store";
+import { useGameState, usePlayerRef, usePlayerState } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
 import { PLAYER_NAME } from "../../utils/constants";
 import { RangeupIndicator } from "./RangeupIndicator";
@@ -14,7 +14,6 @@ import {
 
 export function Player() {
   const {
-    playerRef,
     targetRef,
     positionRef: playerPositionRef,
     velocityRef: playerVelocityRef,
@@ -27,20 +26,19 @@ export function Player() {
     <>
       <Ground {...{ playerPositionRef }} />
 
-      <Mage {...{ playerRef, targetRef }} />
+      <Mage {...{ targetRef }} />
       <Boomerang
         {...{
           playerPositionRef,
           playerVelocityRef,
           playerCylinderApi,
-          playerRef,
         }}
       />
     </>
   );
 }
 
-function Mage({ playerRef, targetRef }) {
+function Mage({ targetRef }) {
   const [{ poweredUp }] = usePlayerState();
   const [{ invulnerable }] = useGameState();
 
@@ -64,6 +62,8 @@ function Mage({ playerRef, targetRef }) {
       }
     },
   });
+
+  const [playerRef] = usePlayerRef();
   return (
     <>
       <MouseTarget>
