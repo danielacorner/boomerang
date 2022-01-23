@@ -5,6 +5,7 @@ import { useEnemies } from "../../store";
 import { Virus } from "./Virus";
 import {
   BACTERIOPHAGE_PHI29_PROHEAD,
+  BACTERIOPHAGE_P68_120,
   getRandomVirus,
   HERPES,
   HIV,
@@ -111,10 +112,11 @@ const WAVES = [
   },
   {
     enemies: [
-      (id) => BACTERIOPHAGE_PHI29_PROHEAD({ shield: true, id }),
+      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
+      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
+      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
       (id) => HIV({ id }),
       (id) => HIV({ id }),
-      (id) => HERPES({ id }),
       (id) => HERPES({ shield: true, id }),
       (id) => HERPES({ shield: true, id }),
     ],

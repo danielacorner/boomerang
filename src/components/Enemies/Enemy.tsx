@@ -15,6 +15,7 @@ import {
   ITEM_TYPES,
 } from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
+import * as THREE from "three";
 
 const ENEMY_JITTER_SPEED = 2;
 const BOOMERANG_BASE_DAMAGE = 0.75;
@@ -208,11 +209,11 @@ function useMoveEnemy({
   useFrame(() => {
     if (!position.current || theyreDead) return;
     // random walk
-    const randomX = Math.random() * 2 - 1;
-    const randomZ = Math.random() * 2 - 0.5;
+    const randomX = Math.random() * 2;
+    const randomZ = Math.random() * 2;
 
     const directionX = Math.random() > 0.5 ? 1 : -1;
-    const directionZ = Math.random() > 0.2 ? 1 : -1;
+    const directionZ = Math.random() > 0.5 ? 1 : -1;
 
     const [x, y, z] = [
       position.current[0],
@@ -220,21 +221,18 @@ function useMoveEnemy({
       position.current[2],
     ];
 
-    // TODO: use applyForce
-
     const [fx, fy, fz] = [
       Math.random() > 0.7 ? ENEMY_JITTER_SPEED * randomX * directionX : 0,
-      1,
+      0.1,
       Math.random() > 0.4 ? ENEMY_JITTER_SPEED * randomZ * directionZ : 0,
     ];
 
-    // const x2Lerp = THREE.MathUtils.lerp(x, fx, 0.1);
-    // const y2Lerp = THREE.MathUtils.lerp(y, fy, 0.1);
-    // const z2Lerp = THREE.MathUtils.lerp(z, fz, 0.1);
+    const x2Lerp = THREE.MathUtils.lerp(x, fx, 0.011);
+    const y2Lerp = THREE.MathUtils.lerp(y, fy, 0.011);
+    const z2Lerp = THREE.MathUtils.lerp(z, fz, 0.011);
 
-    api.applyForce([fx, fy, fz], [x, y, z]);
-    // api.position.set(x2Lerp, y2Lerp, z2Lerp);
-    // api.position.set(x2Lerp, y2Lerp, z2Lerp);
+    // api.applyForce([fx, fy, fz], [x, y, z]);
+    api.position.set(x2Lerp, y2Lerp, z2Lerp);
     api.rotation.set(0, 0, 0);
   });
 

@@ -1,5 +1,8 @@
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
+import { SetStateAction, useRef } from "react";
+import { useMount } from "react-use";
+import { Mesh, BufferGeometry, Material } from "three";
 import { ITEM_TYPES } from "./utils/constants";
 
 type EnemyType = {
@@ -7,6 +10,7 @@ type EnemyType = {
   unmounted: boolean;
   id: number;
   invulnerable: boolean;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   unmountEnemy: Function;
   maxHp: number;
   enemyHeight: number;
@@ -19,12 +23,35 @@ export function useEnemies() {
   return useAtom(enemiesAtom);
 }
 const playerRefAtom = atom<{ current: THREE.Mesh | null }>({ current: null });
-export function usePlayerRef() {
-  return useAtom(playerRefAtom);
+export function usePlayerRef(): [
+  {
+    current: Mesh<BufferGeometry, Material | Material[]> | null;
+  },
+  (
+    update: SetStateAction<{
+      current: Mesh<BufferGeometry, Material | Material[]> | null;
+    }>
+  ) => void
+] {
+  const ref = useRef<THREE.Mesh | null>(null);
+  const [playerRef, setPlayerRef] = useAtom(playerRefAtom);
+  useMount(() => {
+    if (!playerRef.current) {
+      setPlayerRef(ref);
+    }
+  });
+  return [playerRef, setPlayerRef];
 }
 const targetRefAtom = atom<{ current: THREE.Mesh | null }>({ current: null });
 export function useTargetRef() {
-  return useAtom(targetRefAtom);
+  const ref = useRef<THREE.Mesh | null>(null);
+  const [targetRef, setTargetRef] = useAtom(targetRefAtom);
+  useMount(() => {
+    if (!targetRef.current) {
+      setTargetRef(ref);
+    }
+  });
+  return [targetRef, setTargetRef];
 }
 
 const boomerangStateAtom = atom<

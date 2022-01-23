@@ -18,7 +18,7 @@ import {
   POWERUP_NAME,
   RANGEUP_NAME,
 } from "../../utils/constants";
-import { useInterval, useMount } from "react-use";
+import { useInterval } from "react-use";
 
 const POWERUP_DURATION = 10 * 1000;
 const MOVE_SPEED = 0.39;
@@ -44,31 +44,26 @@ export function usePlayerControls(): {
   }, [pressedKeys]);
 
   // record a small "ramp-up" speed from 0 to 1 as long as at least one key is pressed
-  const [speed, setSpeed] = useState(0);
-  useInterval(() => {
-    if (speed < 1 && pressedKeys.length > 0) {
-      setSpeed(speed + 0.2);
-    } else if (speed > 0 && pressedKeys.length === 0) {
-      setSpeed(speed - 0.2);
-    }
-  }, 10);
+  // const [speed, setSpeed] = useState(0);
+  // useInterval(() => {
+  //   if (speed < 1 && pressedKeys.length > 0) {
+  //     setSpeed(speed + 0.2);
+  //   } else if (speed > 0 && pressedKeys.length === 0) {
+  //     setSpeed(speed - 0.2);
+  //   }
+  // }, 10);
 
   const [{ lookAt, poweredUp }, setPlayerState] = usePlayerState();
-  const moveSpeed = speed * MOVE_SPEED * (poweredUp ? 1.5 : 1);
+  const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1);
+  // const moveSpeed = speed * MOVE_SPEED * (poweredUp ? 1.5 : 1);
 
   const [movedMouse, setMovedMouse] = useState(false);
   useEventListener("mousemove", () => setMovedMouse(true));
   useEffect(() => {
     setMovedMouse(false);
   }, [pressedKeys]);
-  const targetRef = useRef<THREE.Mesh>(null);
-  const playerRef = useRef<THREE.Mesh>(null);
-  const [, setPlayerRef] = usePlayerRef();
-  const [, setTargetRef] = useTargetRef();
-  useMount(() => {
-    setPlayerRef(playerRef);
-    setTargetRef(targetRef);
-  });
+  const [playerRef] = usePlayerRef();
+  const [targetRef] = useTargetRef();
 
   const [cylinderRef, cylinderApi] = useCylinder(
     () => ({

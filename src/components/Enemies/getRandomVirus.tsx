@@ -34,7 +34,7 @@ export const BACTERIOPHAGE_P68_120 = ({ shield = false, id = null } = {}) => ({
     <>
       <group position={[0, 2, 0]}>
         <Bacteriophage_P68_120 scale={VIRUS_SCALE} {...p} />
-        {shield && id && <SphereShield {...{ id }} scale={1} />}
+        {shield && id && <SphereShield {...{ id }} scale={2} />}
       </group>
     </>
   ),
@@ -48,7 +48,7 @@ export const HIV = ({ shield = false, id = null } = {}) => ({
     <>
       <group position={[0, 2, 0]}>
         <HIV_200_cleaned_draco scale={VIRUS_SCALE} {...p} />
-        {shield && id && <SphereShield {...{ id }} scale={2} />}
+        {shield && id && <SphereShield {...{ id }} scale={2.3} />}
       </group>
     </>
   ),
