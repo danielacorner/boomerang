@@ -9,7 +9,9 @@ import {
   getRandomVirus,
   HERPES,
   HIV,
-} from "./getRandomVirus";
+  ADENOVIRUS_160_OUTER,
+  HPV_100,
+} from "./VIRUSES";
 import { atom, useAtom } from "jotai";
 
 const MAX_ENEMIES = 6;
@@ -103,22 +105,29 @@ const WAVES = [
   {
     enemies: [
       () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
       () => HIV(),
-      () => HIV(),
-      (id) => HERPES({ shield: true, id }),
+      () => HPV_100(),
       (id) => HERPES({ shield: true, id }),
     ],
   },
   {
     enemies: [
+      (id) => BACTERIOPHAGE_P68_120({ shield: false, id }),
       (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id) => HIV({ id }),
-      (id) => HIV({ id }),
       (id) => HERPES({ shield: true, id }),
       (id) => HERPES({ shield: true, id }),
+      () => HPV_100(),
+      () => HPV_100(),
+    ],
+  },
+  {
+    enemies: [
+      (id) => BACTERIOPHAGE_P68_120({ shield: false, id }),
+      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
+      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      () => HIV(),
+      () => HPV_100(),
     ],
   },
 ];

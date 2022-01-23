@@ -1,5 +1,4 @@
 import { Billboard, Text } from "@react-three/drei";
-import { useControls } from "leva";
 
 export function EnemyHpBar({
   health,
@@ -8,7 +7,6 @@ export function EnemyHpBar({
   enemyName,
   enemyUrl,
 }) {
-  const { x, y, z } = useControls({ x: 0, y: 8.4, z: 0.5 });
   return (
     <Billboard renderOrder={1}>
       {/* backdrop */}

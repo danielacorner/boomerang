@@ -8,16 +8,16 @@ import { useGLTF } from "@react-three/drei";
 export default function Model(props) {
   const group = useRef();
   const { nodes, materials } = useGLTF(
-    "/models/viruses/hpv_100_cleaned_draco.glb"
+    "/models/viruses/adenovirus_160_outer_cleaned_draco.glb"
   ) as any;
   return (
     <group ref={group} {...props} dispose={null}>
       <mesh
-        geometry={nodes["3j6rcif_assembly_1_A_Gaussian_surface"].geometry}
+        geometry={nodes.adenovirus.geometry}
         material={materials["default"]}
       />
     </group>
   );
 }
 
-useGLTF.preload("/models/viruses/hpv_100_cleaned_draco.glb");
+useGLTF.preload("/models/viruses/adenovirus_160_outer_cleaned_draco.glb");

@@ -1,10 +1,40 @@
 import { shuffle } from "../../utils/shuffle";
 import Bacteriophage_phi29_prohead_80_cleaned_draco from "../GLTFs/viruses/Bacteriophage_phi29_prohead_80_cleaned_draco";
+import Adenovirus_160_outer_cleaned_draco from "../GLTFs/viruses/Adenovirus_160_outer_cleaned_draco";
 import Bacteriophage_P68_120 from "../GLTFs/viruses/Bacteriophage_P68_120_cleaned_draco";
 import Herpes_600_cleaned_draco from "../GLTFs/viruses/Herpes_600_cleaned_draco";
+import Hpv_100_cleaned_draco from "../GLTFs/viruses/Hpv_100_cleaned_draco";
 import HIV_200_cleaned_draco from "../GLTFs/viruses/HIV_200_cleaned_draco";
 import SphereShield from "./SphereShield";
 
+export const ADENOVIRUS_160_OUTER = ({ shield = false, id = null } = {}) => ({
+  enemyName: "Human Papillomavirus (HPV)",
+  maxHp: 9,
+  enemyHeight: 8,
+  enemyUrl: "https://www.rcsb.org/structure/3J6R",
+  RandomVirus: (p) => (
+    <>
+      <group position={[0, 2, 0]}>
+        <Hpv_100_cleaned_draco scale={VIRUS_SCALE} {...p} />
+        {shield && id && <SphereShield {...{ id }} scale={1} />}
+      </group>
+    </>
+  ),
+});
+export const HPV_100 = ({ shield = false, id = null } = {}) => ({
+  enemyName: "Adenovirus",
+  maxHp: 9,
+  enemyHeight: 8,
+  enemyUrl: "https://www.rcsb.org/structure/6CGV",
+  RandomVirus: (p) => (
+    <>
+      <group position={[0, 2, 0]}>
+        <Adenovirus_160_outer_cleaned_draco scale={VIRUS_SCALE} {...p} />
+        {shield && id && <SphereShield {...{ id }} scale={1} />}
+      </group>
+    </>
+  ),
+});
 export const BACTERIOPHAGE_PHI29_PROHEAD = ({
   shield = false,
   id = null,
