@@ -20,7 +20,7 @@ import {
 import { useInterval, useMount } from "react-use";
 
 const POWERUP_DURATION = 10 * 1000;
-const MOVE_SPEED = 0.37;
+const MOVE_SPEED = 0.39;
 
 export function usePlayerControls(): {
   cylinderRef: React.RefObject<THREE.Object3D<THREE.Event>>;
@@ -46,21 +46,16 @@ export function usePlayerControls(): {
     }
   }, [pressedKeys]);
 
-  // record a "ramp-up" speed from 0 to 1 as long as at least one key is pressed
+  // record a small "ramp-up" speed from 0 to 1 as long as at least one key is pressed
   const [speed, setSpeed] = useState(0);
-  useInterval(
-    () => {
-      if (speed < 1) {
-        setSpeed(speed + 0.01);
-      }
-    },
-    pressedKeys.length > 0 ? 10 : null
-  );
+  useInterval(() => {
+    if (speed < 1 && pressedKeys.length > 0) {
+      setSpeed(speed + 0.2);
+    } else if (speed > 0 && pressedKeys.length === 0) {
+      setSpeed(speed - 0.2);
+    }
+  }, 10);
 
-  console.log(
-    "🌟🚨 ~ file: usePlayerControls.tsx ~ line 62 ~ usePlayerControls ~ speed",
-    speed
-  );
   const [{ lookAt, poweredUp }, setPlayerState] = usePlayerState();
   const moveSpeed = speed * MOVE_SPEED * (poweredUp ? 1.5 : 1);
 
@@ -173,19 +168,12 @@ export function usePlayerControls(): {
 
   // move the player
   useFrame(({ camera }) => {
-    if (!cylinderRef.current || !playerRef.current || !hasMoved) {
-      console.log(
-        "🌟🚨 ~ file: usePlayerControls.tsx ~ line 173 ~ useFrame ~ playerRef.current",
-        playerRef.current
-      );
-      console.log(
-        "🌟🚨 ~ file: usePlayerControls.tsx ~ line 173 ~ useFrame ~ cylinderRef.current",
-        cylinderRef.current
-      );
-      console.log(
-        "🌟🚨 ~ file: usePlayerControls.tsx ~ line 173 ~ useFrame ~ hasMoved",
-        hasMoved
-      );
+    if (
+      !cylinderRef.current ||
+      !playerRef.current ||
+      !positionRef.current ||
+      !hasMoved
+    ) {
       return;
     }
     const [x1, y1, z1] = [
@@ -228,20 +216,8 @@ export function usePlayerControls(): {
     const [, ry2] = [0.01, newRotY, 0.01];
     const ry2Lerp = THREE.MathUtils.lerp(ry1, ry2, PLAYER_ROTATION_SPEED);
     // TODO: UP not working?
-    // console.log(
-    //   "🌟🚨 ~ file: usePlayerControls.tsx ~ line 186 ~ useFrame ~ newRotY",
-    //   newRotY
-    // );
-    // console.log(
-    //   "🌟🚨 ~ file: usePlayerControls.tsx ~ line 202 ~ useFrame ~ ry2Lerp",
-    //   ry2Lerp
-    // );
-    cylinderApi.rotation.set(0, ry2Lerp, 0);
-    console.log(
-      "🌟🚨 ~ file: usePlayerControls.tsx ~ line 240 ~ useFrame ~ cylinderApi",
-      cylinderApi
-    );
 
+    cylinderApi.rotation.set(0, ry2Lerp, 0);
     const [vx1, vy1, vz1] = velocityRef.current;
     const [vx2, vy2, vz2] = [0, 0, 0];
     const [vx2Lerp, vy2Lerp, vz2Lerp] = [

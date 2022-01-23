@@ -75,9 +75,9 @@ export function Enemy({
   );
 }
 
-const POWERUP_PROBABILITY = 0.2;
-const RANGEUP_PROBABILITY = 0.2;
-const DROPPED_BOOMERANG_PROBABILITY = 0.2;
+const POWERUP_PROBABILITY = 0.1;
+const RANGEUP_PROBABILITY = 0.08;
+const DROPPED_BOOMERANG_PROBABILITY = 0.03;
 const MAX_BOOMERANGS = 6;
 
 function useMoveEnemy({

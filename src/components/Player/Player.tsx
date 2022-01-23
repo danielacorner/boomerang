@@ -64,6 +64,10 @@ function Mage({ targetRef }) {
   });
 
   const [playerRef] = usePlayerRef();
+  console.log(
+    "🌟🚨 ~ file: Player.tsx ~ line 67 ~ Mage ~ playerRef",
+    playerRef
+  );
   return (
     <>
       <MouseTarget>

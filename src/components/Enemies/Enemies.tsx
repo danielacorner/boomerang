@@ -85,28 +85,38 @@ export function Enemies() {
 const WAVES = [
   {
     enemies: [
-      BACTERIOPHAGE_PHI29_PROHEAD,
-      BACTERIOPHAGE_PHI29_PROHEAD,
-      BACTERIOPHAGE_PHI29_PROHEAD,
-      BACTERIOPHAGE_PHI29_PROHEAD,
+      () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      () => BACTERIOPHAGE_PHI29_PROHEAD(),
     ],
   },
   {
     enemies: [
-      BACTERIOPHAGE_PHI29_PROHEAD,
-      BACTERIOPHAGE_PHI29_PROHEAD,
-      HIV,
-      HIV,
+      () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      () => HIV(),
+      () => HIV(),
     ],
   },
   {
     enemies: [
-      BACTERIOPHAGE_PHI29_PROHEAD,
-      BACTERIOPHAGE_PHI29_PROHEAD,
-      HIV,
-      HIV,
-      (id) => HERPES(id),
-      (id) => HERPES(id),
+      () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      () => HIV(),
+      () => HIV(),
+      (id) => HERPES({ shield: true, id }),
+      (id) => HERPES({ shield: true, id }),
+    ],
+  },
+  {
+    enemies: [
+      (id) => BACTERIOPHAGE_PHI29_PROHEAD({ shield: true, id }),
+      (id) => HIV({ id }),
+      (id) => HIV({ id }),
+      (id) => HERPES({ id }),
+      (id) => HERPES({ shield: true, id }),
+      (id) => HERPES({ shield: true, id }),
     ],
   },
 ];

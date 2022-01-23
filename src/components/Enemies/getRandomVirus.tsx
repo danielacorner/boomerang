@@ -1,11 +1,15 @@
 import { shuffle } from "../../utils/shuffle";
 import Bacteriophage_phi29_prohead_80_cleaned_draco from "../GLTFs/viruses/Bacteriophage_phi29_prohead_80_cleaned_draco";
+import Bacteriophage_P68_120 from "../GLTFs/viruses/Bacteriophage_P68_120_cleaned_draco";
 import Herpes_600_cleaned_draco from "../GLTFs/viruses/Herpes_600_cleaned_draco";
 import HIV_200_cleaned_draco from "../GLTFs/viruses/HIV_200_cleaned_draco";
 import SphereShield from "./SphereShield";
 
-export const BACTERIOPHAGE_PHI29_PROHEAD = {
-  enemyName: "Bacteriophage",
+export const BACTERIOPHAGE_PHI29_PROHEAD = ({
+  shield = false,
+  id = null,
+} = {}) => ({
+  enemyName: "Bacteriophage phi29",
   maxHp: 9,
   enemyHeight: 8,
   enemyUrl: "https://www.rcsb.org/structure/6QVK",
@@ -16,27 +20,40 @@ export const BACTERIOPHAGE_PHI29_PROHEAD = {
           scale={VIRUS_SCALE}
           {...p}
         />
+        {shield && id && <SphereShield {...{ id }} scale={1} />}
       </group>
-      {/* <SphereShield {...{ id }} scale={2} /> */}
     </>
   ),
-};
-export const HIV = {
+});
+export const BACTERIOPHAGE_P68_120 = ({ shield = false, id = null } = {}) => ({
+  enemyName: "Bacteriophage P68",
+  maxHp: 9,
+  enemyHeight: 8,
+  enemyUrl: "https://www.rcsb.org/structure/6Q3G",
+  RandomVirus: (p) => (
+    <>
+      <group position={[0, 2, 0]}>
+        <Bacteriophage_P68_120 scale={VIRUS_SCALE} {...p} />
+        {shield && id && <SphereShield {...{ id }} scale={1} />}
+      </group>
+    </>
+  ),
+});
+export const HIV = ({ shield = false, id = null } = {}) => ({
   enemyName: "HIV",
   maxHp: 14,
   enemyHeight: 8,
   enemyUrl: "https://www.rcsb.org/structure/3J3Y/",
-
   RandomVirus: (p) => (
     <>
       <group position={[0, 2, 0]}>
         <HIV_200_cleaned_draco scale={VIRUS_SCALE} {...p} />
-        {/* <SphereShield {...{ id }} scale={3} /> */}
+        {shield && id && <SphereShield {...{ id }} scale={2} />}
       </group>
     </>
   ),
-};
-export const HERPES = (id) => ({
+});
+export const HERPES = ({ shield = false, id = null }) => ({
   enemyName: "Herpes",
   maxHp: 21,
   enemyHeight: 12,
@@ -45,7 +62,7 @@ export const HERPES = (id) => ({
     <>
       <group position={[0, 3.5, 0]}>
         <Herpes_600_cleaned_draco scale={VIRUS_SCALE} {...p} />
-        <SphereShield {...{ id }} scale={4} />
+        {shield && id && <SphereShield {...{ id }} scale={4} />}
       </group>
     </>
   ),
