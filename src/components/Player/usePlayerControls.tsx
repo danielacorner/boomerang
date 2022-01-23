@@ -9,6 +9,7 @@ import {
   useGameState,
   usePlayerState,
   usePlayerRef,
+  useTargetRef,
 } from "../../store";
 import {
   BOOMERANG_ITEM_NAME,
@@ -25,10 +26,6 @@ const MOVE_SPEED = 0.39;
 export function usePlayerControls(): {
   cylinderRef: React.RefObject<THREE.Object3D<THREE.Event>>;
   cylinderApi: PublicApi;
-  targetRef: React.MutableRefObject<null | THREE.Mesh<
-    THREE.BufferGeometry,
-    THREE.Material | THREE.Material[]
-  >>;
   positionRef: React.MutableRefObject<null | number[]>;
   velocityRef: React.MutableRefObject<null | number[]>;
 } {
@@ -67,8 +64,10 @@ export function usePlayerControls(): {
   const targetRef = useRef<THREE.Mesh>(null);
   const playerRef = useRef<THREE.Mesh>(null);
   const [, setPlayerRef] = usePlayerRef();
+  const [, setTargetRef] = useTargetRef();
   useMount(() => {
     setPlayerRef(playerRef);
+    setTargetRef(targetRef);
   });
 
   const [cylinderRef, cylinderApi] = useCylinder(
@@ -80,7 +79,7 @@ export function usePlayerControls(): {
       // if collides with powerup, power up!
       onCollide: (e) => {
         // if collides with enemy, take damage
-        const isCollisionWithEnemy = e.body.name === ENEMY_NAME;
+        const isCollisionWithEnemy = e.body?.name === ENEMY_NAME;
         if (isCollisionWithEnemy) {
           // console.log("COLLISION! with ENEMY", e);
           setGameState((p) =>
@@ -99,7 +98,7 @@ export function usePlayerControls(): {
         }
 
         // if collides with powerup, power up!
-        const isCollisionWithPowerup = e.body.name === POWERUP_NAME;
+        const isCollisionWithPowerup = e.body?.name === POWERUP_NAME;
         if (isCollisionWithPowerup) {
           // console.log("COLLISION! with POWERUP", e);
           setPlayerState((p) => ({ ...p, poweredUp: true }));
@@ -109,7 +108,7 @@ export function usePlayerControls(): {
         }
 
         // if collides with rangeup, range up!
-        const isCollisionWithRangeup = e.body.name === RANGEUP_NAME;
+        const isCollisionWithRangeup = e.body?.name === RANGEUP_NAME;
         if (isCollisionWithRangeup) {
           // console.log("COLLISION! with RANGEUP", e);
           setPlayerState((p) => ({ ...p, rangeUp: true }));
@@ -119,7 +118,7 @@ export function usePlayerControls(): {
         }
 
         // if collides with dropped boomerang, record it
-        const isCollisionWithBoomerang = e.body.name === BOOMERANG_ITEM_NAME;
+        const isCollisionWithBoomerang = e.body?.name === BOOMERANG_ITEM_NAME;
         if (isCollisionWithBoomerang) {
           // console.log("COLLISION! with boomerang", e);
           const newBoomerang = {
@@ -230,7 +229,6 @@ export function usePlayerControls(): {
 
   return {
     cylinderRef,
-    targetRef,
     positionRef,
     velocityRef,
     cylinderApi,

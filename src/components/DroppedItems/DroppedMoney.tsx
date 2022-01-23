@@ -10,6 +10,7 @@ import { BOOMERANG_NAME, GROUP1, ITEM_TYPES } from "../../utils/constants";
 const BAG_RADIUS = 1;
 const UNMOUNT_DELAY = 16 * 1000;
 
+const BAG_INVULNERABLE_DURATION = 2 * 1000;
 export function DroppedMoney({ position }) {
   return (
     <group>
@@ -24,6 +25,13 @@ function Bag({ position }) {
   return mounted ? <BagContent {...{ position, setMounted }} /> : null;
 }
 function BagContent({ position, setMounted }) {
+  const [interactive, setInteractive] = useState(false);
+  useMount(() => {
+    setTimeout(() => {
+      setInteractive(true);
+    }, BAG_INVULNERABLE_DURATION);
+  });
+
   const [collectedStatus, setCollectedStatus] = useState<
     "uncollected" | "collected" | "unmounting"
   >("uncollected");
@@ -36,27 +44,33 @@ function BagContent({ position, setMounted }) {
   );
 
   const [, setMoney] = useMoney();
-  const [ref, api] = useCylinder(() => ({
-    collisionFilterGroup: GROUP1,
-    collisionResponse: 0, // ? don't push back on collisions
-    args: [1, 1, BAG_RADIUS, 6],
-    mass: 1,
-    position,
-    onCollide: (e) => {
-      // when the player touches it, gain +1 money
-      if (e.body.name === "player") {
-        setMoney((p) => p + 1);
-        setCollectedStatus("collected");
-        setTimeout(() => {
-          setMounted(false);
-        }, 1000);
-      }
 
-      if (e.body.name.includes(BOOMERANG_NAME)) {
-        setMounted(false);
-      }
-    },
-  }));
+  const [ref, api] = useCylinder(
+    () => ({
+      collisionFilterGroup: GROUP1,
+      collisionResponse: 0, // ? don't push back on collisions
+      args: [1, 1, BAG_RADIUS, 6],
+      mass: 1,
+      type: interactive ? "Dynamic" : "Static",
+      position,
+      onCollide: (e) => {
+        // when the player touches it, gain +1 money
+        if (e.body?.name === "player") {
+          setMoney((p) => p + 1);
+          setCollectedStatus("collected");
+          setTimeout(() => {
+            setMounted(false);
+          }, 1000);
+        }
+
+        if (e.body?.name.includes(BOOMERANG_NAME) && interactive) {
+          setMounted(false);
+        }
+      },
+    }),
+    null,
+    [interactive]
+  );
 
   useMount(() => {
     if (!ref.current) {

@@ -22,6 +22,10 @@ const playerRefAtom = atom<{ current: THREE.Mesh | null }>({ current: null });
 export function usePlayerRef() {
   return useAtom(playerRefAtom);
 }
+const targetRefAtom = atom<{ current: THREE.Mesh | null }>({ current: null });
+export function useTargetRef() {
+  return useAtom(targetRefAtom);
+}
 
 const boomerangStateAtom = atom<
   {

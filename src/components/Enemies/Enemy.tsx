@@ -113,8 +113,8 @@ function useMoveEnemy({
           return;
         }
         // when the boomerang+enemy collide, subtract some hp
-        const isCollisionWithBoomerang = e.body.name.includes(BOOMERANG_NAME);
-        // const isCollisionWithGround = e.body.name === GROUND_NAME;
+        const isCollisionWithBoomerang = e.body?.name.includes(BOOMERANG_NAME);
+        // const isCollisionWithGround = e.body?.name === GROUND_NAME;
 
         // subtract some hp when they hit the boomerang
         if (isCollisionWithBoomerang) {

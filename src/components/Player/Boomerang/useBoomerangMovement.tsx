@@ -92,7 +92,7 @@ export function useBoomerangMovement({
       onCollide: (e) => {
         // if it collides with the walls,
         // reflect it back
-        if (e.body.name === WALL_NAME) {
+        if (e.body?.name === WALL_NAME) {
           api.velocity.set(
             -velocity.current[0],
             -velocity.current[1],
@@ -101,7 +101,7 @@ export function useBoomerangMovement({
         }
 
         // pick up the boomerang when it collides with the player
-        const isCollisionWithPlayer = e.body.name === PLAYER_NAME;
+        const isCollisionWithPlayer = e.body?.name === PLAYER_NAME;
         if (isCollisionWithPlayer) {
           console.log(
             "🌟🚨 ~ file: useBoomerangMovement.tsx ~ line 102 ~ isCollisionWithPlayer",
@@ -140,13 +140,13 @@ export function useBoomerangMovement({
           ITEM_TYPES.MONEY,
           ITEM_TYPES.POWERUP,
           ITEM_TYPES.RANGEUP,
-        ].includes(e.body.name as any);
+        ].includes(e.body?.name as any);
         if (isCollisionWithDroppedItem) {
           console.log(
             "🌟🚨 ~ file: useBoomerangMovement.tsx ~ line 137 ~ isCollisionWithDroppedItem",
             isCollisionWithDroppedItem
           );
-          setCarriedItems((p) => [...p, e.body.name as ITEM_TYPES]);
+          setCarriedItems((p) => [...p, e.body?.name as ITEM_TYPES]);
         }
       },
     }),
