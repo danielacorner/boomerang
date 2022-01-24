@@ -4,6 +4,7 @@ import { EnemyHpBar } from "./EnemyHpBar";
 import { ENEMY_CYLINDER_HEIGHT, ENEMY_NAME } from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 import { useMoveEnemy } from "./useMoveEnemy";
+import { Text } from "@react-three/drei";
 
 // const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
 
@@ -31,7 +32,7 @@ export function Enemy({
     return unsubscribe;
   }, []);
 
-  const { enemyRef, api } = useMoveEnemy({
+  const { enemyRef, api, movementStatus } = useMoveEnemy({
     position,
     theyreDead,
     setTheyreDead,
@@ -55,7 +56,30 @@ export function Enemy({
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
         <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
+        <AttackIndicator {...{ movementStatus }} />
       </animated.mesh>
     </>
+  );
+}
+
+const AnimatedText = animated(Text);
+/** warn before the enemy attacks */
+function AttackIndicator({ movementStatus }) {
+  const willAttack = movementStatus === "preAttack";
+  const { opacity, position } = useSpring({
+    opacity: willAttack ? 1 : 0,
+    position: [0, 10 + (willAttack ? 0 : -5), 0] as [number, number, number],
+  });
+  return (
+    <animated.mesh position={position}>
+      <AnimatedText
+        color={"#d63434"}
+        fontSize={6}
+        scale={1}
+        fillOpacity={opacity}
+      >
+        !
+      </AnimatedText>
+    </animated.mesh>
   );
 }

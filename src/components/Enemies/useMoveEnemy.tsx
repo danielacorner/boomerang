@@ -27,6 +27,10 @@ const UNMOUNT_DELAY = 5 * 1000;
 type MovementType = "randomWalk" | "preAttack" | "attack";
 const MOVEMENT_SEQUENCE: MovementType[] = ["randomWalk", "preAttack", "attack"];
 
+const RANDOM_WALK_DURATION = 3500;
+const PRE_ATTACK_DURATION = 1000;
+const ATTACK_DURATION = 500;
+
 export function useMoveEnemy({
   position,
   theyreDead,
@@ -153,6 +157,7 @@ export function useMoveEnemy({
   const [movementStatus, setMovementStatus] = useState<MovementType>(
     MOVEMENT_SEQUENCE[0]
   );
+
   // set the enemy's movement status at specified time intervals
   useInterval(
     () => {
@@ -167,11 +172,11 @@ export function useMoveEnemy({
       setMovementStatus(nextMovementStatus);
     },
     movementStatus === "randomWalk"
-      ? 3500
+      ? RANDOM_WALK_DURATION
       : movementStatus === "preAttack"
-      ? 1000
+      ? PRE_ATTACK_DURATION
       : movementStatus === "attack"
-      ? 500
+      ? ATTACK_DURATION
       : null
   );
   const [attacked, setAttacked] = useState(false);
@@ -215,6 +220,7 @@ export function useMoveEnemy({
       // api.applyForce([fx, fy, fz], [x, y, z]);
       api.position.set(x2Lerp, y2Lerp, z2Lerp);
       api.rotation.set(0, 0, 0);
+      api.velocity.set(0, 0, 0);
     } else if (movementStatus === "preAttack") {
       enemyRef.current.scale.set(1.3, 1.3, 1.3);
       api.rotation.set(0, 0, 0);
@@ -244,7 +250,7 @@ export function useMoveEnemy({
         setAttacked(true);
       }
       api.rotation.set(0, 0, 0);
-      api.position.set(x, y, z);
+      // api.position.set(x, y, z);
     }
   });
 
@@ -265,5 +271,5 @@ export function useMoveEnemy({
     }
   }, [theyDied]);
 
-  return { enemyRef, api };
+  return { enemyRef, api, movementStatus };
 }
