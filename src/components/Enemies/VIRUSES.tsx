@@ -6,10 +6,25 @@ import Herpes_600_cleaned_draco from "../GLTFs/viruses/Herpes_600_cleaned_draco"
 import Hpv_100_cleaned_draco from "../GLTFs/viruses/Hpv_100_cleaned_draco";
 import HIV_200_cleaned_draco from "../GLTFs/viruses/HIV_200_cleaned_draco";
 import SphereShield from "./SphereShield";
+import JeffBezos from "../GLTFs/JeffBezos";
 
+export const JEFF_BEZOS = ({ shield = false, id = null } = {}) => ({
+  enemyName: "Jeff Bezos (billionaire)",
+  maxHp: 140,
+  enemyHeight: 10,
+  enemyUrl: "",
+  RandomVirus: (p) => (
+    <>
+      <group position={[0, 2, 0]} rotation={[0, Math.PI, 0]}>
+        <JeffBezos scale={4.6} {...p} />
+        {shield && id && <SphereShield {...{ id }} scale={1} />}
+      </group>
+    </>
+  ),
+});
 export const ADENOVIRUS_160_OUTER = ({ shield = false, id = null } = {}) => ({
   enemyName: "Human Papillomavirus (HPV)",
-  maxHp: 9,
+  maxHp: 12,
   enemyHeight: 8,
   enemyUrl: "https://www.rcsb.org/structure/3J6R",
   RandomVirus: (p) => (
@@ -23,7 +38,7 @@ export const ADENOVIRUS_160_OUTER = ({ shield = false, id = null } = {}) => ({
 });
 export const HPV_100 = ({ shield = false, id = null } = {}) => ({
   enemyName: "Adenovirus",
-  maxHp: 9,
+  maxHp: 11,
   enemyHeight: 8,
   enemyUrl: "https://www.rcsb.org/structure/6CGV",
   RandomVirus: (p) => (
@@ -40,7 +55,7 @@ export const BACTERIOPHAGE_PHI29_PROHEAD = ({
   id = null,
 } = {}) => ({
   enemyName: "Bacteriophage phi29",
-  maxHp: 9,
+  maxHp: 10,
   enemyHeight: 8,
   enemyUrl: "https://www.rcsb.org/structure/6QVK",
   RandomVirus: (p) => (
@@ -57,7 +72,7 @@ export const BACTERIOPHAGE_PHI29_PROHEAD = ({
 });
 export const BACTERIOPHAGE_P68_120 = ({ shield = false, id = null } = {}) => ({
   enemyName: "Bacteriophage P68",
-  maxHp: 9,
+  maxHp: 10,
   enemyHeight: 8,
   enemyUrl: "https://www.rcsb.org/structure/6Q3G",
   RandomVirus: (p) => (

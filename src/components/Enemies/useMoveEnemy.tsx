@@ -18,7 +18,7 @@ import { useInterval } from "react-use";
 import { Vector3 } from "three";
 const POWERUP_PROBABILITY = 0.1;
 const RANGEUP_PROBABILITY = 0.08;
-const DROPPED_BOOMERANG_PROBABILITY = 0.03;
+const DROPPED_BOOMERANG_PROBABILITY = 0.008;
 const MAX_BOOMERANGS = 6;
 
 const ENEMY_JITTER_SPEED = 2;

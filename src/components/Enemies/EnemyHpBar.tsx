@@ -19,27 +19,33 @@ export function EnemyHpBar({
           transparent={true}
           opacity={0.8}
         />
-        <Nametag name={enemyName} url={enemyUrl} />
       </mesh>
       {/* remaining hp */}
-      <mesh scale={1} position={[0, enemyHeight + 0.01, 0.01]}>
-        <boxGeometry attach="geometry" args={[health, 1.4, 0.1]} />
-        <meshBasicMaterial
-          depthTest={false}
-          attach="material"
-          color={"#810f0f"}
-          transparent={true}
-          opacity={0.8}
-        />
+      <mesh position={[0, enemyHeight + 0.01, 0.01]}>
+        <mesh scale={[health, 1, 1]} position={[(-maxHp + health) / 2, 0, 0]}>
+          <boxGeometry attach="geometry" args={[1, 1.4, 0.1]} />
+          <meshBasicMaterial
+            depthTest={false}
+            attach="material"
+            color={"#810f0f"}
+            transparent={true}
+            opacity={0.8}
+          />
+        </mesh>
         <Nametag name={enemyName} url={enemyUrl} />
       </mesh>
     </Billboard>
   );
 }
 
-function Nametag({ name, url }) {
+function Nametag({ name, url, ...rest }) {
   return (
-    <mesh renderOrder={1} material-depthTest={false} position={[0, 0, 0]}>
+    <mesh
+      renderOrder={1}
+      material-depthTest={false}
+      position={[0, 0, 0]}
+      {...rest}
+    >
       <Text
         anchorY={"middle"}
         color={"#ffffff"}

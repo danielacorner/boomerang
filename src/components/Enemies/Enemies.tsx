@@ -11,6 +11,7 @@ import {
   HIV,
   ADENOVIRUS_160_OUTER,
   HPV_100,
+  JEFF_BEZOS,
 } from "./VIRUSES";
 import { atom, useAtom } from "jotai";
 
@@ -126,6 +127,7 @@ const WAVES = [
       (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
       (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
       (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      () => JEFF_BEZOS(),
     ],
   },
   {
@@ -155,6 +157,7 @@ const WAVES = [
     ],
   },
 ];
+
 const currentWaveAtom = atom(0);
 export const useCurrentWave = () => useAtom(currentWaveAtom);
 function useSpawnWavesOfEnemies(spawnEnemy) {
