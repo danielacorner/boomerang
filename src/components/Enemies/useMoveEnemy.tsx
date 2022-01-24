@@ -23,7 +23,7 @@ const MAX_BOOMERANGS = 6;
 
 const ENEMY_JITTER_SPEED = 2;
 const BOOMERANG_BASE_DAMAGE = 0.75;
-const UNMOUNT_DELAY = 2 * 1000;
+const UNMOUNT_DELAY = 5 * 1000;
 type MovementType = "randomWalk" | "preAttack" | "attack";
 const MOVEMENT_SEQUENCE: MovementType[] = ["randomWalk", "preAttack", "attack"];
 
@@ -156,6 +156,9 @@ export function useMoveEnemy({
   // set the enemy's movement status at specified time intervals
   useInterval(
     () => {
+      if (theyreDead) {
+        return;
+      }
       const nextMovementStatus =
         MOVEMENT_SEQUENCE[
           (MOVEMENT_SEQUENCE.indexOf(movementStatus) + 1) %
@@ -164,11 +167,11 @@ export function useMoveEnemy({
       setMovementStatus(nextMovementStatus);
     },
     movementStatus === "randomWalk"
-      ? 4000
+      ? 3500
       : movementStatus === "preAttack"
       ? 1000
       : movementStatus === "attack"
-      ? 1000
+      ? 500
       : null
   );
   const [attacked, setAttacked] = useState(false);
@@ -189,6 +192,9 @@ export function useMoveEnemy({
       position.current[2],
     ];
     if (movementStatus === "randomWalk") {
+      if (attacked) {
+        setAttacked(false);
+      }
       // random walk
       const randomX = Math.random() * 2;
       const randomZ = Math.random() * 2;
@@ -217,8 +223,6 @@ export function useMoveEnemy({
     } else if (movementStatus === "attack") {
       if (!attacked) {
         enemyRef.current.scale.set(1, 1, 1);
-        api.rotation.set(0, 0, 0);
-        api.position.set(x, y, z);
         const newVelocity = playerRef.current.position
           .clone()
           .sub(
@@ -232,9 +236,15 @@ export function useMoveEnemy({
           "🌟🚨 ~ file: useMoveEnemy.tsx ~ line 230 ~ useFrame ~ newVelocity",
           newVelocity
         );
-        api.velocity.set(newVelocity.x, newVelocity.y, newVelocity.z);
+        api.velocity.set(
+          newVelocity.x * 3,
+          newVelocity.y * 3,
+          newVelocity.z * 3
+        );
         setAttacked(true);
       }
+      api.rotation.set(0, 0, 0);
+      api.position.set(x, y, z);
     }
   });
 
