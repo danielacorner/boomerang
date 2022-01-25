@@ -29,7 +29,9 @@ const MOVEMENT_SEQUENCE: MovementType[] = ["randomWalk", "preAttack", "attack"];
 
 const RANDOM_WALK_DURATION = 3500;
 const PRE_ATTACK_DURATION = 1000;
-const ATTACK_DURATION = 500;
+const ATTACK_DURATION = 380;
+
+const ENEMY_ATTACK_SPEED = 3;
 
 export function useMoveEnemy({
   position,
@@ -161,9 +163,6 @@ export function useMoveEnemy({
   // set the enemy's movement status at specified time intervals
   useInterval(
     () => {
-      if (theyreDead) {
-        return;
-      }
       const nextMovementStatus =
         MOVEMENT_SEQUENCE[
           (MOVEMENT_SEQUENCE.indexOf(movementStatus) + 1) %
@@ -171,7 +170,9 @@ export function useMoveEnemy({
         ];
       setMovementStatus(nextMovementStatus);
     },
-    movementStatus === "randomWalk"
+    theyreDead
+      ? null
+      : movementStatus === "randomWalk"
       ? RANDOM_WALK_DURATION
       : movementStatus === "preAttack"
       ? PRE_ATTACK_DURATION
@@ -222,13 +223,11 @@ export function useMoveEnemy({
       api.rotation.set(0, 0, 0);
       api.velocity.set(0, 0, 0);
     } else if (movementStatus === "preAttack") {
-      enemyRef.current.scale.set(1.3, 1.3, 1.3);
       api.rotation.set(0, 0, 0);
       api.position.set(x, y, z);
       api.velocity.set(0, 0, 0);
     } else if (movementStatus === "attack") {
       if (!attacked) {
-        enemyRef.current.scale.set(1, 1, 1);
         const newVelocity = playerRef.current.position
           .clone()
           .sub(
@@ -238,14 +237,11 @@ export function useMoveEnemy({
               position.current[2]
             )
           );
-        console.log(
-          "🌟🚨 ~ file: useMoveEnemy.tsx ~ line 230 ~ useFrame ~ newVelocity",
-          newVelocity
-        );
+
         api.velocity.set(
-          newVelocity.x * 3,
-          newVelocity.y * 3,
-          newVelocity.z * 3
+          newVelocity.x * ENEMY_ATTACK_SPEED,
+          newVelocity.y * ENEMY_ATTACK_SPEED,
+          newVelocity.z * ENEMY_ATTACK_SPEED
         );
         setAttacked(true);
       }

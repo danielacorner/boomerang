@@ -42,12 +42,18 @@ export function Enemy({
     invulnerable,
   });
 
-  const { opacity } = useSpring({ opacity: theyreDead ? 0 : 1 });
+  const willAttack = movementStatus === "preAttack";
+
+  const { opacity, scale } = useSpring({
+    opacity: theyreDead ? 0 : 1,
+    scale: willAttack ? 1.2 : 1,
+  });
   return (
     <>
       <animated.mesh
         material-transparent={true}
         material-opacity={opacity}
+        scale={scale}
         ref={enemyRef}
         name={ENEMY_NAME}
       >
@@ -56,7 +62,7 @@ export function Enemy({
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
         <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
-        <AttackIndicator {...{ movementStatus }} />
+        <AttackIndicator {...{ willAttack }} />
       </animated.mesh>
     </>
   );
@@ -64,8 +70,7 @@ export function Enemy({
 
 const AnimatedText = animated(Text);
 /** warn before the enemy attacks */
-function AttackIndicator({ movementStatus }) {
-  const willAttack = movementStatus === "preAttack";
+function AttackIndicator({ willAttack }) {
   const { opacity, position } = useSpring({
     opacity: willAttack ? 1 : 0,
     position: [0, 10 + (willAttack ? 0 : -5), 0] as [number, number, number],
