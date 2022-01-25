@@ -6,6 +6,7 @@ import {
   usePlayerState,
   useDroppedItems,
   usePlayerRef,
+  usePlayerPositionRef,
 } from "../../store";
 import {
   BOOMERANG_NAME,
@@ -27,11 +28,11 @@ const UNMOUNT_DELAY = 5 * 1000;
 type MovementType = "randomWalk" | "preAttack" | "attack";
 const MOVEMENT_SEQUENCE: MovementType[] = ["randomWalk", "preAttack", "attack"];
 
-const RANDOM_WALK_DURATION = 3500;
+const RANDOM_WALK_DURATION = 4500;
 const PRE_ATTACK_DURATION = 1000;
-const ATTACK_DURATION = 380;
+const ATTACK_DURATION = 200;
 
-const ENEMY_ATTACK_SPEED = 3;
+const ENEMY_ATTACK_SPEED = 6;
 
 export function useMoveEnemy({
   position,
@@ -48,6 +49,7 @@ export function useMoveEnemy({
   const [theyDroppedItems, setTheyDroppedItems] = useState(false);
   const [, setDroppedItems] = useDroppedItems();
   const [playerRef] = usePlayerRef();
+  const [playerPositionRef] = usePlayerPositionRef();
   const [theyDied, setTheyDied] = useState(false);
 
   const [enemyRef, api] = useCylinder(
@@ -228,20 +230,22 @@ export function useMoveEnemy({
       api.velocity.set(0, 0, 0);
     } else if (movementStatus === "attack") {
       if (!attacked) {
-        const newVelocity = playerRef.current.position
-          .clone()
-          .sub(
-            new Vector3(
-              position.current[0],
-              position.current[1],
-              position.current[2]
-            )
-          );
+        const newVelocity = new Vector3(
+          playerPositionRef.current[0] - position.current[0],
+          playerPositionRef.current[1] - position.current[1],
+          playerPositionRef.current[2] - position.current[2]
+        );
+        console.log(
+          "🌟🚨 ~ file: useMoveEnemy.tsx ~ line 240 ~ useFrame ~ playerRef.current.position",
+          playerPositionRef.current
+        );
+
+        const newVelocityNormalized = newVelocity.normalize();
 
         api.velocity.set(
-          newVelocity.x * ENEMY_ATTACK_SPEED,
-          newVelocity.y * ENEMY_ATTACK_SPEED,
-          newVelocity.z * ENEMY_ATTACK_SPEED
+          newVelocityNormalized.x * ENEMY_ATTACK_SPEED,
+          newVelocityNormalized.y * ENEMY_ATTACK_SPEED,
+          newVelocityNormalized.z * ENEMY_ATTACK_SPEED
         );
         setAttacked(true);
       }

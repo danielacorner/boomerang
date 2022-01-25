@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import {
   useHeldBoomerangs,
   useMoney,
+  usePlayerPositionRef,
   usePlayerRef,
   usePlayerState,
 } from "../../../store";
@@ -29,33 +30,16 @@ const PLAYER_THROW_VELOCITY_MULTIPLIER = 3;
 
 /** shoots a boomerang when you click */
 export function useBoomerangMovement({
-  playerPositionRef,
-  playerVelocityRef,
   playerCylinderApi,
   idx,
 }: {
-  playerPositionRef: { current: [number, number, number] };
-  playerVelocityRef: { current: [number, number, number] };
   playerCylinderApi: PublicApi;
   idx;
 }) {
   const [playerRef] = usePlayerRef();
+  const [playerPositionRef] = usePlayerPositionRef();
   const [{ poweredUp, rangeUp }, setPlayerState] = usePlayerState();
   const [, setMoney] = useMoney();
-
-  // subscribe to the position
-  const position = useRef(INITIAL_POSITION);
-  useEffect(() => {
-    const unsubscribe = api.position.subscribe((v) => (position.current = v));
-    return unsubscribe;
-  }, []);
-
-  // subscribe to the velocity
-  const velocity = useRef(INITIAL_POSITION);
-  useEffect(() => {
-    const unsubscribe = api.velocity.subscribe((v) => (velocity.current = v));
-    return unsubscribe;
-  }, []);
 
   // boomerang state & click position
   const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
@@ -153,6 +137,20 @@ export function useBoomerangMovement({
     null,
     [poweredUp, width, height, isBoomerangMoving]
   );
+
+  // subscribe to the position
+  const position = useRef(INITIAL_POSITION);
+  useEffect(() => {
+    const unsubscribe = api.position.subscribe((v) => (position.current = v));
+    return unsubscribe;
+  }, []);
+
+  // subscribe to the velocity
+  const velocity = useRef(INITIAL_POSITION);
+  useEffect(() => {
+    const unsubscribe = api.velocity.subscribe((v) => (velocity.current = v));
+    return unsubscribe;
+  }, []);
 
   // after a while, a returning boomerang will drop to the ground
   const DROP_TIMEOUT = 3.5 * 1000;
@@ -271,6 +269,7 @@ export function useBoomerangMovement({
 
       // if the boomerang is close to the player, pick up the boomerang
       if (isAtPlayer && thrownTime.current > 1500) {
+        console.count("💥 picked up!");
         api.position.set(...playerPositionRef.current);
         thrownTime.current = null;
         setHeldBoomerangs((p) =>

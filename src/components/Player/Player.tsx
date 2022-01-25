@@ -18,23 +18,16 @@ import {
 } from "./MaxThrowDistanceIndicator";
 
 export function Player() {
-  const {
-    positionRef: playerPositionRef,
-    velocityRef: playerVelocityRef,
-    cylinderRef: playerCylinderRef,
-    cylinderApi: playerCylinderApi,
-  } = usePlayerControls();
+  const { cylinderApi: playerCylinderApi } = usePlayerControls();
 
   // TODO: try putting a ref into jotai?
   return (
     <>
-      <Ground {...{ playerPositionRef }} />
+      <Ground />
 
       <Mage />
       <Boomerang
         {...{
-          playerPositionRef,
-          playerVelocityRef,
           playerCylinderApi,
         }}
       />

@@ -13,20 +13,15 @@ import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
 
 export const BoomerangWithControls = ({
-  playerVelocityRef,
-  playerPositionRef,
   playerCylinderApi,
   // TODO: use idx to only shoot one at a time
   idx,
 }: {
   playerPositionRef: { current: [number, number, number] };
-  playerVelocityRef: { current: [number, number, number] };
   idx: number;
   playerCylinderApi: PublicApi;
 }) => {
   const { boomerangRef: ref, carriedItems } = useBoomerangMovement({
-    playerPositionRef,
-    playerVelocityRef,
     playerCylinderApi,
     idx,
   });

@@ -10,6 +10,7 @@ import {
   usePlayerState,
   usePlayerRef,
   useTargetRef,
+  usePlayerPositionRef,
 } from "../../store";
 import {
   BOOMERANG_ITEM_NAME,
@@ -18,16 +19,14 @@ import {
   POWERUP_NAME,
   RANGEUP_NAME,
 } from "../../utils/constants";
-import { useInterval } from "react-use";
+import { useInterval, useMount } from "react-use";
+import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 
 const POWERUP_DURATION = 10 * 1000;
 const MOVE_SPEED = 0.39;
 
 export function usePlayerControls(): {
-  cylinderRef: React.RefObject<THREE.Object3D<THREE.Event>>;
   cylinderApi: PublicApi;
-  positionRef: React.MutableRefObject<null | number[]>;
-  velocityRef: React.MutableRefObject<null | number[]>;
 } {
   const [, setHeldBoomerangs] = useHeldBoomerangs();
 
@@ -137,6 +136,10 @@ export function usePlayerControls(): {
     });
     return unsubscribe;
   }, []);
+  const [, setPlayerPositionRef] = usePlayerPositionRef();
+  useMount(() => {
+    setPlayerPositionRef(positionRef);
+  });
 
   const velocityRef = useRef<[number, number, number]>([0, 0, 0]);
   useEffect(() => {
@@ -222,10 +225,19 @@ export function usePlayerControls(): {
     cylinderApi.velocity.set(vx2Lerp, vy2Lerp, vz2Lerp);
   });
 
-  return {
+  useWhyDidYouUpdate("Player", {
+    playerRef,
     cylinderRef,
     positionRef,
     velocityRef,
+    rotation,
+    setPlayerState,
+    setPlayerPositionRef,
+    setHeldBoomerangs,
+    setHasMoved,
+  });
+
+  return {
     cylinderApi,
   };
 }

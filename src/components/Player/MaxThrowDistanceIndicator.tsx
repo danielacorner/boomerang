@@ -23,11 +23,7 @@ export function MaxThrowDistanceIndicator() {
     </mesh>
   );
 }
-export function Boomerang({
-  playerPositionRef,
-  playerCylinderApi,
-  playerVelocityRef,
-}) {
+export function Boomerang({ playerCylinderApi }) {
   const [heldBoomerangs] = useHeldBoomerangs();
   return (
     <>
@@ -36,9 +32,7 @@ export function Boomerang({
           key={idx}
           {...{
             idx,
-            playerPositionRef,
             playerCylinderApi,
-            playerVelocityRef,
           }}
         />
       ))}

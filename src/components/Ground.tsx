@@ -5,21 +5,24 @@ import {
   useTexture,
 } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
-import { useHeldBoomerangs, usePlayerState } from "../store";
+import {
+  useHeldBoomerangs,
+  usePlayerPositionRef,
+  usePlayerState,
+} from "../store";
 import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { GROUND_NAME, GROUP1, MAX_THROW_DISTANCE } from "../utils/constants";
 import { useWhyDidYouUpdate } from "./useWhyDidYouUpdate";
 import { useCallback } from "react";
-import * as LANDSCAPE from "three-landscape";
-console.log("🌟🚨 ~ file: Ground.tsx ~ line 15 ~ LANDSCAPE", LANDSCAPE);
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
   rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
 };
 
-export function Ground({ playerPositionRef }) {
+export function Ground() {
+  const [playerPositionRef] = usePlayerPositionRef();
   const [planeRef] = usePlane(() => ({
     ...PLANE_PROPS,
     collisionFilterGroup: GROUP1,
@@ -217,83 +220,3 @@ function distanceBetweenPoints([x1, y1, z1], [x2, y2, z2]) {
     Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) + Math.pow(z1 - z2, 2)
   );
 }
-
-/** e.g. convert a [1,2,3] array into [1/3,2/3,3/3] */
-// function normalizeVector([x, y, z]) {
-//   const magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
-//   return [x / magnitude, y / magnitude, z / magnitude];
-// }
-
-const Terrain = () => {
-  const GPUTier = useDetectGPU();
-  const lowPowerDevice = GPUTier.tier === 0 || GPUTier.isMobile;
-  const detail = lowPowerDevice ? 32 : 8;
-  const [highestQualityLoaded, textures] = LANDSCAPE.useProgressiveTexture([
-    [
-      "/hd/heightmap.png",
-      "/hd/normalmap_y@0.5.png",
-      "/simplex-noise.png",
-      "/Assets/Cliffs_02/Rock_DarkCrackyCliffs_col.jpg",
-      "/Assets/Cliffs_02/Rock_DarkCrackyCliffs_norm.jpg",
-      "/Assets/Rock_04/Rock_sobermanRockWall_col.jpg",
-      "/Assets/Rock_04/Rock_sobermanRockWall_norm.jpg",
-      "/Assets/Mud_03/Ground_WetBumpyMud_col.jpg",
-      "/Assets/Mud_03/Ground_WetBumpyMud_norm.jpg",
-      "/Assets/Grass_020/ground_Grass1_col.jpg",
-      "/hd/splatmap_00@0.5.png",
-      "/hd/splatmap_01@0.5.png",
-    ],
-    [
-      "/hd/heightmap.png",
-      "/hd/normalmap_y.png",
-      "/simplex-noise.png",
-      "/Assets/Cliffs_02/Rock_DarkCrackyCliffs_col.jpg",
-      "/Assets/Cliffs_02/Rock_DarkCrackyCliffs_norm.jpg",
-      "/Assets/Rock_04/Rock_sobermanRockWall_col.jpg",
-      "/Assets/Rock_04/Rock_sobermanRockWall_norm.jpg",
-      "/Assets/Mud_03/Ground_WetBumpyMud_col.jpg",
-      "/Assets/Mud_03/Ground_WetBumpyMud_norm.jpg",
-      "/Assets/Grass_020/ground_Grass1_col.jpg",
-      "/hd/splatmap_00.png",
-      "/hd/splatmap_01.png",
-    ],
-  ]);
-
-  const [
-    displacement,
-    normal,
-    noise,
-    d1,
-    n1,
-    d2,
-    n2,
-    d3,
-    n3,
-    d4,
-    splat1,
-    splat2,
-  ] = textures[highestQualityLoaded];
-
-  const { width, height } = displacement.image;
-
-  return (
-    <mesh position={[0, 0, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-      <planeBufferGeometry args={[100, 100, width / detail, height / detail]} />
-      <LANDSCAPE.SplatStandardMaterial
-        normalMap={normal}
-        splats={[splat1, splat2]}
-        normalMaps={[n1, n2, n3]}
-        normalWeights={[0.75, 0.75, 0.75]}
-        diffuseMaps={[d1, d2, d3, d4, d4, d3]}
-        scale={[128 / 4, 128 / 2, 128, 128 * 2, 128, 128, 10]}
-        saturation={[1.1, 1.1, 1.1, 1.2, 1.1, 1.1]}
-        brightness={[0.0, 0.0, 0.0, -0.075, -0.075, 0.0]}
-        noise={noise}
-        displacementMap={displacement}
-        displacementScale={10}
-        displacementBias={-10}
-        envMapIntensity={0.5}
-      />
-    </mesh>
-  );
-};

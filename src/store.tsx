@@ -42,6 +42,28 @@ export function usePlayerRef(): [
   });
   return [playerRef, setPlayerRef];
 }
+const playerPositionRefAtom = atom<{
+  current: [number, number, number];
+}>({
+  current: [0, 0, 0],
+});
+export function usePlayerPositionRef(): [
+  {
+    current: [number, number, number];
+  },
+  (
+    update: SetStateAction<{
+      current: [number, number, number];
+    }>
+  ) => void
+] {
+  const [playerPositionRef, setPlayerPositionRef] = useAtom(
+    playerPositionRefAtom
+  );
+
+  return [playerPositionRef, setPlayerPositionRef];
+}
+
 const targetRefAtom = atom<{ current: THREE.Mesh | null }>({ current: null });
 export function useTargetRef() {
   const ref = useRef<THREE.Mesh | null>(null);
