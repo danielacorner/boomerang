@@ -65,7 +65,16 @@ export function usePlayerPositionRef(): [
 }
 
 const targetRefAtom = atom<{ current: THREE.Mesh | null }>({ current: null });
-export function useTargetRef() {
+export function useTargetRef(): [
+  {
+    current: Mesh<BufferGeometry, Material | Material[]> | null;
+  },
+  (
+    update: SetStateAction<{
+      current: Mesh<BufferGeometry, Material | Material[]> | null;
+    }>
+  ) => void
+] {
   const ref = useRef<THREE.Mesh | null>(null);
   const [targetRef, setTargetRef] = useAtom(targetRefAtom);
   useMount(() => {

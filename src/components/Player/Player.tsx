@@ -11,26 +11,16 @@ import {
 import { useSpring, animated } from "@react-spring/three";
 import { PLAYER_NAME } from "../../utils/constants";
 import { RangeupIndicator } from "./RangeupIndicator";
-import { Ground } from "../Ground";
 import {
   Boomerang,
   MaxThrowDistanceIndicator,
 } from "./MaxThrowDistanceIndicator";
 
 export function Player() {
-  const { cylinderApi: playerCylinderApi } = usePlayerControls();
-
-  // TODO: try putting a ref into jotai?
   return (
     <>
-      <Ground />
-
       <Mage />
-      <Boomerang
-        {...{
-          playerCylinderApi,
-        }}
-      />
+      <Boomerang />
     </>
   );
 }

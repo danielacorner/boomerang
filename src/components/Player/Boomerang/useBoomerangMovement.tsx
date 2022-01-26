@@ -19,6 +19,7 @@ import * as THREE from "three";
 import { useInterval } from "react-use";
 import { usePressedKeys } from "../usePressedKeys";
 import MoneyBag from "../../GLTFs/MoneyBag";
+import { useWhyDidYouUpdate } from "../../useWhyDidYouUpdate";
 
 const BOOMERANG_RADIUS = 2;
 const BOOMERANG_PULL_FORCE = 0.1;
@@ -286,6 +287,17 @@ export function useBoomerangMovement({
         api.velocity.set(0, 0, 0);
       }
     }
+  });
+  useWhyDidYouUpdate("Boomerang", {
+    idx,
+    status,
+    position,
+    velocity,
+    rangeUp,
+    poweredUp,
+    playerPositionRef,
+    playerRef,
+    isBoomerangMoving,
   });
 
   return { boomerangRef, carriedItems };

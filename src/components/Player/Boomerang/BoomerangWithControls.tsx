@@ -7,20 +7,19 @@ import { BOOMERANG_NAME, ITEM_TYPES } from "../../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 import { Spin } from "./Spin";
 import { useBoomerangMovement } from "./useBoomerangMovement";
-import { PublicApi } from "@react-three/cannon";
 import { Powerup } from "../../DroppedItems/Powerup";
 import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
+import { useWhyDidYouUpdate } from "../../useWhyDidYouUpdate";
+import { usePlayerControls } from "../usePlayerControls";
 
 export const BoomerangWithControls = ({
-  playerCylinderApi,
   // TODO: use idx to only shoot one at a time
   idx,
 }: {
-  playerPositionRef: { current: [number, number, number] };
   idx: number;
-  playerCylinderApi: PublicApi;
 }) => {
+  const { cylinderApi: playerCylinderApi } = usePlayerControls();
   const { boomerangRef: ref, carriedItems } = useBoomerangMovement({
     playerCylinderApi,
     idx,
@@ -35,6 +34,11 @@ export const BoomerangWithControls = ({
     },
     [status, poweredUp]
   );
+
+  useWhyDidYouUpdate("BoomerangWithControls", {
+    status,
+    poweredUp,
+  });
 
   return (
     <animated.mesh

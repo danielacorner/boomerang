@@ -5,6 +5,7 @@ import { ENEMY_CYLINDER_HEIGHT, ENEMY_NAME } from "../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 import { useMoveEnemy } from "./useMoveEnemy";
 import { Text } from "@react-three/drei";
+import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 
 // const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
 
@@ -48,6 +49,19 @@ export function Enemy({
     opacity: theyreDead ? 0 : 1,
     scale: willAttack ? 1.2 : 1,
   });
+  useWhyDidYouUpdate("Enemy 🦠", {
+    position,
+    theyreDead,
+    health,
+    setHealth,
+    unmountEnemy,
+    invulnerable,
+    maxHp,
+    enemyHeight,
+    enemyUrl,
+    enemyName,
+  });
+
   return (
     <>
       <animated.mesh
@@ -61,8 +75,8 @@ export function Enemy({
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
-        <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
-        <AttackIndicator {...{ willAttack }} />
+        {/* <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} /> */}
+        {/* <AttackIndicator {...{ willAttack }} /> */}
       </animated.mesh>
     </>
   );

@@ -1,6 +1,6 @@
 import { Enemy } from "./Enemy";
-import { useCallback, useEffect, useState } from "react";
-import { useInterval, useMount, usePrevious } from "react-use";
+import { useCallback, useEffect } from "react";
+import { usePrevious } from "react-use";
 import { useEnemies } from "../../store";
 import { Virus } from "./Virus";
 import {
@@ -14,6 +14,7 @@ import {
   JEFF_BEZOS,
 } from "./VIRUSES";
 import { atom, useAtom } from "jotai";
+import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 
 const MAX_ENEMIES = 6;
 
@@ -51,7 +52,10 @@ export function Enemies() {
   }, []);
 
   useSpawnWavesOfEnemies(spawnEnemy);
-
+  useWhyDidYouUpdate("Enemies 🦠🦠🦠🦠", {
+    Enemies,
+    spawnEnemy,
+  });
   return (
     <>
       {Enemies.map(
@@ -86,7 +90,16 @@ export function Enemies() {
   );
 }
 
-const WAVES = [
+type IDType = number | null | undefined;
+const WAVES: {
+  enemies: ((id?: IDType) => {
+    enemyName: string;
+    maxHp: number;
+    enemyHeight: number;
+    enemyUrl: string;
+    RandomVirus: (p: any) => JSX.Element;
+  })[];
+}[] = [
   {
     enemies: [
       () => BACTERIOPHAGE_PHI29_PROHEAD(),
@@ -108,36 +121,36 @@ const WAVES = [
       () => BACTERIOPHAGE_PHI29_PROHEAD(),
       () => HIV(),
       () => HPV_100(),
-      (id) => HERPES({ shield: true, id }),
+      (id: IDType) => HERPES({ shield: true, id }),
     ],
   },
   {
     enemies: [
-      (id) => BACTERIOPHAGE_P68_120({ shield: false, id }),
-      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id) => HERPES({ shield: true, id }),
-      (id) => HERPES({ shield: true, id }),
+      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: false, id }),
+      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
+      (id: IDType) => HERPES({ shield: true, id }),
+      (id: IDType) => HERPES({ shield: true, id }),
       () => HPV_100(),
       () => HPV_100(),
     ],
   },
   {
     enemies: [
-      (id) => BACTERIOPHAGE_P68_120({ shield: false, id }),
-      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: false, id }),
+      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
+      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
       () => JEFF_BEZOS(),
     ],
   },
   {
     enemies: [
-      (id) => BACTERIOPHAGE_P68_120({ shield: false, id }),
-      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: false, id }),
+      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
+      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
+      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
+      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
       () => HPV_100(),
       () => HPV_100(),
       () => HPV_100(),
@@ -146,10 +159,10 @@ const WAVES = [
   },
   {
     enemies: [
-      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
+      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
       () => HPV_100(),
       () => HPV_100(),
       () => HPV_100(),
@@ -171,8 +184,11 @@ function useSpawnWavesOfEnemies(spawnEnemy) {
     if (prevWave !== currentWave) {
       WAVES[currentWave].enemies.forEach((enemy, idx) => {
         const id = Math.round(Math.random() * 10 ** 16);
-        spawnEnemy(typeof enemy === "function" ? enemy(id) : enemy, id);
-        // setTimeout(() => spawnEnemy(enemy), idx * 1000);
+        // spawnEnemy(enemy(id), id);
+        setTimeout(
+          () => spawnEnemy(enemy(id)),
+          idx * 1000 + Math.random() * 2000
+        );
       });
     }
   }, [currentWave]);
@@ -184,4 +200,13 @@ function useSpawnWavesOfEnemies(spawnEnemy) {
       setCurrentWave(currentWave + 1);
     }
   }, [Enemies]);
+
+  useWhyDidYouUpdate("useSpawnWavesOfEnemies", {
+    currentWave,
+    prevWave,
+    setCurrentWave,
+    setEnemies,
+    spawnEnemy,
+    WAVES,
+  });
 }

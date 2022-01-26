@@ -17,6 +17,7 @@ import {
 import * as THREE from "three";
 import { useInterval } from "react-use";
 import { Vector3 } from "three";
+import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 const POWERUP_PROBABILITY = 0.1;
 const RANGEUP_PROBABILITY = 0.08;
 const DROPPED_BOOMERANG_PROBABILITY = 0.008;
@@ -270,6 +271,26 @@ export function useMoveEnemy({
       }, UNMOUNT_DELAY);
     }
   }, [theyDied]);
-
+  useWhyDidYouUpdate("useMoveEnemy", {
+    position,
+    heldBoomerangs,
+    theyDroppedItems,
+    poweredUp,
+    health,
+    movementStatus,
+    theyreDead,
+    theyDied,
+    attacked,
+    enemyRef,
+    playerRef,
+    playerPositionRef,
+    unmountEnemy,
+    setTheyreDead,
+    setTheyDied,
+    setAttacked,
+    setMovementStatus,
+    setDroppedItems,
+    setHealth,
+  });
   return { enemyRef, api, movementStatus };
 }

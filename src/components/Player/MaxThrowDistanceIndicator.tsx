@@ -2,6 +2,8 @@ import { BoomerangTarget } from "./Boomerang/BoomerangTarget";
 import { useHeldBoomerangs, usePlayerState } from "../../store";
 import { MAX_THROW_DISTANCE } from "../../utils/constants";
 import { BoomerangWithControls } from "./Boomerang/BoomerangWithControls";
+import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
+import { usePlayerControls } from "./usePlayerControls";
 
 /** a white torus of radius MAX_THROW_DISTANCE */
 export function MaxThrowDistanceIndicator() {
@@ -23,8 +25,11 @@ export function MaxThrowDistanceIndicator() {
     </mesh>
   );
 }
-export function Boomerang({ playerCylinderApi }) {
+export function Boomerang() {
   const [heldBoomerangs] = useHeldBoomerangs();
+  useWhyDidYouUpdate("Player", {
+    heldBoomerangs,
+  });
   return (
     <>
       {heldBoomerangs.map((_, idx) => (
@@ -32,7 +37,6 @@ export function Boomerang({ playerCylinderApi }) {
           key={idx}
           {...{
             idx,
-            playerCylinderApi,
           }}
         />
       ))}

@@ -21,6 +21,19 @@ const PLANE_PROPS = {
   rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
 };
 
+export function GroundBasic() {
+  const [planeRef] = usePlane(() => ({
+    ...PLANE_PROPS,
+    collisionFilterGroup: GROUP1,
+  }));
+
+  return (
+    <Plane receiveShadow name={GROUND_NAME} ref={planeRef} {...PLANE_PROPS}>
+      <meshToonMaterial color="#525252" />
+    </Plane>
+  );
+}
+
 export function Ground() {
   const [playerPositionRef] = usePlayerPositionRef();
   const [planeRef] = usePlane(() => ({

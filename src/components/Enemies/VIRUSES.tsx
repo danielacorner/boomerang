@@ -8,7 +8,10 @@ import HIV_200_cleaned_draco from "../GLTFs/viruses/HIV_200_cleaned_draco";
 import SphereShield from "./SphereShield";
 import JeffBezos from "../GLTFs/JeffBezos";
 
-export const JEFF_BEZOS = ({ shield = false, id = null } = {}) => ({
+export const JEFF_BEZOS = ({
+  shield = false,
+  id = null as null | number,
+} = {}) => ({
   enemyName: "Jeff Bezos (billionaire)",
   maxHp: 140,
   enemyHeight: 10,
@@ -22,7 +25,10 @@ export const JEFF_BEZOS = ({ shield = false, id = null } = {}) => ({
     </>
   ),
 });
-export const ADENOVIRUS_160_OUTER = ({ shield = false, id = null } = {}) => ({
+export const ADENOVIRUS_160_OUTER = ({
+  shield = false,
+  id = null as null | number,
+} = {}) => ({
   enemyName: "Human Papillomavirus (HPV)",
   maxHp: 12,
   enemyHeight: 8,
@@ -36,7 +42,10 @@ export const ADENOVIRUS_160_OUTER = ({ shield = false, id = null } = {}) => ({
     </>
   ),
 });
-export const HPV_100 = ({ shield = false, id = null } = {}) => ({
+export const HPV_100 = ({
+  shield = false,
+  id = null as null | number,
+} = {}) => ({
   enemyName: "Adenovirus",
   maxHp: 11,
   enemyHeight: 8,
@@ -70,7 +79,10 @@ export const BACTERIOPHAGE_PHI29_PROHEAD = ({
     </>
   ),
 });
-export const BACTERIOPHAGE_P68_120 = ({ shield = false, id = null } = {}) => ({
+export const BACTERIOPHAGE_P68_120 = ({
+  shield = false,
+  id = null as null | number,
+} = {}) => ({
   enemyName: "Bacteriophage P68",
   maxHp: 10,
   enemyHeight: 8,
@@ -84,7 +96,7 @@ export const BACTERIOPHAGE_P68_120 = ({ shield = false, id = null } = {}) => ({
     </>
   ),
 });
-export const HIV = ({ shield = false, id = null } = {}) => ({
+export const HIV = ({ shield = false, id = null as null | number } = {}) => ({
   enemyName: "HIV",
   maxHp: 14,
   enemyHeight: 8,
@@ -98,7 +110,7 @@ export const HIV = ({ shield = false, id = null } = {}) => ({
     </>
   ),
 });
-export const HERPES = ({ shield = false, id = null }) => ({
+export const HERPES = ({ shield = false, id = null as null | number }) => ({
   enemyName: "Herpes",
   maxHp: 21,
   enemyHeight: 12,
