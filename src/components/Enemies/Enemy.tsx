@@ -75,8 +75,8 @@ export function Enemy({
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
-        {/* <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} /> */}
-        {/* <AttackIndicator {...{ willAttack }} /> */}
+        <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
+        <AttackIndicator {...{ willAttack }} />
       </animated.mesh>
     </>
   );

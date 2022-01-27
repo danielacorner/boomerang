@@ -3,7 +3,7 @@ import { Physics } from "@react-three/cannon";
 import { Scene } from "./components/Scene";
 import { Suspense, useRef } from "react";
 import { DebugMode } from "./DebugMode";
-import { AdaptiveDpr, Loader, Plane, Sphere, Stats } from "@react-three/drei";
+import { Loader, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import Effects from "./components/Effects";
 
@@ -15,8 +15,9 @@ export function CanvasAndScene() {
       <Loader />
       <Canvas
         mode="concurrent"
-        // gl={{ alpha: false, antialias: false }}
-        performance={{ min: 0.1 }}
+        frameloop="demand"
+        gl={{ alpha: false, antialias: false }}
+        performance={{ min: 0.9 }}
         shadows
         camera={{
           position: [1, CAMERA_DISTANCE * 2, -CAMERA_DISTANCE],
@@ -36,8 +37,7 @@ export function CanvasAndScene() {
           </Physics>
         </Suspense>
         {/* https://docs.pmnd.rs/react-three-fiber/advanced/scaling-performance */}
-        <AdaptiveDpr pixelated />
-        {/* <Effects /> */}
+        <Effects />
       </Canvas>
     </>
   );
