@@ -5,7 +5,6 @@ import {
   useHeldBoomerangs,
   usePlayerState,
   useDroppedItems,
-  usePlayerRef,
   usePlayerPositionRef,
 } from "../../store";
 import {
@@ -49,7 +48,6 @@ export function useMoveEnemy({
   const [{ poweredUp }] = usePlayerState();
   const [theyDroppedItems, setTheyDroppedItems] = useState(false);
   const [, setDroppedItems] = useDroppedItems();
-  const [playerRef] = usePlayerRef();
   const [playerPositionRef] = usePlayerPositionRef();
   const [theyDied, setTheyDied] = useState(false);
 
@@ -186,12 +184,7 @@ export function useMoveEnemy({
   const [attacked, setAttacked] = useState(false);
   // movement: move towards player
   useFrame(() => {
-    if (
-      !position.current ||
-      !enemyRef.current ||
-      !playerRef.current ||
-      theyreDead
-    ) {
+    if (!position.current || !enemyRef.current || theyreDead) {
       return;
     }
 
@@ -231,13 +224,14 @@ export function useMoveEnemy({
       api.velocity.set(0, 0, 0);
     } else if (movementStatus === "attack") {
       if (!attacked) {
+        setAttacked(true);
         const newVelocity = new Vector3(
           playerPositionRef.current[0] - position.current[0],
           playerPositionRef.current[1] - position.current[1],
           playerPositionRef.current[2] - position.current[2]
         );
         console.log(
-          "🌟🚨 ~ file: useMoveEnemy.tsx ~ line 240 ~ useFrame ~ playerRef.current.position",
+          "🌟🚨 ~ file: useMoveEnemy.tsx ~ line 240 ~ useFrame ~ playerPositionRef.position",
           playerPositionRef.current
         );
 
@@ -248,7 +242,6 @@ export function useMoveEnemy({
           newVelocityNormalized.y * ENEMY_ATTACK_SPEED,
           newVelocityNormalized.z * ENEMY_ATTACK_SPEED
         );
-        setAttacked(true);
       }
       api.rotation.set(0, 0, 0);
       // api.position.set(x, y, z);
@@ -282,7 +275,6 @@ export function useMoveEnemy({
     theyDied,
     attacked,
     enemyRef,
-    playerRef,
     playerPositionRef,
     unmountEnemy,
     setTheyreDead,

@@ -1,4 +1,3 @@
-import { usePlayerControls } from "./usePlayerControls";
 import BlackMage from "../GLTFs/BlackMage";
 import { MouseTarget } from "./MouseTarget";
 import { useEffect, useState } from "react";
@@ -15,17 +14,53 @@ import {
   Boomerang,
   MaxThrowDistanceIndicator,
 } from "./MaxThrowDistanceIndicator";
+import { usePlayerControls } from "./usePlayerControls";
 
 export function Player() {
   return (
     <>
       <Mage />
       <Boomerang />
+      <Target />
+      <Controls />
     </>
   );
 }
+function Controls() {
+  usePlayerControls();
+
+  return null;
+}
+const Target = () => {
+  const [targetRef] = useTargetRef();
+  return (
+    <MouseTarget>
+      <mesh ref={targetRef} />
+    </MouseTarget>
+  );
+};
 
 function Mage() {
+  const { scale, opacity } = useMageSpring();
+
+  const [playerRef] = usePlayerRef();
+
+  return (
+    <animated.mesh
+      scale={scale}
+      material-transparent={true}
+      material-opacity={opacity}
+      ref={playerRef}
+      name={PLAYER_NAME}
+    >
+      <BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
+      <RangeupIndicator />
+      <MaxThrowDistanceIndicator />
+      <pointLight intensity={5} distance={24} />
+    </animated.mesh>
+  );
+}
+function useMageSpring() {
   const [{ poweredUp }] = usePlayerState();
   const [{ invulnerable }] = useGameState();
 
@@ -37,7 +72,7 @@ function Mage() {
     }
   }, [invulnerable]);
 
-  const { scale, opacity } = useSpring({
+  return useSpring({
     scale: poweredUp ? 2.4 : 1.4,
     opacity: blinkOn ? 0 : 1,
     onRest: () => {
@@ -49,26 +84,4 @@ function Mage() {
       }
     },
   });
-
-  const [playerRef] = usePlayerRef();
-  const [targetRef] = useTargetRef();
-  return (
-    <>
-      <MouseTarget>
-        <mesh ref={targetRef} />
-      </MouseTarget>
-      <animated.mesh
-        scale={scale}
-        material-transparent={true}
-        material-opacity={opacity}
-        ref={playerRef}
-        name={PLAYER_NAME}
-      >
-        <BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
-        <RangeupIndicator />
-        <MaxThrowDistanceIndicator />
-        <pointLight intensity={5} distance={24} />
-      </animated.mesh>
-    </>
-  );
 }

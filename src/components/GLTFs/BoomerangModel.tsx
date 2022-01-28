@@ -44,9 +44,9 @@ export default function BoomerangModel({
   return (
     <animated.mesh scale={scale}>
       <group ref={group} {...props} dispose={null} scale={0.095}>
-        {["flying", "returning"].includes(status) && (
+        {/* {["flying", "returning"].includes(status) && (
           <pointLight intensity={displayOpacity ? 2 : 0} distance={10} />
-        )}
+        )} */}
         <group
           position={[x2, y2, z2]}
           rotation={[-Math.PI / 2 + x, 0 + y, 0 + z]}

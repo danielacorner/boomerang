@@ -71,7 +71,7 @@ export function Enemy({
         ref={enemyRef}
         name={ENEMY_NAME}
       >
-        <pointLight intensity={5} distance={8} position={[0, -5, 0]} />
+        {/* <pointLight intensity={5} distance={8} position={[0, -5, 0]} /> */}
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}

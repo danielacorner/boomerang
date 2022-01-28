@@ -11,7 +11,6 @@ import { Powerup } from "../../DroppedItems/Powerup";
 import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
 import { useWhyDidYouUpdate } from "../../useWhyDidYouUpdate";
-import { usePlayerControls } from "../usePlayerControls";
 
 export const BoomerangWithControls = ({
   // TODO: use idx to only shoot one at a time
@@ -19,9 +18,7 @@ export const BoomerangWithControls = ({
 }: {
   idx: number;
 }) => {
-  const { cylinderApi: playerCylinderApi } = usePlayerControls();
   const { boomerangRef: ref, carriedItems } = useBoomerangMovement({
-    playerCylinderApi,
     idx,
   });
   const [heldBoomerangs] = useHeldBoomerangs();

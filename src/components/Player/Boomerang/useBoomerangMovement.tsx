@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useHeldBoomerangs,
   useMoney,
@@ -7,7 +7,7 @@ import {
   usePlayerState,
 } from "../../../store";
 import { useFrame } from "@react-three/fiber";
-import { PublicApi, useCylinder, useSphere } from "@react-three/cannon";
+import { useCylinder } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
 import {
   GROUP1,
@@ -16,9 +16,7 @@ import {
   WALL_NAME,
 } from "../../../utils/constants";
 import * as THREE from "three";
-import { useInterval } from "react-use";
 import { usePressedKeys } from "../usePressedKeys";
-import MoneyBag from "../../GLTFs/MoneyBag";
 import { useWhyDidYouUpdate } from "../../useWhyDidYouUpdate";
 
 const BOOMERANG_RADIUS = 2;
@@ -30,13 +28,7 @@ const PLAYER_RADIUS = 1.5;
 const PLAYER_THROW_VELOCITY_MULTIPLIER = 3;
 
 /** shoots a boomerang when you click */
-export function useBoomerangMovement({
-  playerCylinderApi,
-  idx,
-}: {
-  playerCylinderApi: PublicApi;
-  idx;
-}) {
+export function useBoomerangMovement({ idx }: { idx }) {
   const [playerRef] = usePlayerRef();
   const [playerPositionRef] = usePlayerPositionRef();
   const [{ poweredUp, rangeUp }, setPlayerState] = usePlayerState();
@@ -93,16 +85,21 @@ export function useBoomerangMovement({
             isCollisionWithPlayer
           );
           setHeldBoomerangs((currentBoomerangs) => {
-            return currentBoomerangs.map((boom, bIdx) => {
+            const newBooms = currentBoomerangs.map((boom, bIdx) => {
               if (bIdx === idx) {
                 return {
                   ...boom,
-                  status: "held",
+                  status: "held" as any,
                   clickTargetPosition: null,
                 };
               }
               return boom;
             });
+            if (isEqual(newBooms, currentBoomerangs)) {
+              return currentBoomerangs;
+            } else {
+              return newBooms;
+            }
           });
 
           // also pick up any items on the boomerang

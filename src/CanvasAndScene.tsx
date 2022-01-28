@@ -17,7 +17,7 @@ export function CanvasAndScene() {
         mode="concurrent"
         frameloop="demand"
         gl={{ alpha: false, antialias: false }}
-        performance={{ min: 0.9 }}
+        performance={{ min: 0.8 }}
         shadows
         camera={{
           position: [1, CAMERA_DISTANCE * 2, -CAMERA_DISTANCE],

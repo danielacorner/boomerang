@@ -3,7 +3,6 @@ import { useHeldBoomerangs, usePlayerState } from "../../store";
 import { MAX_THROW_DISTANCE } from "../../utils/constants";
 import { BoomerangWithControls } from "./Boomerang/BoomerangWithControls";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
-import { usePlayerControls } from "./usePlayerControls";
 
 /** a white torus of radius MAX_THROW_DISTANCE */
 export function MaxThrowDistanceIndicator() {

@@ -3,14 +3,12 @@ import { PublicApi, useCylinder } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
-import { useEventListener } from "../../utils/useEventListener";
 import {
   useHeldBoomerangs,
   useGameState,
   usePlayerState,
-  usePlayerRef,
-  useTargetRef,
   usePlayerPositionRef,
+  usePlayerRef,
 } from "../../store";
 import {
   BOOMERANG_ITEM_NAME,
@@ -25,9 +23,7 @@ import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 const POWERUP_DURATION = 10 * 1000;
 const MOVE_SPEED = 0.39;
 
-export function usePlayerControls(): {
-  cylinderApi: PublicApi;
-} {
+export function usePlayerControls() {
   const [, setHeldBoomerangs] = useHeldBoomerangs();
 
   const { lastPressedKey, pressedKeys, up, left, down, right } =
@@ -42,27 +38,10 @@ export function usePlayerControls(): {
     }
   }, [pressedKeys]);
 
-  // record a small "ramp-up" speed from 0 to 1 as long as at least one key is pressed
-  // const [speed, setSpeed] = useState(0);
-  // useInterval(() => {
-  //   if (speed < 1 && pressedKeys.length > 0) {
-  //     setSpeed(speed + 0.2);
-  //   } else if (speed > 0 && pressedKeys.length === 0) {
-  //     setSpeed(speed - 0.2);
-  //   }
-  // }, 10);
-
   const [{ lookAt, poweredUp }, setPlayerState] = usePlayerState();
   const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1);
-  // const moveSpeed = speed * MOVE_SPEED * (poweredUp ? 1.5 : 1);
 
-  const [movedMouse, setMovedMouse] = useState(false);
-  useEventListener("mousemove", () => setMovedMouse(true));
-  useEffect(() => {
-    setMovedMouse(false);
-  }, [pressedKeys]);
   const [playerRef] = usePlayerRef();
-  const [targetRef] = useTargetRef();
 
   const [cylinderRef, cylinderApi] = useCylinder(
     () => ({
@@ -164,13 +143,8 @@ export function usePlayerControls(): {
   }, []);
 
   // move the player
-  useFrame(({ camera }) => {
-    if (
-      !cylinderRef.current ||
-      !playerRef.current ||
-      !positionRef.current ||
-      !hasMoved
-    ) {
+  useFrame(() => {
+    if (!cylinderRef.current || !positionRef.current) {
       return;
     }
     const [x1, y1, z1] = [
@@ -202,16 +176,17 @@ export function usePlayerControls(): {
 
     // TODO: rotate to lookAt position
     // const newRotY = -getAngleFromCenter(
-    //   [playerRef.current.position.x, playerRef.current.position.z],
+    //   [playerPositionRef[0], playerPositionRef.current[2],
     //   [lookAt[0], lookAt[2]]
     // );
-    const newRotY = getPlayerRotation(lastPressedKey);
 
     const PLAYER_ROTATION_SPEED = 0.08;
-
-    const [, ry1] = rotation.current;
-    const [, ry2] = [0.01, newRotY, 0.01];
-    const ry2Lerp = THREE.MathUtils.lerp(ry1, ry2, PLAYER_ROTATION_SPEED);
+    const newRotY = getPlayerRotation(lastPressedKey);
+    const ry2Lerp = THREE.MathUtils.lerp(
+      rotation.current[1],
+      newRotY,
+      PLAYER_ROTATION_SPEED
+    );
     // TODO: UP not working?
 
     cylinderApi.rotation.set(0, ry2Lerp, 0);
@@ -236,10 +211,6 @@ export function usePlayerControls(): {
     setHeldBoomerangs,
     setHasMoved,
   });
-
-  return {
-    cylinderApi,
-  };
 }
 const ROT_LEFT = Math.PI * -1;
 const ROT_DOWN = Math.PI * 0;

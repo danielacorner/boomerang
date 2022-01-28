@@ -103,9 +103,9 @@ const WAVES: {
   {
     enemies: [
       () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      // () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      // () => BACTERIOPHAGE_PHI29_PROHEAD(),
+      // () => BACTERIOPHAGE_PHI29_PROHEAD(),
     ],
   },
   {
