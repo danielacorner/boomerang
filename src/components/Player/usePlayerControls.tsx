@@ -12,6 +12,7 @@ import {
 } from "../../store";
 import {
   BOOMERANG_ITEM_NAME,
+  CAMERA_POSITION,
   ENEMY_NAME,
   GROUP2,
   POWERUP_NAME,
@@ -130,7 +131,7 @@ export function usePlayerControls() {
 
   const rotation = useRef([0, 0, 0]);
 
-  // last known player position... use for innacurate needs only
+  // last known player position... use for inaccurate needs only (updating it faster impacts performance)
   useInterval(() => {
     setPlayerState((p) => ({ ...p, playerPosition: positionRef.current }));
   }, 5 * 1000);
@@ -143,7 +144,51 @@ export function usePlayerControls() {
   }, []);
 
   // move the player
-  useFrame(() => {
+  useMovePlayer(
+    cylinderRef,
+    positionRef,
+    right,
+    left,
+    moveSpeed,
+    down,
+    up,
+    cylinderApi,
+    lastPressedKey,
+    rotation,
+    velocityRef
+  );
+
+  useWhyDidYouUpdate("Player", {
+    playerRef,
+    cylinderRef,
+    positionRef,
+    velocityRef,
+    rotation,
+    setPlayerState,
+    setPlayerPositionRef,
+    setHeldBoomerangs,
+    setHasMoved,
+  });
+}
+const ROT_LEFT = Math.PI * -1;
+const ROT_DOWN = Math.PI * 0;
+const ROT_RIGHT = Math.PI * 1;
+const ROT_UP = Math.PI * 2;
+function useMovePlayer(
+  cylinderRef,
+  positionRef,
+  right: boolean,
+  left: boolean,
+  moveSpeed: number,
+  down: boolean,
+  up: boolean,
+  cylinderApi: PublicApi,
+  lastPressedKey: string,
+  rotation,
+  velocityRef
+) {
+  const [playerPositionRef] = usePlayerPositionRef();
+  useFrame(({ camera }) => {
     if (!cylinderRef.current || !positionRef.current) {
       return;
     }
@@ -166,20 +211,29 @@ export function usePlayerControls() {
     ];
 
     // cylinderApi.velocity.set(0, 0, 0);
-
     // prevents twitchy movement
     // const delta = Math.abs(x2 - x1) + Math.abs(y2 - y1) + Math.abs(z2 - z1);
     // const isAboveThreshold = delta > 0.1;
     // if (isAboveThreshold) {
     cylinderApi.position.set(x2Lerp, y2Lerp, z2Lerp);
-    // }
+    const newCameraPosition: [number, number, number] = [
+      CAMERA_POSITION[0] + playerPositionRef.current[0],
+      CAMERA_POSITION[1],
+      CAMERA_POSITION[2] + playerPositionRef.current[2],
+    ];
+    camera.position.set(...newCameraPosition);
+    camera.lookAt(
+      playerPositionRef.current[0],
+      playerPositionRef.current[1],
+      playerPositionRef.current[2]
+    );
 
+    // }
     // TODO: rotate to lookAt position
     // const newRotY = -getAngleFromCenter(
     //   [playerPositionRef[0], playerPositionRef.current[2],
     //   [lookAt[0], lookAt[2]]
     // );
-
     const PLAYER_ROTATION_SPEED = 0.08;
     const newRotY = getPlayerRotation(lastPressedKey);
     const ry2Lerp = THREE.MathUtils.lerp(
@@ -188,7 +242,6 @@ export function usePlayerControls() {
       PLAYER_ROTATION_SPEED
     );
     // TODO: UP not working?
-
     cylinderApi.rotation.set(0, ry2Lerp, 0);
     const [vx1, vy1, vz1] = velocityRef.current;
     const [vx2, vy2, vz2] = [0, 0, 0];
@@ -199,23 +252,8 @@ export function usePlayerControls() {
     ];
     cylinderApi.velocity.set(vx2Lerp, vy2Lerp, vz2Lerp);
   });
-
-  useWhyDidYouUpdate("Player", {
-    playerRef,
-    cylinderRef,
-    positionRef,
-    velocityRef,
-    rotation,
-    setPlayerState,
-    setPlayerPositionRef,
-    setHeldBoomerangs,
-    setHasMoved,
-  });
 }
-const ROT_LEFT = Math.PI * -1;
-const ROT_DOWN = Math.PI * 0;
-const ROT_RIGHT = Math.PI * 1;
-const ROT_UP = Math.PI * 2;
+
 function getPlayerRotation(lastPressedKey) {
   return lastPressedKey === LEFT
     ? ROT_LEFT

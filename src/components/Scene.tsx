@@ -2,7 +2,6 @@ import { Player } from "./Player/Player";
 import { Enemies } from "./Enemies/Enemies";
 import { Walls } from "./Player/Walls";
 import { Lighting } from "./Lighting";
-import { OrbitControlsWithAngle } from "./OrbitControlsWithAngle";
 import { DroppedItems } from "./DroppedItems/DroppedItems";
 import { Ground } from "./Ground";
 import { AdaptiveDpr } from "@react-three/drei";
@@ -22,10 +21,9 @@ export function Scene() {
       <Player />
       <Enemies />
       <Walls />
-      <OrbitControlsWithAngle />
       <DroppedItems />
       <Ground />
-      <AdaptiveDpr pixelated />
+      <AdaptiveDpr pixelated />w
     </mesh>
   );
 }

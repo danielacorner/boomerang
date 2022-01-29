@@ -6,8 +6,7 @@ import { DebugMode } from "./DebugMode";
 import { Loader, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import Effects from "./components/Effects";
-
-const CAMERA_DISTANCE = 26;
+import { CAMERA_POSITION } from "./utils/constants";
 
 export function CanvasAndScene() {
   return (
@@ -20,7 +19,7 @@ export function CanvasAndScene() {
         performance={{ min: 0.8 }}
         shadows
         camera={{
-          position: [1, CAMERA_DISTANCE * 2, -CAMERA_DISTANCE],
+          position: CAMERA_POSITION,
           fov: 50,
           // near: 0.5,
           // far: 100,
