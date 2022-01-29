@@ -169,6 +169,10 @@ export function useMoveEnemy({
           (MOVEMENT_SEQUENCE.indexOf(movementStatus) + 1) %
             MOVEMENT_SEQUENCE.length
         ];
+      console.log(
+        "🌟🚨 ~ file: useMoveEnemy.tsx ~ line 169 ~ nextMovementStatus",
+        nextMovementStatus
+      );
       setMovementStatus(nextMovementStatus);
     },
     theyreDead

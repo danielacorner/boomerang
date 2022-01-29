@@ -129,11 +129,26 @@ export function Ground() {
           rangeUp
         );
 
-        setPlayerState((p) => ({
-          ...p,
-          lookAt,
-          farthestTargetPosition: newFarthestTargetPosition,
-        }));
+        setPlayerState((p) => {
+          return p; // ???
+          // if the distance between the previous target position and the new target position
+          // is greater than 0.1, then update the target position
+          const THRESHOLD = 5;
+          if (
+            distanceBetweenPoints(p.lookAt, lookAt) > THRESHOLD ||
+            distanceBetweenPoints(
+              p.farthestTargetPosition,
+              newFarthestTargetPosition
+            ) > THRESHOLD
+          ) {
+            return {
+              ...p,
+              lookAt,
+              farthestTargetPosition: newFarthestTargetPosition,
+            };
+          }
+          return p;
+        });
       }
     },
     [rangeUp]

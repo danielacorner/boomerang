@@ -103,12 +103,14 @@ const playerStateAtom = atom<{
   lookAt: [number, number, number];
   playerPosition: [number, number, number];
   playerVelocity: [number, number, number];
+  farthestTargetPosition: [number, number, number];
   poweredUp: boolean;
   rangeUp: boolean;
 }>({
   lookAt: [0, 0, 0],
   playerPosition: [0, 0, 0],
   playerVelocity: [0, 0, 0],
+  farthestTargetPosition: [0, 0, 0],
   poweredUp: false,
   rangeUp: false,
 });
