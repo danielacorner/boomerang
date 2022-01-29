@@ -5,7 +5,7 @@ import { BoomerangWithControls } from "./Boomerang/BoomerangWithControls";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 
 /** a white torus of radius MAX_THROW_DISTANCE */
-export function MaxThrowDistanceIndicator() {
+export function MaxThrowDistanceRangeIndicator() {
   const [{ rangeUp }] = usePlayerState();
   // if it's above the max distance, shrink it down to the max distance
   const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
@@ -18,7 +18,7 @@ export function MaxThrowDistanceIndicator() {
       <meshBasicMaterial
         attach="material"
         transparent={true}
-        opacity={0.2}
+        opacity={0.15}
         color={0xdcfcfc}
       />
     </mesh>

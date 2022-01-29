@@ -9,23 +9,27 @@ import {
 } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
 import { PLAYER_NAME } from "../../utils/constants";
-import { RangeupIndicator } from "./RangeupIndicator";
 import {
   Boomerang,
-  MaxThrowDistanceIndicator,
-} from "./MaxThrowDistanceIndicator";
+  MaxThrowDistanceRangeIndicator,
+} from "./MaxThrowDistanceRangeIndicator";
 import { usePlayerControls } from "./usePlayerControls";
+import { RangeupCircularTimer } from "./RangeupCircularTimer";
+import { RangeupIndicator } from "./RangeupIndicator";
 
 export function Player() {
   return (
     <>
       <Mage />
       <Boomerang />
+      <RangeupCircularTimer />
+      <RangeupIndicator />
       <Target />
       <Controls />
     </>
   );
 }
+
 function Controls() {
   usePlayerControls();
 
@@ -54,8 +58,7 @@ function Mage() {
       name={PLAYER_NAME}
     >
       <BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
-      <RangeupIndicator />
-      <MaxThrowDistanceIndicator />
+      <MaxThrowDistanceRangeIndicator />
       <pointLight intensity={5} distance={24} />
     </animated.mesh>
   );

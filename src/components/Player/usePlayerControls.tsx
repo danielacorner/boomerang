@@ -22,6 +22,7 @@ import { useInterval, useMount } from "react-use";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 
 const POWERUP_DURATION = 10 * 1000;
+export const RANGEUP_DURATION = 10 * 1000;
 const MOVE_SPEED = 0.39;
 
 export function usePlayerControls() {
@@ -88,7 +89,7 @@ export function usePlayerControls() {
           setPlayerState((p) => ({ ...p, rangeUp: true }));
           setTimeout(() => {
             setPlayerState((p) => ({ ...p, rangeUp: false }));
-          }, POWERUP_DURATION);
+          }, RANGEUP_DURATION);
         }
 
         // if collides with dropped boomerang, record it

@@ -26,6 +26,7 @@ const THROW_SPEED = 3;
 const INITIAL_POSITION: [number, number, number] = [0, 1, 0];
 const PLAYER_RADIUS = 1.5;
 const PLAYER_THROW_VELOCITY_MULTIPLIER = 3;
+const BOOMERANG_AIR_FRICTION = 0.03;
 
 /** shoots a boomerang when you click */
 export function useBoomerangMovement({ idx }: { idx }) {
@@ -224,9 +225,9 @@ export function useBoomerangMovement({ idx }: { idx }) {
   useFrame(() => {
     if (!isBoomerangMoving) {
       const slowerVelocity = [
-        THREE.MathUtils.lerp(velocity.current[0], 0, 0.05),
-        THREE.MathUtils.lerp(velocity.current[1], -1, 0.05),
-        THREE.MathUtils.lerp(velocity.current[2], 0, 0.05),
+        THREE.MathUtils.lerp(velocity.current[0], 0, BOOMERANG_AIR_FRICTION),
+        THREE.MathUtils.lerp(velocity.current[1], -1, BOOMERANG_AIR_FRICTION),
+        THREE.MathUtils.lerp(velocity.current[2], 0, BOOMERANG_AIR_FRICTION),
       ];
       api.velocity.set(slowerVelocity[0], slowerVelocity[1], slowerVelocity[2]);
     }
