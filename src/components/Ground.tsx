@@ -15,6 +15,7 @@ import * as THREE from "three";
 import { GROUND_NAME, GROUP1, MAX_THROW_DISTANCE } from "../utils/constants";
 import { useWhyDidYouUpdate } from "./useWhyDidYouUpdate";
 import { useCallback } from "react";
+import { distanceBetweenPoints } from "../utils/utils";
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
@@ -233,10 +234,4 @@ export function getMousePosition(e: ThreeEvent<PointerEvent>) {
   }
   const { x, z } = point;
   return { x, y: 1, z };
-}
-
-function distanceBetweenPoints([x1, y1, z1], [x2, y2, z2]) {
-  return Math.sqrt(
-    Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) + Math.pow(z1 - z2, 2)
-  );
 }

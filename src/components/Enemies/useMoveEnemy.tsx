@@ -216,22 +216,27 @@ export function useMoveEnemy({
       if (attackedRef.current) {
         attackedRef.current = false;
       }
-      // random walk
+      // random walk towards player
       const randomX = Math.random() * 2;
       const randomZ = Math.random() * 2;
 
       const directionX = Math.random() > 0.5 ? 1 : -1;
       const directionZ = Math.random() > 0.5 ? 1 : -1;
 
-      const [fx, fy, fz] = [
+      const [dx, dy, dz] = [
         Math.random() > 0.5 ? ENEMY_JITTER_SPEED * randomX * directionX : 0,
         0.1,
         Math.random() > 0.5 ? ENEMY_JITTER_SPEED * randomZ * directionZ : 0,
       ];
+      const [x2, y2, z2] = [
+        playerPositionRef.current[0],
+        playerPositionRef.current[1],
+        playerPositionRef.current[2],
+      ];
 
-      const x2Lerp = THREE.MathUtils.lerp(x, fx, 0.011);
-      const y2Lerp = THREE.MathUtils.lerp(y, fy, 0.011);
-      const z2Lerp = THREE.MathUtils.lerp(z, fz, 0.011);
+      const x2Lerp = THREE.MathUtils.lerp(x, x2 + dx, 0.011);
+      const y2Lerp = THREE.MathUtils.lerp(y, y2 + dy, 0.011);
+      const z2Lerp = THREE.MathUtils.lerp(z, z2 + dz, 0.011);
 
       // api.applyForce([fx, fy, fz], [x, y, z]);
       api.position.set(x2Lerp, y2Lerp, z2Lerp);

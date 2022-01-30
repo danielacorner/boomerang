@@ -7,6 +7,8 @@ import { getCurrentStep, useMoveEnemy } from "./useMoveEnemy";
 import { Text } from "@react-three/drei";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 import * as THREE from "three";
+import { usePlayerPositionRef } from "../../store";
+import { getIsPlayerWithinRange } from "./enemyUtils";
 const ANIM_SCALE_SPEED = 0.11;
 const ANIM_OPACITY_SPEED = 0.4;
 const ANIM_TEXT_POSITION_SPEED = 0.3;
@@ -45,11 +47,17 @@ export function Enemy({
     unmountEnemy,
     invulnerable,
   });
-
+  const [playerPositionRef] = usePlayerPositionRef();
   useFrame(({ clock }) => {
     if (!enemyRef.current || !enemyMeshRef.current) return;
 
-    const currentStep = getCurrentStep(clock.getElapsedTime());
+    const isPlayerWithinRange = getIsPlayerWithinRange(
+      position.current,
+      playerPositionRef.current
+    );
+
+    const time = isPlayerWithinRange ? clock.getElapsedTime() : 0;
+    const currentStep = getCurrentStep(time);
     const willAttack = currentStep?.movementType === "preAttack";
     const sss = THREE.MathUtils.lerp(
       enemyRef.current.scale.x,
