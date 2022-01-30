@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCylinder } from "@react-three/cannon";
 import {
   useHeldBoomerangs,
@@ -14,7 +14,6 @@ import {
   ITEM_TYPES,
 } from "../../utils/constants";
 import * as THREE from "three";
-import { useInterval } from "react-use";
 import { Vector3 } from "three";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 const POWERUP_PROBABILITY = 0.03;
@@ -26,13 +25,51 @@ const ENEMY_JITTER_SPEED = 2;
 const BOOMERANG_BASE_DAMAGE = 0.75;
 const UNMOUNT_DELAY = 5 * 1000;
 type MovementType = "randomWalk" | "preAttack" | "attack";
-const MOVEMENT_SEQUENCE: MovementType[] = ["randomWalk", "preAttack", "attack"];
 
-const RANDOM_WALK_DURATION = 4500;
-const PRE_ATTACK_DURATION = 1000;
-const ATTACK_DURATION = 200;
+type MovementStep = {
+  stepIdx: number;
+  duration: number;
+  startTime: number;
+  movementType: MovementType;
+};
+const MOVEMENT_SEQUENCE_RAW: MovementStep[] = [
+  {
+    stepIdx: 0,
+    startTime: 0,
+    duration: 4.5,
+    movementType: "randomWalk",
+  },
+  {
+    stepIdx: 1,
+    startTime: 4.5,
+    duration: 1,
+    movementType: "preAttack",
+  },
+  {
+    stepIdx: 2,
+    startTime: 5.5,
+    duration: 1,
+    movementType: "attack",
+  },
+];
 
-const ENEMY_ATTACK_SPEED = 6;
+const MOVEMENT_SEQUENCE: MovementStep[] = MOVEMENT_SEQUENCE_RAW.reduce(
+  (acc, cur, idx) => {
+    const prev = MOVEMENT_SEQUENCE_RAW[idx - 1];
+    return [
+      ...acc,
+      { ...cur, startTime: prev ? (prev.startTime || 0) + prev.duration : 0 },
+    ];
+  },
+  [] as MovementStep[]
+);
+
+const MOVEMENT_SEQUENCE_DURATION = MOVEMENT_SEQUENCE.reduce(
+  (acc, curr) => acc + curr.duration,
+  0
+);
+
+const ENEMY_ATTACK_SPEED = 7;
 
 export function useMoveEnemy({
   position,
@@ -50,7 +87,9 @@ export function useMoveEnemy({
   const [, setDroppedItems] = useDroppedItems();
   const [playerPositionRef] = usePlayerPositionRef();
   const [theyDied, setTheyDied] = useState(false);
-
+  const movementStatusRef = useRef<MovementType | null>(null);
+  const enemyMeshRef = useRef<THREE.Mesh | null>(null);
+  const attackedRef = useRef<boolean>(false);
   const [enemyRef, api] = useCylinder(
     () => ({
       collisionFilterGroup: GROUP1,
@@ -129,10 +168,6 @@ export function useMoveEnemy({
             const droppedBoomerang =
               heldBoomerangs.length < MAX_BOOMERANGS &&
               Math.random() > 1 - DROPPED_BOOMERANG_PROBABILITY;
-            console.log(
-              "🌟🚨 ~ file: Enemy.tsx ~ line 179 ~ heldBoomerangs",
-              heldBoomerangs
-            );
             if (droppedBoomerang) {
               const rPosition: [number, number, number] = [
                 position.current[0] + Math.random() - 0.5,
@@ -153,44 +188,24 @@ export function useMoveEnemy({
         friction: theyreDead ? 0 : 100,
       },
     }),
-    null,
+    enemyMeshRef,
     [status, heldBoomerangs, theyDroppedItems, poweredUp, health]
   );
 
-  const [movementStatus, setMovementStatus] = useState<MovementType>(
-    MOVEMENT_SEQUENCE[0]
-  );
-
-  // set the enemy's movement status at specified time intervals
-  useInterval(
-    () => {
-      const nextMovementStatus =
-        MOVEMENT_SEQUENCE[
-          (MOVEMENT_SEQUENCE.indexOf(movementStatus) + 1) %
-            MOVEMENT_SEQUENCE.length
-        ];
-      console.log(
-        "🌟🚨 ~ file: useMoveEnemy.tsx ~ line 169 ~ nextMovementStatus",
-        nextMovementStatus
-      );
-      setMovementStatus(nextMovementStatus);
-    },
-    theyreDead
-      ? null
-      : movementStatus === "randomWalk"
-      ? RANDOM_WALK_DURATION
-      : movementStatus === "preAttack"
-      ? PRE_ATTACK_DURATION
-      : movementStatus === "attack"
-      ? ATTACK_DURATION
-      : null
-  );
   const [attacked, setAttacked] = useState(false);
   // movement: move towards player
-  useFrame(() => {
+  useFrame(({ clock }) => {
     if (!position.current || !enemyRef.current || theyreDead) {
       return;
     }
+    const time = clock.getElapsedTime();
+    const currentStep = getCurrentStep(time);
+
+    if (!currentStep) {
+      return;
+    }
+    const movementStatus = currentStep.movementType;
+    movementStatusRef.current = movementStatus;
 
     const [x, y, z] = [
       position.current[0],
@@ -198,8 +213,8 @@ export function useMoveEnemy({
       position.current[2],
     ];
     if (movementStatus === "randomWalk") {
-      if (attacked) {
-        setAttacked(false);
+      if (attackedRef.current) {
+        attackedRef.current = false;
       }
       // random walk
       const randomX = Math.random() * 2;
@@ -227,16 +242,12 @@ export function useMoveEnemy({
       api.position.set(x, y, z);
       api.velocity.set(0, 0, 0);
     } else if (movementStatus === "attack") {
-      if (!attacked) {
-        setAttacked(true);
+      if (!attackedRef.current) {
+        attackedRef.current = true;
         const newVelocity = new Vector3(
           playerPositionRef.current[0] - position.current[0],
           playerPositionRef.current[1] - position.current[1],
           playerPositionRef.current[2] - position.current[2]
-        );
-        console.log(
-          "🌟🚨 ~ file: useMoveEnemy.tsx ~ line 240 ~ useFrame ~ playerPositionRef.position",
-          playerPositionRef.current
         );
 
         const newVelocityNormalized = newVelocity.normalize();
@@ -274,7 +285,6 @@ export function useMoveEnemy({
     theyDroppedItems,
     poweredUp,
     health,
-    movementStatus,
     theyreDead,
     theyDied,
     attacked,
@@ -284,9 +294,18 @@ export function useMoveEnemy({
     setTheyreDead,
     setTheyDied,
     setAttacked,
-    setMovementStatus,
     setDroppedItems,
     setHealth,
   });
-  return { enemyRef, api, movementStatus };
+  return { enemyRef, enemyMeshRef, api, movementStatusRef };
+}
+export function getCurrentStep(time: number) {
+  const timeInSequence = time % MOVEMENT_SEQUENCE_DURATION;
+  const currentStep = MOVEMENT_SEQUENCE.find((step) => {
+    return (
+      timeInSequence >= step.startTime &&
+      timeInSequence < step.startTime + step.duration
+    );
+  });
+  return currentStep;
 }

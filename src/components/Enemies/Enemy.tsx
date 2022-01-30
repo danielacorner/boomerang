@@ -1,12 +1,15 @@
-import { useThree } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { EnemyHpBar } from "./EnemyHpBar";
 import { ENEMY_CYLINDER_HEIGHT, ENEMY_NAME } from "../../utils/constants";
-import { animated, useSpring } from "@react-spring/three";
-import { useMoveEnemy } from "./useMoveEnemy";
+import { animated } from "@react-spring/three";
+import { getCurrentStep, useMoveEnemy } from "./useMoveEnemy";
 import { Text } from "@react-three/drei";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
-
+import * as THREE from "three";
+const ANIM_SCALE_SPEED = 0.11;
+const ANIM_OPACITY_SPEED = 0.4;
+const ANIM_TEXT_POSITION_SPEED = 0.3;
 // const CEILING_HEIGHT = CYLINDER_HEIGHT * 4;
 
 // set up collisions on its children
@@ -33,7 +36,7 @@ export function Enemy({
     return unsubscribe;
   }, []);
 
-  const { enemyRef, api, movementStatus } = useMoveEnemy({
+  const { enemyRef, enemyMeshRef, api, movementStatusRef } = useMoveEnemy({
     position,
     theyreDead,
     setTheyreDead,
@@ -43,12 +46,29 @@ export function Enemy({
     invulnerable,
   });
 
-  const willAttack = movementStatus === "preAttack";
+  useFrame(({ clock }) => {
+    if (!enemyRef.current || !enemyMeshRef.current) return;
 
-  const { opacity, scale } = useSpring({
-    opacity: theyreDead ? 0 : 1,
-    scale: willAttack ? 1.2 : 1,
+    const currentStep = getCurrentStep(clock.getElapsedTime());
+    const willAttack = currentStep?.movementType === "preAttack";
+    const sss = THREE.MathUtils.lerp(
+      enemyRef.current.scale.x,
+      willAttack ? 1.2 : 1,
+      ANIM_SCALE_SPEED
+    );
+    const scale = new THREE.Vector3(sss, sss, sss);
+    const material = enemyMeshRef.current.material as THREE.MeshBasicMaterial;
+    const opacity = THREE.MathUtils.lerp(
+      material.opacity,
+      theyreDead ? 0 : 1,
+      ANIM_OPACITY_SPEED
+    );
+
+    material.opacity = opacity;
+
+    enemyRef.current.scale.set(scale.x, scale.y, scale.z);
   });
+
   useWhyDidYouUpdate("Enemy 🦠", {
     position,
     theyreDead,
@@ -66,9 +86,7 @@ export function Enemy({
     <>
       <animated.mesh
         material-transparent={true}
-        material-opacity={opacity}
-        scale={scale}
-        ref={enemyRef}
+        ref={enemyMeshRef}
         name={ENEMY_NAME}
       >
         {/* <pointLight intensity={5} distance={8} position={[0, -5, 0]} /> */}
@@ -76,7 +94,7 @@ export function Enemy({
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
         <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
-        <AttackIndicator {...{ willAttack }} />
+        <AttackIndicator />
       </animated.mesh>
     </>
   );
@@ -84,21 +102,39 @@ export function Enemy({
 
 const AnimatedText = animated(Text);
 /** warn before the enemy attacks */
-function AttackIndicator({ willAttack }) {
-  const { opacity, position } = useSpring({
-    opacity: willAttack ? 1 : 0,
-    position: [0, 10 + (willAttack ? 0 : -5), 0] as [number, number, number],
+function AttackIndicator() {
+  const textRef = useRef<any>(null);
+  const meshRef = useRef<any>(null);
+
+  useFrame(({ clock }) => {
+    if (!meshRef.current || !textRef.current) return;
+    const currentStep = getCurrentStep(clock.getElapsedTime());
+    const willAttack = currentStep?.movementType === "preAttack";
+
+    textRef.current.fillOpacity = THREE.MathUtils.lerp(
+      textRef.current.fillOpacity,
+      willAttack ? 1 : 0,
+      ANIM_OPACITY_SPEED
+    );
+    const nextY = THREE.MathUtils.lerp(
+      meshRef.current.position.y,
+      10 + (willAttack ? 0 : -5),
+      ANIM_TEXT_POSITION_SPEED
+    );
+    meshRef.current.position.set(0, nextY, 0);
   });
+
   return (
-    <animated.mesh position={position}>
-      <AnimatedText
+    <mesh ref={meshRef} position={[0, 0, 0]}>
+      <Text
+        ref={textRef}
         color={"#d63434"}
         fontSize={6}
         scale={1}
-        fillOpacity={opacity}
+        // fillOpacity={opacity}
       >
         !
-      </AnimatedText>
-    </animated.mesh>
+      </Text>
+    </mesh>
   );
 }

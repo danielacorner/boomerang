@@ -59,14 +59,6 @@ export function Ground() {
         MAX_THROW_DISTANCE,
         rangeUp
       );
-      console.log(
-        "🌟🚨 ~ file: Ground.tsx ~ line 36 ~ Ground ~ newFarthestTargetPosition",
-        newFarthestTargetPosition
-      );
-      console.log(
-        "🌟🚨 ~ file: Ground.tsx ~ line 38 ~ Ground ~ playerPositionRef.current",
-        playerPositionRef.current
-      );
 
       setHeldBoomerangs((currentBoomerangs) => {
         // if rangeUp is active, send ALL active boomerangs,

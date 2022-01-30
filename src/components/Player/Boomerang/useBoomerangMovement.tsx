@@ -81,10 +81,6 @@ export function useBoomerangMovement({ idx }: { idx }) {
         // pick up the boomerang when it collides with the player
         const isCollisionWithPlayer = e.body?.name === PLAYER_NAME;
         if (isCollisionWithPlayer) {
-          console.log(
-            "🌟🚨 ~ file: useBoomerangMovement.tsx ~ line 102 ~ isCollisionWithPlayer",
-            isCollisionWithPlayer
-          );
           setHeldBoomerangs((currentBoomerangs) => {
             const newBooms = currentBoomerangs.map((boom, bIdx) => {
               if (bIdx === idx) {
@@ -125,10 +121,6 @@ export function useBoomerangMovement({ idx }: { idx }) {
           ITEM_TYPES.RANGEUP,
         ].includes(e.body?.name as any);
         if (isCollisionWithDroppedItem) {
-          console.log(
-            "🌟🚨 ~ file: useBoomerangMovement.tsx ~ line 137 ~ isCollisionWithDroppedItem",
-            isCollisionWithDroppedItem
-          );
           setCarriedItems((p) => [...p, e.body?.name as ITEM_TYPES]);
         }
       },

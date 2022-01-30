@@ -9,10 +9,6 @@ import { useFrame } from "@react-three/fiber";
 
 export function Scene() {
   useFrame(({ performance }) => {
-    console.log(
-      "🌟🚨 ~ file: Scene.tsx ~ line 15 ~ useFrame ~ performance",
-      performance.current
-    );
     performance.regress();
   });
   return (
