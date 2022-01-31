@@ -11,6 +11,7 @@ import { Powerup } from "../../DroppedItems/Powerup";
 import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
 import { useWhyDidYouUpdate } from "../../useWhyDidYouUpdate";
+import { Html } from "@react-three/drei";
 
 export const BoomerangWithControls = ({
   // TODO: use idx to only shoot one at a time
@@ -57,15 +58,24 @@ function CarriedItems({ carriedItems }: { carriedItems: ITEM_TYPES[] }) {
   return (
     <>
       {carriedItems.map((item, idx) => (
-        <React.Fragment key={idx}>
+        <mesh
+          position={[
+            Math.random() * 0.5 - 0.25,
+            Math.random() * 0.5 - 0.25,
+            Math.random() * 0.5 - 0.25,
+          ]}
+          key={idx}
+        >
           {item === ITEM_TYPES.MONEY ? (
             <MoneyBag />
           ) : item === ITEM_TYPES.POWERUP ? (
             <Powerup />
           ) : item === ITEM_TYPES.RANGEUP ? (
             <Rangeup />
+          ) : item === ITEM_TYPES.HEART ? (
+            <Html>♥</Html>
           ) : null}
-        </React.Fragment>
+        </mesh>
       ))}
     </>
   );

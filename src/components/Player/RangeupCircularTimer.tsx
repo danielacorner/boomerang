@@ -31,25 +31,35 @@ export function RangeupCircularTimer(props) {
       });
     } else if (countdownStartTime) {
       const timeSinceStart = time - countdownStartTime;
-      const timeSinceStartInTicks = Math.floor(timeSinceStart / 1000);
+      const timeSinceStartInTicks = Math.floor(timeSinceStart);
       const tickIndex = Math.min(timeSinceStartInTicks, TIMER_TICKS.length - 1);
+      console.log(
+        "🌟🚨 ~ file: RangeupCircularTimer.tsx ~ line 36 ~ useFrame ~ tickIndex",
+        tickIndex
+      );
       const tickRef = refs[tickIndex];
+      console.log(
+        "🌟🚨 ~ file: RangeupCircularTimer.tsx ~ line 38 ~ useFrame ~ tickRef",
+        tickRef
+      );
       if (tickRef.current) {
         tickRef.current.scale.set(0, 0, 0);
         // tickRef.current.scale.set(0, 0, 0);
       }
-      // if (timeSinceStart > RANGEUP_DURATION) {
-      //   refs.forEach((ref) => {
-      //     if (ref.current) {
-      //       ref.current.scale.set(0, 0, 0);
-      //     }
-      //   });
-      // }
+      if (timeSinceStart > RANGEUP_DURATION) {
+        setCountdownStartTime(null);
+      }
     }
   });
 
   return (
-    <animated.mesh ref={outerRef} scale={scale} position={[0, 0, 0]} {...props}>
+    <animated.mesh
+      ref={outerRef}
+      scale={scale}
+      position={[0, 0, 0]}
+      rotation={[0, 0, Math.PI]}
+      {...props}
+    >
       {/* for each second, show a sphere in a circle around the player's feet */}
       {TIMER_TICKS.map((_, idx) => {
         const tickProgress = idx / TIMER_TICKS.length;
@@ -59,6 +69,7 @@ export function RangeupCircularTimer(props) {
           <mesh
             ref={tickRef}
             key={idx}
+            scale={0.4}
             position={[
               Math.sin(tickProgress * Math.PI * 2) * RADIUS,
               0,
