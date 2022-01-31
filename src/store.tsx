@@ -118,11 +118,13 @@ export function usePlayerState() {
   return useAtom(playerStateAtom);
 }
 
-export const INITIAL_HITPOINTS = 5;
+export const INITIAL_HITPOINTS = 3;
 const gameStateAtom = atom<{
+  maxHitpoints: number;
   hitpoints: number;
   invulnerable: boolean;
 }>({
+  maxHitpoints: INITIAL_HITPOINTS,
   hitpoints: INITIAL_HITPOINTS,
   invulnerable: false,
 });

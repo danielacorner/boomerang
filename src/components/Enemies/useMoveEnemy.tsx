@@ -18,6 +18,7 @@ import { Vector3 } from "three";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 const POWERUP_PROBABILITY = 0.03;
 const RANGEUP_PROBABILITY = 0.04;
+const HEART_PROBABILITY = 0.04;
 const DROPPED_BOOMERANG_PROBABILITY = 0.008;
 const MAX_BOOMERANGS = 6;
 
@@ -161,6 +162,20 @@ export function useMoveEnemy({
               const newPowerup = {
                 position: rPosition,
                 type: ITEM_TYPES.RANGEUP,
+              };
+              setDroppedItems((p) => [...p, newPowerup]);
+            }
+
+            const heart = Math.random() > 1 - HEART_PROBABILITY;
+            if (heart) {
+              const rPosition: [number, number, number] = [
+                position.current[0] + Math.random() - 0.5,
+                position.current[1] + Math.random() - 0.5,
+                position.current[2] + Math.random() - 0.5,
+              ];
+              const newPowerup = {
+                position: rPosition,
+                type: ITEM_TYPES.HEART,
               };
               setDroppedItems((p) => [...p, newPowerup]);
             }

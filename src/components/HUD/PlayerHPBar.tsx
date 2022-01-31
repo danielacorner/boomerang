@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import styled from "styled-components";
-import { INITIAL_HITPOINTS, useGameState } from "../../store";
+import { useGameState } from "../../store";
 
 export function PlayerHPBar() {
-  const [{ hitpoints }] = useGameState();
+  const [{ hitpoints, maxHitpoints }] = useGameState();
 
   // TODO: when we die, restart the game!
   useEffect(() => {
@@ -14,7 +14,7 @@ export function PlayerHPBar() {
   return (
     <PlayerHpBarStyles>
       {[...new Array(hitpoints)].map((_) => "🧡 ")}
-      {[...new Array(INITIAL_HITPOINTS - hitpoints)].map((_, idx) => (
+      {[...new Array(maxHitpoints - hitpoints)].map((_, idx) => (
         <span key={idx} style={{ opacity: 0.4 }}>
           💔{" "}
         </span>

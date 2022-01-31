@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  useGameState,
   useHeldBoomerangs,
   useMoney,
   usePlayerPositionRef,
@@ -33,6 +34,7 @@ export function useBoomerangMovement({ idx }: { idx }) {
   const [playerRef] = usePlayerRef();
   const [playerPositionRef] = usePlayerPositionRef();
   const [{ poweredUp, rangeUp }, setPlayerState] = usePlayerState();
+  const [, setGameState] = useGameState();
   const [, setMoney] = useMoney();
 
   // boomerang state & click position
@@ -109,6 +111,12 @@ export function useBoomerangMovement({ idx }: { idx }) {
                 setPlayerState((p) => ({ ...p, rangeUp: true }));
               } else if (item === ITEM_TYPES.POWERUP) {
                 setPlayerState((p) => ({ ...p, poweredUp: true }));
+              } else if (item === ITEM_TYPES.HEART) {
+                setGameState((p) => ({
+                  ...p,
+                  maxHitpoints: p.maxHitpoints,
+                  hitpoints: p.hitpoints + 1,
+                }));
               }
             });
             setCarriedItems([]);

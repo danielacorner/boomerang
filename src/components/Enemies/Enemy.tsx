@@ -4,7 +4,7 @@ import { EnemyHpBar } from "./EnemyHpBar";
 import { ENEMY_CYLINDER_HEIGHT, ENEMY_NAME } from "../../utils/constants";
 import { animated } from "@react-spring/three";
 import { getCurrentStep, useMoveEnemy } from "./useMoveEnemy";
-import { Text } from "@react-three/drei";
+import { Billboard, Text } from "@react-three/drei";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 import * as THREE from "three";
 import { usePlayerPositionRef } from "../../store";
@@ -90,20 +90,26 @@ export function Enemy({
     enemyName,
   });
 
+  const hpBarRef = useRef(null as any);
+  useFrame(() => {
+    hpBarRef.current.position.set(
+      position.current[0],
+      position.current[1] + enemyHeight / 2,
+      position.current[2]
+    );
+  });
   return (
     <>
-      <animated.mesh
-        material-transparent={true}
-        ref={enemyMeshRef}
-        name={ENEMY_NAME}
-      >
+      <mesh ref={hpBarRef}>
+        <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
+      </mesh>
+      <mesh material-transparent={true} ref={enemyMeshRef} name={ENEMY_NAME}>
         {/* <pointLight intensity={5} distance={8} position={[0, -5, 0]} /> */}
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
-        <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
         <AttackIndicator />
-      </animated.mesh>
+      </mesh>
     </>
   );
 }

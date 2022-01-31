@@ -35,7 +35,7 @@ export function RangeupCircularTimer(props) {
       const tickIndex = Math.min(timeSinceStartInTicks, TIMER_TICKS.length - 1);
       const tickRef = refs[tickIndex];
       if (tickRef.current) {
-        tickRef.current.scale.set(0.4, 0.4, 0.4);
+        tickRef.current.scale.set(0, 0, 0);
         // tickRef.current.scale.set(0, 0, 0);
       }
       // if (timeSinceStart > RANGEUP_DURATION) {

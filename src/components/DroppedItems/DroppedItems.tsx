@@ -1,4 +1,5 @@
 import { DroppedMoney } from "./DroppedMoney";
+import { DroppedHeart } from "./DroppedHeart";
 import { useDroppedItems } from "../../store";
 import { DroppedPowerup } from "./DroppedPowerup";
 import React from "react";
@@ -25,6 +26,11 @@ export function DroppedItems() {
       {droppedMoneyPositions.map(({ position }) => (
         <React.Fragment key={JSON.stringify(position)}>
           <DroppedMoney {...{ position }} />
+        </React.Fragment>
+      ))}
+      {droppedMoneyPositions.map(({ position }) => (
+        <React.Fragment key={JSON.stringify(position)}>
+          <DroppedHeart {...{ position }} />
         </React.Fragment>
       ))}
       {droppedPowerupPositions.map(({ position }) => (
