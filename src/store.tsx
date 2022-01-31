@@ -106,6 +106,7 @@ const playerStateAtom = atom<{
   farthestTargetPosition: [number, number, number];
   poweredUp: boolean;
   rangeUp: boolean;
+  rangeUpStartTime: number | null;
 }>({
   lookAt: [0, 0, 0],
   playerPosition: [0, 0, 0],
@@ -113,6 +114,7 @@ const playerStateAtom = atom<{
   farthestTargetPosition: [0, 0, 0],
   poweredUp: false,
   rangeUp: false,
+  rangeUpStartTime: null,
 });
 export function usePlayerState() {
   return useAtom(playerStateAtom);

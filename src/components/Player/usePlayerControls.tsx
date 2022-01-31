@@ -1,4 +1,4 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { PublicApi, useCylinder } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
@@ -40,11 +40,10 @@ export function usePlayerControls() {
     }
   }, [pressedKeys]);
 
-  const [{ lookAt, poweredUp }, setPlayerState] = usePlayerState();
+  const [{ lookAt, rangeUp, poweredUp }, setPlayerState] = usePlayerState();
   const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1);
-
   const [playerRef] = usePlayerRef();
-
+  const { clock } = useThree();
   const [cylinderRef, cylinderApi] = useCylinder(
     () => ({
       collisionFilterGroup: GROUP2,
@@ -86,10 +85,11 @@ export function usePlayerControls() {
         const isCollisionWithRangeup = e.body?.name === RANGEUP_NAME;
         if (isCollisionWithRangeup) {
           // console.log("COLLISION! with RANGEUP", e);
-          setPlayerState((p) => ({ ...p, rangeUp: true }));
-          setTimeout(() => {
-            setPlayerState((p) => ({ ...p, rangeUp: false }));
-          }, RANGEUP_DURATION);
+          setPlayerState((p) => ({
+            ...p,
+            rangeUp: true,
+            rangeUpStartTime: clock.getElapsedTime(),
+          }));
         }
 
         // if collides with dropped boomerang, record it

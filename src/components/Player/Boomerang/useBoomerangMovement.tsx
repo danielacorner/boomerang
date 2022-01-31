@@ -7,7 +7,7 @@ import {
   usePlayerRef,
   usePlayerState,
 } from "../../../store";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { useCylinder } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
 import {
@@ -50,7 +50,7 @@ export function useBoomerangMovement({ idx }: { idx }) {
   ];
 
   const [carriedItems, setCarriedItems] = useState<ITEM_TYPES[]>([]);
-
+  const { clock } = useThree();
   const [boomerangRef, api] = useCylinder(
     () => ({
       mass: poweredUp ? 4 : 1,
@@ -108,7 +108,11 @@ export function useBoomerangMovement({ idx }: { idx }) {
               if (item === ITEM_TYPES.MONEY) {
                 setMoney((p) => p + 1);
               } else if (item === ITEM_TYPES.RANGEUP) {
-                setPlayerState((p) => ({ ...p, rangeUp: true }));
+                setPlayerState((p) => ({
+                  ...p,
+                  rangeUp: true,
+                  rangeUpStartTime: clock.getElapsedTime(),
+                }));
               } else if (item === ITEM_TYPES.POWERUP) {
                 setPlayerState((p) => ({ ...p, poweredUp: true }));
               } else if (item === ITEM_TYPES.HEART) {
