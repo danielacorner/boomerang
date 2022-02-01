@@ -70,7 +70,7 @@ const MOVEMENT_SEQUENCE_DURATION = MOVEMENT_SEQUENCE.reduce(
   0
 );
 
-const ENEMY_ATTACK_SPEED = 7;
+const ENEMY_ATTACK_SPEED = 14;
 
 export function useMoveEnemy({
   position,

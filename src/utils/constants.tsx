@@ -35,3 +35,4 @@ export const CAMERA_POSITION: [number, number, number] = [
   CAMERA_DISTANCE * 2,
   -CAMERA_DISTANCE,
 ];
+export const CAMERA_RANGEUP_HEIGHT = CAMERA_POSITION[1] * 2;

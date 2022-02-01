@@ -13,6 +13,7 @@ import {
 import {
   BOOMERANG_ITEM_NAME,
   CAMERA_POSITION,
+  CAMERA_RANGEUP_HEIGHT,
   ENEMY_NAME,
   GROUP2,
   POWERUP_NAME,
@@ -188,6 +189,7 @@ function useMovePlayer(
   rotation,
   velocityRef
 ) {
+  const [{ rangeUp }] = usePlayerState();
   const [playerPositionRef] = usePlayerPositionRef();
   useFrame(({ camera }) => {
     if (!cylinderRef.current || !positionRef.current) {
@@ -217,9 +219,17 @@ function useMovePlayer(
     // const isAboveThreshold = delta > 0.1;
     // if (isAboveThreshold) {
     cylinderApi.position.set(x2Lerp, y2Lerp, z2Lerp);
+
+    // move the camera up when rangeUp is active
+    const cameraY = THREE.MathUtils.lerp(
+      camera.position.y,
+      rangeUp ? CAMERA_RANGEUP_HEIGHT : CAMERA_POSITION[1],
+      0.05
+    );
+
     const newCameraPosition: [number, number, number] = [
       CAMERA_POSITION[0] + playerPositionRef.current[0],
-      CAMERA_POSITION[1],
+      cameraY,
       CAMERA_POSITION[2] + playerPositionRef.current[2],
     ];
     camera.position.set(...newCameraPosition);

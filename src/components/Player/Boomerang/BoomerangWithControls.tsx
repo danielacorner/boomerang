@@ -1,5 +1,5 @@
 /* eslint-disable react/display-name */
-import React from "react";
+import React, { useRef } from "react";
 import BoomerangModel from "../../GLTFs/BoomerangModel";
 import { useHeldBoomerangs, usePlayerState } from "../../../store";
 import { FlashWhenStatusChanges } from "./FlashWhenStatusChanges";
@@ -55,17 +55,17 @@ export const BoomerangWithControls = ({
 };
 
 function CarriedItems({ carriedItems }: { carriedItems: ITEM_TYPES[] }) {
+  const positions = useRef<[number, number, number][]>(
+    carriedItems.map(() => [
+      5 * Math.random() * 0.5 - 0.25,
+      5 * Math.random() * 0.5 - 0.25,
+      5 * Math.random() * 0.5 - 0.25,
+    ])
+  ).current;
   return (
     <>
       {carriedItems.map((item, idx) => (
-        <mesh
-          position={[
-            Math.random() * 0.5 - 0.25,
-            Math.random() * 0.5 - 0.25,
-            Math.random() * 0.5 - 0.25,
-          ]}
-          key={idx}
-        >
+        <mesh position={positions[idx]} key={idx}>
           {item === ITEM_TYPES.MONEY ? (
             <MoneyBag />
           ) : item === ITEM_TYPES.POWERUP ? (

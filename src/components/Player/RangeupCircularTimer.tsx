@@ -1,11 +1,12 @@
 import { usePlayerPositionRef, usePlayerState } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
 import { RANGEUP_DURATION } from "./usePlayerControls";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
 const TIMER_TICKS = [...new Array(RANGEUP_DURATION / 1000)];
-
+const SCALE = 1;
+const RADIUS = 10;
 export function RangeupCircularTimer(props) {
   const [{ rangeUp, rangeUpStartTime }, setPlayerState] = usePlayerState();
   const { scale } = useSpring({ scale: rangeUp ? 0.6 : 0 });
@@ -46,7 +47,7 @@ export function RangeupCircularTimer(props) {
     if (rangeUpStartTime) {
       refs.forEach((ref) => {
         if (ref.current) {
-          ref.current.scale.set(0.4, 0.4, 0.4);
+          ref.current.scale.set(SCALE, SCALE, SCALE);
         }
       });
     }
@@ -69,7 +70,7 @@ export function RangeupCircularTimer(props) {
           <mesh
             ref={tickRef}
             key={idx}
-            scale={0.4}
+            scale={SCALE}
             position={[
               Math.sin(tickProgress * Math.PI * 2) * RADIUS,
               0,
@@ -89,4 +90,3 @@ export function RangeupCircularTimer(props) {
     </animated.mesh>
   );
 }
-const RADIUS = 5;
