@@ -55,7 +55,7 @@ function BagContent({ position, setMounted }) {
       position,
       onCollide: (e) => {
         // when the player touches it, gain +1 money
-        if (e.body?.name === "player") {
+        if (e.body?.name === "player" && collectedStatus === "uncollected") {
           setMoney((p) => p + 1);
           setCollectedStatus("collected");
           setTimeout(() => {

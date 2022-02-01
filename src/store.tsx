@@ -132,7 +132,7 @@ const gameStateAtom = atom<{
 });
 export const useGameState = () => useAtom(gameStateAtom);
 
-const moneyAtom = atomWithStorage<number>("money", 0);
+const moneyAtom = atom<number>(0);
 export const useMoney = () => useAtom(moneyAtom);
 
 const isDevAtom = atom<boolean>(process.env.NODE_ENV === "development");
