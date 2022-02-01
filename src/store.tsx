@@ -105,6 +105,7 @@ const playerStateAtom = atom<{
   playerVelocity: [number, number, number];
   farthestTargetPosition: [number, number, number];
   poweredUp: boolean;
+  poweredUpStartTime: number | null;
   rangeUp: boolean;
   rangeUpStartTime: number | null;
 }>({
@@ -113,6 +114,7 @@ const playerStateAtom = atom<{
   playerVelocity: [0, 0, 0],
   farthestTargetPosition: [0, 0, 0],
   poweredUp: false,
+  poweredUpStartTime: null,
   rangeUp: false,
   rangeUpStartTime: null,
 });

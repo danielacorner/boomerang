@@ -16,6 +16,7 @@ import {
 import { usePlayerControls } from "./usePlayerControls";
 import { RangeupCircularTimer } from "./RangeupCircularTimer";
 import { RangeupIndicator } from "./RangeupIndicator";
+import { PowerupCircularTimer } from "./PowerupCircularTimer";
 
 export function Player() {
   return (
@@ -23,6 +24,7 @@ export function Player() {
       <Mage />
       <Boomerang />
       <RangeupCircularTimer />
+      <PowerupCircularTimer />
       <RangeupIndicator />
       <Target />
       <Controls />

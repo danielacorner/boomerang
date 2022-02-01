@@ -22,7 +22,7 @@ import {
 import { useInterval, useMount } from "react-use";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 
-const POWERUP_DURATION = 10 * 1000;
+export const POWERUP_DURATION = 10 * 1000;
 export const RANGEUP_DURATION = 10 * 1000;
 const MOVE_SPEED = 0.39;
 
@@ -76,16 +76,24 @@ export function usePlayerControls() {
         const isCollisionWithPowerup = e.body?.name === POWERUP_NAME;
         if (isCollisionWithPowerup) {
           // console.log("COLLISION! with POWERUP", e);
-          setPlayerState((p) => ({ ...p, poweredUp: true }));
+          setPlayerState((p) => ({
+            ...p,
+            poweredUp: true,
+            poweredUpStartTime: clock.getElapsedTime(),
+          }));
           setTimeout(() => {
-            setPlayerState((p) => ({ ...p, poweredUp: false }));
+            setPlayerState((p) => ({
+              ...p,
+              poweredUp: false,
+              poweredUpStartTime: null,
+            }));
           }, POWERUP_DURATION);
         }
 
         // if collides with rangeup, range up!
         const isCollisionWithRangeup = e.body?.name === RANGEUP_NAME;
         if (isCollisionWithRangeup) {
-          // console.log("COLLISION! with RANGEUP", e);
+          console.log("💥 oof a RANGEUP", e);
           setPlayerState((p) => ({
             ...p,
             rangeUp: true,

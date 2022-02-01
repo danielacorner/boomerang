@@ -57,6 +57,7 @@ function BagContent({ position, setMounted }) {
       onCollide: (e) => {
         // when the player touches it, gain +1 money
         if (e.body?.name === "player" && collectedStatus === "uncollected") {
+          console.log("💥 oof a HEART");
           setGameState((p) => ({
             ...p,
             maxHitpoints: p.maxHitpoints + 1,
@@ -74,7 +75,7 @@ function BagContent({ position, setMounted }) {
       },
     }),
     null,
-    [interactive]
+    [interactive, collectedStatus]
   );
 
   useMount(() => {

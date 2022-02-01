@@ -1,29 +1,28 @@
 import { usePlayerPositionRef, usePlayerState } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
-import { RANGEUP_DURATION } from "./usePlayerControls";
+import { POWERUP_DURATION } from "./usePlayerControls";
 import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
-const TIMER_TICKS = [...new Array(RANGEUP_DURATION / 1000)];
-const SCALE = 0.7;
-const RADIUS = 15;
-export function RangeupCircularTimer(props) {
-  const [{ rangeUp, rangeUpStartTime }, setPlayerState] = usePlayerState();
-  const { scale } = useSpring({ scale: rangeUp ? 0.6 : 0 });
+const TIMER_TICKS = [...new Array(POWERUP_DURATION / 1000)];
+const SCALE = 1;
+const RADIUS = 10;
+export function PowerupCircularTimer(props) {
+  const [{ poweredUp, poweredUpStartTime }, setPlayerState] = usePlayerState();
+  const { scale } = useSpring({ scale: poweredUp ? 0.6 : 0 });
 
   const [playerPositionRef] = usePlayerPositionRef();
   const outerRef = useRef<THREE.Mesh | null>(null);
-  const refs = TIMER_TICKS.map((t) => useRef<THREE.Mesh | null>(null));
-  //
+  const refs = TIMER_TICKS.map(() => useRef<THREE.Mesh | null>(null));
+
   useFrame(({ clock }) => {
-    if (!rangeUp || !outerRef.current) {
+    if (!poweredUp || !outerRef.current) {
       return;
     }
     outerRef.current.position.set(...playerPositionRef.current);
     const time = clock.getElapsedTime();
-    if (rangeUpStartTime) {
-      const timeSinceStart = time - rangeUpStartTime;
-
+    if (poweredUpStartTime) {
+      const timeSinceStart = time - poweredUpStartTime;
       const timeSinceStartInTicks = Math.floor(timeSinceStart);
       const tickIndex = Math.min(timeSinceStartInTicks, TIMER_TICKS.length - 1);
       const tickRef = refs[tickIndex];
@@ -32,32 +31,32 @@ export function RangeupCircularTimer(props) {
         tickRef.current.scale.set(0, 0, 0);
         // tickRef.current.scale.set(0, 0, 0);
       }
-      if (timeSinceStart > RANGEUP_DURATION / 1000 && rangeUp) {
+      if (timeSinceStart > POWERUP_DURATION / 1000 && poweredUp) {
         setPlayerState((p) => ({
           ...p,
-          rangeUp: false,
-          rangeUpStartTime: null,
+          poweredUp: false,
+          poweredUpStartTime: null,
         }));
       }
     }
   });
 
-  // when rangeUpStartTime changes, we need to reset the timer
+  // when poweredUpStartTime changes, we need to reset the timer
   useEffect(() => {
-    if (rangeUpStartTime) {
+    if (poweredUpStartTime) {
       refs.forEach((ref) => {
         if (ref.current) {
           ref.current.scale.set(SCALE, SCALE, SCALE);
         }
       });
     }
-  }, [rangeUpStartTime]);
+  }, [poweredUpStartTime]);
 
   return (
     <animated.mesh
       ref={outerRef}
       scale={scale}
-      position={[0, 0, 0]}
+      position={[0, 2, 0]}
       rotation={[0, 0, Math.PI]}
       {...props}
     >
@@ -77,10 +76,10 @@ export function RangeupCircularTimer(props) {
               Math.cos(tickProgress * Math.PI * 2) * RADIUS,
             ]}
           >
-            <sphereBufferGeometry attach="geometry" args={[1, 16, 16]} />
+            <icosahedronBufferGeometry attach="geometry" args={[1, 0]} />
             <meshBasicMaterial
               attach="material"
-              color={"#70d9f3"}
+              color={"#e0764d"}
               opacity={0.5}
               transparent={true}
             />

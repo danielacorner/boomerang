@@ -108,13 +108,18 @@ export function useBoomerangMovement({ idx }: { idx }) {
               if (item === ITEM_TYPES.MONEY) {
                 setMoney((p) => p + 1);
               } else if (item === ITEM_TYPES.RANGEUP) {
+                console.log("💥 oof a RANGEUP", e);
                 setPlayerState((p) => ({
                   ...p,
                   rangeUp: true,
                   rangeUpStartTime: clock.getElapsedTime(),
                 }));
               } else if (item === ITEM_TYPES.POWERUP) {
-                setPlayerState((p) => ({ ...p, poweredUp: true }));
+                setPlayerState((p) => ({
+                  ...p,
+                  poweredUp: true,
+                  poweredUpStartTime: clock.getElapsedTime(),
+                }));
               } else if (item === ITEM_TYPES.HEART) {
                 setGameState((p) => ({
                   ...p,

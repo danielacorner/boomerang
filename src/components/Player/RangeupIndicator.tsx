@@ -7,7 +7,7 @@ import { useRef } from "react";
 
 export function RangeupIndicator() {
   const [{ rangeUp }] = usePlayerState();
-  const { scale } = useSpring({ scale: rangeUp ? 0.6 : 0 });
+  const { scale } = useSpring({ scale: rangeUp ? 1.5 : 0 });
   const ref = useRef<THREE.Mesh | null>(null);
   const [playerPositionRef] = usePlayerPositionRef();
   useFrame(() => {
