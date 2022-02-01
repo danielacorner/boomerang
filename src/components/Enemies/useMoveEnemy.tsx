@@ -16,10 +16,10 @@ import {
 import * as THREE from "three";
 import { Vector3 } from "three";
 import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
-const POWERUP_PROBABILITY = 0.03;
-const RANGEUP_PROBABILITY = 0.04;
-const HEART_PROBABILITY = 0.04;
-const DROPPED_BOOMERANG_PROBABILITY = 0.008;
+const POWERUP_PROBABILITY = 0.06;
+const RANGEUP_PROBABILITY = 0.08;
+const HEART_PROBABILITY = 0.08;
+const DROPPED_BOOMERANG_PROBABILITY = 0.04;
 const MAX_BOOMERANGS = 6;
 
 const ENEMY_JITTER_SPEED = 2;
