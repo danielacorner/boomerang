@@ -91,6 +91,7 @@ export function useMoveEnemy({
   const movementStatusRef = useRef<MovementType | null>(null);
   const enemyMeshRef = useRef<THREE.Mesh | null>(null);
   const attackedRef = useRef<boolean>(false);
+  const onceRef = useRef<boolean>(false);
   const [enemyRef, api] = useCylinder(
     () => ({
       collisionFilterGroup: GROUP1,
@@ -123,9 +124,10 @@ export function useMoveEnemy({
           if (didTheyDied) {
             setTheyDied(true);
           }
-          const shouldDropItems = didTheyDied;
+          const shouldDropItems = didTheyDied && !onceRef.current;
 
           if (shouldDropItems) {
+            onceRef.current = true;
             setTheyDroppedItems(true);
             const mPosition: [number, number, number] = [
               position.current[0] + Math.random() - 0.5,

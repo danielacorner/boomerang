@@ -46,6 +46,8 @@ function BagContent({ position, setMounted }) {
 
   const [, setGameState] = useGameState();
 
+  const onceRef = useRef(false);
+
   const [ref, api] = useCylinder(
     () => ({
       collisionFilterGroup: GROUP1,
@@ -56,7 +58,12 @@ function BagContent({ position, setMounted }) {
       position,
       onCollide: (e) => {
         // when the player touches it, gain +1 money
-        if (e.body?.name === "player" && collectedStatus === "uncollected") {
+        if (
+          e.body?.name === "player" &&
+          collectedStatus === "uncollected" &&
+          !onceRef.current
+        ) {
+          onceRef.current = true;
           console.log("💥 oof a HEART");
           setGameState((p) => ({
             ...p,
