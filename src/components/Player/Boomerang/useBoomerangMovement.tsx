@@ -1,20 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  useGameState,
-  useHeldBoomerangs,
-  useMoney,
-  usePlayerPositionRef,
-  usePlayerRef,
-  usePlayerState,
+	useGameState,
+	useGameStateRef,
+	useHeldBoomerangs,
+	useMoney,
+	usePlayerPositionRef,
+	usePlayerRef,
+	usePlayerState,
 } from "../../../store";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useCylinder } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
 import {
-  GROUP1,
-  ITEM_TYPES,
-  PLAYER_NAME,
-  WALL_NAME,
+	GROUP1,
+	ITEM_TYPES,
+	PLAYER_NAME,
+	WALL_NAME,
 } from "../../../utils/constants";
 import * as THREE from "three";
 import { usePressedKeys } from "../usePressedKeys";
@@ -31,281 +32,287 @@ const BOOMERANG_AIR_FRICTION = 0.03;
 
 /** shoots a boomerang when you click */
 export function useBoomerangMovement({ idx }: { idx }) {
-  const [playerRef] = usePlayerRef();
-  const [playerPositionRef] = usePlayerPositionRef();
-  const [{ poweredUp, rangeUp }, setPlayerState] = usePlayerState();
-  const [, setGameState] = useGameState();
-  const [, setMoney] = useMoney();
+	const [playerRef] = usePlayerRef();
+	const [playerPositionRef] = usePlayerPositionRef();
+	const [{ poweredUp, rangeUp }, setPlayerState] = usePlayerState();
+	const [, setGameState] = useGameState();
 
-  // boomerang state & click position
-  const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
-  const { status, clickTargetPosition } = heldBoomerangs[idx];
+	// boomerang state & click position
+	const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
+	const { status, clickTargetPosition } = heldBoomerangs[idx];
 
-  const isHeld = status === "held";
-  const isBoomerangMoving = !["dropped", "held"].includes(status);
+	const isHeld = status === "held";
+	const isBoomerangMoving = !["dropped", "held"].includes(status);
 
-  const [width, height] = [
-    BOOMERANG_RADIUS * (poweredUp ? 2.5 : 1) * (isHeld ? 0 : 1),
-    2,
-  ];
+	const [width, height] = [
+		BOOMERANG_RADIUS * (poweredUp ? 2.5 : 1) * (isHeld ? 0 : 1),
+		2,
+	];
+	const [gameStateRef] = useGameStateRef();
+	const [carriedItems, setCarriedItems] = useState<ITEM_TYPES[]>([]);
+	const { clock } = useThree();
+	const onceRef = useRef(false);
+	const [boomerangRef, api] = useCylinder(
+		() => ({
+			mass: poweredUp ? 4 : 1,
+			args: [width, width, height, 6],
+			...(isBoomerangMoving
+				? {
+						collisionFilterMask: GROUP1, // while moving, it can only collide with group 1 (enemies, walls, ground, dropped items)
+				  }
+				: {}),
+			position: position.current || playerPositionRef || INITIAL_POSITION,
+			// position: playerPosition || INITIAL_POSITION,
+			// TODO ? when it hits a wall, set to Dynamic
+			type: isBoomerangMoving ? "Kinematic" : "Dynamic",
+			// A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
+			material: {
+				restitution: 1,
+				friction: 0,
+			},
+			onCollide: (e) => {
+				// if it collides with the walls,
+				// reflect it back
+				if (e.body?.name === WALL_NAME) {
+					api.velocity.set(
+						-velocity.current[0],
+						-velocity.current[1],
+						-velocity.current[2]
+					);
+				}
 
-  const [carriedItems, setCarriedItems] = useState<ITEM_TYPES[]>([]);
-  const { clock } = useThree();
-  const [boomerangRef, api] = useCylinder(
-    () => ({
-      mass: poweredUp ? 4 : 1,
-      args: [width, width, height, 6],
-      ...(isBoomerangMoving
-        ? {
-            collisionFilterMask: GROUP1, // while moving, it can only collide with group 1 (enemies, walls, ground, dropped items)
-          }
-        : {}),
-      position: position.current || playerPositionRef || INITIAL_POSITION,
-      // position: playerPosition || INITIAL_POSITION,
-      // TODO ? when it hits a wall, set to Dynamic
-      type: isBoomerangMoving ? "Kinematic" : "Dynamic",
-      // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
-      material: {
-        restitution: 1,
-        friction: 0,
-      },
-      onCollide: (e) => {
-        // if it collides with the walls,
-        // reflect it back
-        if (e.body?.name === WALL_NAME) {
-          api.velocity.set(
-            -velocity.current[0],
-            -velocity.current[1],
-            -velocity.current[2]
-          );
-        }
+				// pick up the boomerang when it collides with the player
+				const isCollisionWithPlayer = e.body?.name === PLAYER_NAME;
+				if (isCollisionWithPlayer) {
+					setHeldBoomerangs((currentBoomerangs) => {
+						const newBooms = currentBoomerangs.map((boom, bIdx) => {
+							if (bIdx === idx) {
+								return {
+									...boom,
+									status: "held" as any,
+									clickTargetPosition: null,
+								};
+							}
+							return boom;
+						});
+						if (isEqual(newBooms, currentBoomerangs)) {
+							return currentBoomerangs;
+						} else {
+							return newBooms;
+						}
+					});
 
-        // pick up the boomerang when it collides with the player
-        const isCollisionWithPlayer = e.body?.name === PLAYER_NAME;
-        if (isCollisionWithPlayer) {
-          setHeldBoomerangs((currentBoomerangs) => {
-            const newBooms = currentBoomerangs.map((boom, bIdx) => {
-              if (bIdx === idx) {
-                return {
-                  ...boom,
-                  status: "held" as any,
-                  clickTargetPosition: null,
-                };
-              }
-              return boom;
-            });
-            if (isEqual(newBooms, currentBoomerangs)) {
-              return currentBoomerangs;
-            } else {
-              return newBooms;
-            }
-          });
+					// also pick up any items on the boomerang
+					if (carriedItems.length && !onceRef.current) {
+						onceRef.current = true;
+						// apply each item's effect
+						carriedItems.forEach((item) => {
+							if (item === ITEM_TYPES.MONEY) {
+								gameStateRef.current = {
+									...gameStateRef.current,
+									money: gameStateRef.current.money + 1,
+								};
+							} else if (item === ITEM_TYPES.RANGEUP) {
+								console.log("💥 oof a RANGEUP", e);
+								setPlayerState((p) => ({
+									...p,
+									rangeUp: true,
+									rangeUpStartTime: clock.getElapsedTime(),
+								}));
+							} else if (item === ITEM_TYPES.POWERUP) {
+								setPlayerState((p) => ({
+									...p,
+									poweredUp: true,
+									poweredUpStartTime: clock.getElapsedTime(),
+								}));
+							} else if (item === ITEM_TYPES.HEART) {
+								gameStateRef.current = {
+									...gameStateRef.current,
+									hitpoints: gameStateRef.current.hitpoints + 1,
+									maxHitpoints: gameStateRef.current.maxHitpoints + 1,
+								};
+							}
+						});
+						setCarriedItems([]);
+					} else if (!carriedItems.length && onceRef.current) {
+						onceRef.current = false;
+					}
+				}
 
-          // also pick up any items on the boomerang
-          if (carriedItems.length) {
-            // apply each item's effect
-            carriedItems.forEach((item) => {
-              if (item === ITEM_TYPES.MONEY) {
-                setMoney((p) => p + 1);
-              } else if (item === ITEM_TYPES.RANGEUP) {
-                console.log("💥 oof a RANGEUP", e);
-                setPlayerState((p) => ({
-                  ...p,
-                  rangeUp: true,
-                  rangeUpStartTime: clock.getElapsedTime(),
-                }));
-              } else if (item === ITEM_TYPES.POWERUP) {
-                setPlayerState((p) => ({
-                  ...p,
-                  poweredUp: true,
-                  poweredUpStartTime: clock.getElapsedTime(),
-                }));
-              } else if (item === ITEM_TYPES.HEART) {
-                setGameState((p) => ({
-                  ...p,
-                  maxHitpoints: p.maxHitpoints,
-                  hitpoints: p.hitpoints + 1,
-                }));
-              }
-            });
-            setCarriedItems([]);
-          }
-        }
+				const isCollisionWithDroppedItem = [
+					ITEM_TYPES.MONEY,
+					ITEM_TYPES.POWERUP,
+					ITEM_TYPES.RANGEUP,
+				].includes(e.body?.name as any);
+				if (isCollisionWithDroppedItem) {
+					setCarriedItems((p) => [...p, e.body?.name as ITEM_TYPES]);
+				}
+			},
+		}),
+		null,
+		[poweredUp, width, height, isBoomerangMoving]
+	);
 
-        const isCollisionWithDroppedItem = [
-          ITEM_TYPES.MONEY,
-          ITEM_TYPES.POWERUP,
-          ITEM_TYPES.RANGEUP,
-        ].includes(e.body?.name as any);
-        if (isCollisionWithDroppedItem) {
-          setCarriedItems((p) => [...p, e.body?.name as ITEM_TYPES]);
-        }
-      },
-    }),
-    null,
-    [poweredUp, width, height, isBoomerangMoving]
-  );
+	// subscribe to the position
+	const position = useRef(INITIAL_POSITION);
+	useEffect(() => {
+		const unsubscribe = api.position.subscribe((v) => (position.current = v));
+		return unsubscribe;
+	}, []);
 
-  // subscribe to the position
-  const position = useRef(INITIAL_POSITION);
-  useEffect(() => {
-    const unsubscribe = api.position.subscribe((v) => (position.current = v));
-    return unsubscribe;
-  }, []);
+	// subscribe to the velocity
+	const velocity = useRef(INITIAL_POSITION);
+	useEffect(() => {
+		const unsubscribe = api.velocity.subscribe((v) => (velocity.current = v));
+		return unsubscribe;
+	}, []);
 
-  // subscribe to the velocity
-  const velocity = useRef(INITIAL_POSITION);
-  useEffect(() => {
-    const unsubscribe = api.velocity.subscribe((v) => (velocity.current = v));
-    return unsubscribe;
-  }, []);
+	// after a while, a returning boomerang will drop to the ground
+	const DROP_TIMEOUT = 3.5 * 1000;
+	const timer = useRef(null as any);
+	useEffect(() => {
+		const keepFlying =
+			rangeUp || ["held", "dropped", "flying"].includes(status);
 
-  // after a while, a returning boomerang will drop to the ground
-  const DROP_TIMEOUT = 3.5 * 1000;
-  const timer = useRef(null as any);
-  useEffect(() => {
-    const keepFlying =
-      rangeUp || ["held", "dropped", "flying"].includes(status);
+		if (timer.current && keepFlying) {
+			clearTimeout(timer.current);
+		} else if (status === "returning" && !keepFlying) {
+			timer.current = setTimeout(() => {
+				setHeldBoomerangs((p) =>
+					p.map((boom, bIdx) =>
+						bIdx === idx ? { ...boom, status: "dropped" } : boom
+					)
+				);
+			}, DROP_TIMEOUT);
+		}
+	}, [rangeUp, status]);
 
-    if (timer.current && keepFlying) {
-      clearTimeout(timer.current);
-    } else if (status === "returning" && !keepFlying) {
-      timer.current = setTimeout(() => {
-        setHeldBoomerangs((p) =>
-          p.map((boom, bIdx) =>
-            bIdx === idx ? { ...boom, status: "dropped" } : boom
-          )
-        );
-      }, DROP_TIMEOUT);
-    }
-  }, [rangeUp, status]);
+	// decrease the overall velocity when the boomerang is flying
+	const thrownTime = useRef<any>(null);
 
-  // decrease the overall velocity when the boomerang is flying
-  const thrownTime = useRef<any>(null);
+	// throw on click
+	const { up, left, down, right } = usePressedKeys();
+	useEffect(() => {
+		if (!playerRef?.current) {
+			return;
+		}
 
-  // throw on click
-  const { up, left, down, right } = usePressedKeys();
-  useEffect(() => {
-    if (!playerRef?.current) {
-      return;
-    }
+		if (clickTargetPosition && status === "flying") {
+			// first, set position to player position
+			if (!rangeUp) {
+				api.position.set(...playerPositionRef.current);
+			}
 
-    if (clickTargetPosition && status === "flying") {
-      // first, set position to player position
-      if (!rangeUp) {
-        api.position.set(...playerPositionRef.current);
-      }
+			thrownTime.current = Date.now();
 
-      thrownTime.current = Date.now();
+			const playerVelocity = [
+				left ? -1 : right ? 1 : 0,
+				0,
+				up ? 1 : down ? -1 : 0,
+			];
 
-      const playerVelocity = [
-        left ? -1 : right ? 1 : 0,
-        0,
-        up ? 1 : down ? -1 : 0,
-      ];
+			const throwVelocity: [number, number, number] = [
+				clickTargetPosition[0] -
+					position.current[0] +
+					playerVelocity[0] * PLAYER_THROW_VELOCITY_MULTIPLIER,
+				clickTargetPosition[1] -
+					position.current[1] +
+					playerVelocity[1] * PLAYER_THROW_VELOCITY_MULTIPLIER,
+				clickTargetPosition[2] -
+					position.current[2] +
+					playerVelocity[2] * PLAYER_THROW_VELOCITY_MULTIPLIER,
+			].map((v) => v * THROW_SPEED) as [number, number, number];
 
-      const throwVelocity: [number, number, number] = [
-        clickTargetPosition[0] -
-          position.current[0] +
-          playerVelocity[0] * PLAYER_THROW_VELOCITY_MULTIPLIER,
-        clickTargetPosition[1] -
-          position.current[1] +
-          playerVelocity[1] * PLAYER_THROW_VELOCITY_MULTIPLIER,
-        clickTargetPosition[2] -
-          position.current[2] +
-          playerVelocity[2] * PLAYER_THROW_VELOCITY_MULTIPLIER,
-      ].map((v) => v * THROW_SPEED) as [number, number, number];
+			api.velocity.set(...throwVelocity);
 
-      api.velocity.set(...throwVelocity);
+			setTimeout(() => {
+				setHeldBoomerangs((p) =>
+					p.map((boom, bIdx) =>
+						bIdx === idx
+							? { ...boom, status: "returning", clickTargetPosition: null }
+							: boom
+					)
+				);
+			}, 300);
+		}
+	}, [clickTargetPosition, status]);
 
-      setTimeout(() => {
-        setHeldBoomerangs((p) =>
-          p.map((boom, bIdx) =>
-            bIdx === idx
-              ? { ...boom, status: "returning", clickTargetPosition: null }
-              : boom
-          )
-        );
-      }, 300);
-    }
-  }, [clickTargetPosition, status]);
+	// drop the boomerang
+	useFrame(() => {
+		if (!isBoomerangMoving) {
+			const slowerVelocity = [
+				THREE.MathUtils.lerp(velocity.current[0], 0, BOOMERANG_AIR_FRICTION),
+				THREE.MathUtils.lerp(velocity.current[1], -1, BOOMERANG_AIR_FRICTION),
+				THREE.MathUtils.lerp(velocity.current[2], 0, BOOMERANG_AIR_FRICTION),
+			];
+			api.velocity.set(slowerVelocity[0], slowerVelocity[1], slowerVelocity[2]);
+		}
+	});
 
-  // drop the boomerang
-  useFrame(() => {
-    if (!isBoomerangMoving) {
-      const slowerVelocity = [
-        THREE.MathUtils.lerp(velocity.current[0], 0, BOOMERANG_AIR_FRICTION),
-        THREE.MathUtils.lerp(velocity.current[1], -1, BOOMERANG_AIR_FRICTION),
-        THREE.MathUtils.lerp(velocity.current[2], 0, BOOMERANG_AIR_FRICTION),
-      ];
-      api.velocity.set(slowerVelocity[0], slowerVelocity[1], slowerVelocity[2]);
-    }
-  });
+	// pull the boomerang towards the player
+	useFrame(() => {
+		if (isBoomerangMoving && status === "returning") {
+			const time = Date.now() - thrownTime.current;
+			const slowDownPct =
+				(1 - Math.min(time / BOOMERANG_FLY_MAX_DURATION, 1)) ** 0.5;
 
-  // pull the boomerang towards the player
-  useFrame(() => {
-    if (isBoomerangMoving && status === "returning") {
-      const time = Date.now() - thrownTime.current;
-      const slowDownPct =
-        (1 - Math.min(time / BOOMERANG_FLY_MAX_DURATION, 1)) ** 0.5;
+			// set the velocity to pull the boomerang towards the player
 
-      // set the velocity to pull the boomerang towards the player
+			const pullBoomerang: [number, number, number] = [
+				playerPositionRef.current[0] - position.current[0],
+				playerPositionRef.current[1] - position.current[1],
+				playerPositionRef.current[2] - position.current[2],
+			];
 
-      const pullBoomerang: [number, number, number] = [
-        playerPositionRef.current[0] - position.current[0],
-        playerPositionRef.current[1] - position.current[1],
-        playerPositionRef.current[2] - position.current[2],
-      ];
+			const pullForce = BOOMERANG_PULL_FORCE * (rangeUp ? 0.5 : 1);
 
-      const pullForce = BOOMERANG_PULL_FORCE * (rangeUp ? 0.5 : 1);
+			const newVelocity: [number, number, number] = [
+				velocity.current[0] + pullBoomerang[0] * pullForce,
+				velocity.current[1] + pullBoomerang[1] * pullForce,
+				velocity.current[2] + pullBoomerang[2] * pullForce,
+			].map((velocity) => velocity * slowDownPct) as [number, number, number];
 
-      const newVelocity: [number, number, number] = [
-        velocity.current[0] + pullBoomerang[0] * pullForce,
-        velocity.current[1] + pullBoomerang[1] * pullForce,
-        velocity.current[2] + pullBoomerang[2] * pullForce,
-      ].map((velocity) => velocity * slowDownPct) as [number, number, number];
+			api.velocity.set(...newVelocity);
 
-      api.velocity.set(...newVelocity);
+			const playerRadius = PLAYER_RADIUS * (rangeUp || poweredUp ? 2 : 1);
 
-      const playerRadius = PLAYER_RADIUS * (rangeUp || poweredUp ? 2 : 1);
+			// if the boomerang is close to the player, set the boomerang to the player's position
+			const isAtPlayer =
+				Math.abs(pullBoomerang[0]) < playerRadius &&
+				Math.abs(pullBoomerang[1]) < playerRadius &&
+				Math.abs(pullBoomerang[2]) < playerRadius;
 
-      // if the boomerang is close to the player, set the boomerang to the player's position
-      const isAtPlayer =
-        Math.abs(pullBoomerang[0]) < playerRadius &&
-        Math.abs(pullBoomerang[1]) < playerRadius &&
-        Math.abs(pullBoomerang[2]) < playerRadius;
+			// if the boomerang is close to the player, pick up the boomerang
+			if (isAtPlayer && thrownTime.current > 1500) {
+				console.count("💥 picked up!");
+				api.position.set(...playerPositionRef.current);
+				thrownTime.current = null;
+				setHeldBoomerangs((p) =>
+					p.map((boom, bIdx) =>
+						bIdx === idx
+							? {
+									...boom,
+									status: "held",
+									clickTargetPosition: null,
+							  }
+							: boom
+					)
+				);
+				api.velocity.set(0, 0, 0);
+			}
+		}
+	});
+	useWhyDidYouUpdate("Boomerang", {
+		idx,
+		status,
+		position,
+		velocity,
+		rangeUp,
+		poweredUp,
+		playerPositionRef,
+		playerRef,
+		isBoomerangMoving,
+	});
 
-      // if the boomerang is close to the player, pick up the boomerang
-      if (isAtPlayer && thrownTime.current > 1500) {
-        console.count("💥 picked up!");
-        api.position.set(...playerPositionRef.current);
-        thrownTime.current = null;
-        setHeldBoomerangs((p) =>
-          p.map((boom, bIdx) =>
-            bIdx === idx
-              ? {
-                  ...boom,
-                  status: "held",
-                  clickTargetPosition: null,
-                }
-              : boom
-          )
-        );
-        api.velocity.set(0, 0, 0);
-      }
-    }
-  });
-  useWhyDidYouUpdate("Boomerang", {
-    idx,
-    status,
-    position,
-    velocity,
-    rangeUp,
-    poweredUp,
-    playerPositionRef,
-    playerRef,
-    isBoomerangMoving,
-  });
-
-  return { boomerangRef, carriedItems };
+	return { boomerangRef, carriedItems };
 }
