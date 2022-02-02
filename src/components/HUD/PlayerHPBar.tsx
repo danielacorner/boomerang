@@ -31,8 +31,8 @@ export function PlayerHPBar() {
 	}, [hitpoints]);
 	return (
 		<PlayerHpBarStyles>
-			{[...new Array(hitpoints)].map((_) => "🧡 ")}
-			{[...new Array(maxHitpoints - hitpoints)].map((_, idx) => (
+			{[...new Array(Math.max(0, hitpoints))].map((_) => "🧡 ")}
+			{[...new Array(Math.max(0, maxHitpoints - hitpoints))].map((_, idx) => (
 				<span key={idx} style={{ opacity: 0.4 }}>
 					💔{" "}
 				</span>
