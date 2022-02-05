@@ -65,6 +65,8 @@ export function usePlayerPositionRef(): [
 }
 
 export type GameStateType = {
+  poweredUp: boolean;
+  rangeUp: boolean;
   hitpoints: number;
   maxHitpoints: number;
   invulnerable: boolean;
@@ -73,6 +75,8 @@ export type GameStateType = {
   farthestTargetPosition: [number, number, number];
 };
 export const INITIAL_GAME_STATE: GameStateType = {
+  rangeUp: false,
+  poweredUp: false,
   hitpoints: INITIAL_HITPOINTS,
   maxHitpoints: INITIAL_HITPOINTS,
   invulnerable: false,

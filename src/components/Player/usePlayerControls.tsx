@@ -102,12 +102,17 @@ export function usePlayerControls() {
             poweredUp: true,
             poweredUpStartTime: clock.getElapsedTime(),
           }));
+          gameStateRef.current = { ...gameStateRef.current, poweredUp: true };
           setTimeout(() => {
             setPlayerState((p) => ({
               ...p,
               poweredUp: false,
               poweredUpStartTime: null,
             }));
+            gameStateRef.current = {
+              ...gameStateRef.current,
+              poweredUp: false,
+            };
           }, POWERUP_DURATION);
         }
 
