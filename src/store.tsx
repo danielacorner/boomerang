@@ -64,7 +64,7 @@ export function usePlayerPositionRef(): [
 	return [playerPositionRef, setPlayerPositionRef];
 }
 
-type GameStateType = {
+export type GameStateType = {
 	hitpoints: number;
 	maxHitpoints: number;
 	invulnerable: boolean;

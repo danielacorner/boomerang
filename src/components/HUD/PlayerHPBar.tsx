@@ -32,11 +32,13 @@ export function PlayerHPBar() {
 	return (
 		<PlayerHpBarStyles>
 			{[...new Array(Math.max(0, hitpoints))].map((_) => "🧡 ")}
-			{[...new Array(Math.max(0, maxHitpoints - hitpoints))].map((_, idx) => (
-				<span key={idx} style={{ opacity: 0.4 }}>
-					💔{" "}
-				</span>
-			))}
+			{[...new Array(Math.min(maxHitpoints, maxHitpoints - hitpoints))].map(
+				(_, idx) => (
+					<span key={idx} style={{ opacity: 0.4 }}>
+						💔{" "}
+					</span>
+				)
+			)}
 		</PlayerHpBarStyles>
 	);
 }

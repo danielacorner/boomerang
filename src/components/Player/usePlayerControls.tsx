@@ -20,7 +20,6 @@ import {
 	RANGEUP_NAME,
 } from "../../utils/constants";
 import { useInterval, useMount } from "react-use";
-import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 
 export const POWERUP_DURATION = 16 * 1000;
 export const RANGEUP_DURATION = 16 * 1000;
@@ -41,7 +40,7 @@ export function usePlayerControls() {
 		}
 	}, [pressedKeys]);
 
-	const [{ lookAt, rangeUp, poweredUp }, setPlayerState] = usePlayerState();
+	const [{ poweredUp }, setPlayerState] = usePlayerState();
 	const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1);
 	const [playerRef] = usePlayerRef();
 	const { clock } = useThree();
@@ -49,7 +48,7 @@ export function usePlayerControls() {
 		() => ({
 			collisionFilterGroup: GROUP2,
 			mass: 1,
-			args: poweredUp ? [2, 2, 4] : [1, 1, 3],
+			args: poweredUp ? [3, 2, 4] : [1.5, 1, 3],
 			position: [0, 2, 0],
 			// if collides with powerup, power up!
 			onCollide: (e) => {
@@ -168,18 +167,6 @@ export function usePlayerControls() {
 		rotation,
 		velocityRef
 	);
-
-	useWhyDidYouUpdate("Player", {
-		playerRef,
-		cylinderRef,
-		positionRef,
-		velocityRef,
-		rotation,
-		setPlayerState,
-		setPlayerPositionRef,
-		setHeldBoomerangs,
-		setHasMoved,
-	});
 }
 const ROT_LEFT = Math.PI * -1;
 const ROT_DOWN = Math.PI * 0;

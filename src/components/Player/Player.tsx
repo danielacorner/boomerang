@@ -1,7 +1,12 @@
 import BlackMage from "../GLTFs/BlackMage";
 import { MouseTarget } from "./MouseTarget";
 import { useEffect, useState } from "react";
-import { useGameState, usePlayerRef, usePlayerState } from "../../store";
+import {
+	useGameState,
+	usePlayerPositionRef,
+	usePlayerRef,
+	usePlayerState,
+} from "../../store";
 import { useSpring, animated } from "@react-spring/three";
 import { PLAYER_NAME } from "../../utils/constants";
 import {
@@ -12,6 +17,8 @@ import { usePlayerControls } from "./usePlayerControls";
 import { RangeupCircularTimer } from "./RangeupCircularTimer";
 import { RangeupIndicator } from "./RangeupIndicator";
 import { PowerupCircularTimer } from "./PowerupCircularTimer";
+import { Html } from "@react-three/drei";
+import { useInterval } from "react-use";
 
 export function Player() {
 	return (
@@ -49,10 +56,23 @@ function Mage() {
 			ref={playerRef}
 			name={PLAYER_NAME}
 		>
+			{process.env.NODE_ENV === "development" && <PositionIndicator />}
 			<BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
 			<MaxThrowDistanceRangeIndicator />
 			<pointLight intensity={5} distance={24} />
 		</animated.mesh>
+	);
+}
+function PositionIndicator() {
+	const [playerPositionRef] = usePlayerPositionRef();
+	const [key, setkey] = useState(0);
+	useInterval(() => {
+		setkey(Math.random());
+	}, 100);
+	return (
+		<Html position={[0, -2, 0]} style={{ color: "white" }} key={key}>
+			{playerPositionRef.current.map((p) => p.toFixed(1)).join(",")}
+		</Html>
 	);
 }
 function useMageSpring() {

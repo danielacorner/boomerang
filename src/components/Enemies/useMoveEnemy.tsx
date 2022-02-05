@@ -15,7 +15,6 @@ import {
 } from "../../utils/constants";
 import * as THREE from "three";
 import { Vector3 } from "three";
-import { useWhyDidYouUpdate } from "../useWhyDidYouUpdate";
 const POWERUP_PROBABILITY = 0.12;
 const RANGEUP_PROBABILITY = 0.16;
 const HEART_PROBABILITY = 0.16;
@@ -74,8 +73,7 @@ const ENEMY_ATTACK_SPEED = 14;
 
 export function useMoveEnemy({
 	position,
-	theyreDead,
-	setTheyreDead,
+	theyreDeadRef,
 	health,
 	setHealth,
 	unmountEnemy,
@@ -201,18 +199,25 @@ export function useMoveEnemy({
 				}
 			},
 			material: {
-				restitution: theyreDead ? 1 : 0,
-				friction: theyreDead ? 0 : 100,
+				restitution: theyreDeadRef.current ? 1 : 0,
+				friction: theyreDeadRef.current ? 0 : 100,
 			},
 		}),
 		enemyMeshRef,
-		[status, heldBoomerangs, theyDroppedItems, poweredUp, health]
+		[
+			status,
+			heldBoomerangs,
+			theyDroppedItems,
+			poweredUp,
+			health,
+			theyreDeadRef.current,
+		]
 	);
 
 	const [attacked, setAttacked] = useState(false);
 	// movement: move towards player
 	useFrame(({ clock }) => {
-		if (!position.current || !enemyRef.current || theyreDead) {
+		if (!position.current || !enemyRef.current || theyreDeadRef.current) {
 			return;
 		}
 		const time = clock.getElapsedTime();
@@ -287,7 +292,7 @@ export function useMoveEnemy({
 
 	// when they die, apply a force to the enemy to make it fall
 	useEffect(() => {
-		if (theyDied && !theyreDead) {
+		if (theyDied && !theyreDeadRef.current) {
 			const worldPoint: [number, number, number] = [
 				position.current[0],
 				position.current[1] - ENEMY_CYLINDER_HEIGHT / 2,
@@ -295,30 +300,13 @@ export function useMoveEnemy({
 			];
 			const kickIntoSpace: [number, number, number] = [0, -10, 0];
 			api.applyImpulse(kickIntoSpace, worldPoint);
-			setTheyreDead(true);
+			theyreDeadRef.current = true;
 			setTimeout(() => {
 				unmountEnemy();
 			}, UNMOUNT_DELAY);
 		}
 	}, [theyDied]);
-	useWhyDidYouUpdate("useMoveEnemy", {
-		position,
-		heldBoomerangs,
-		theyDroppedItems,
-		poweredUp,
-		health,
-		theyreDead,
-		theyDied,
-		attacked,
-		enemyRef,
-		playerPositionRef,
-		unmountEnemy,
-		setTheyreDead,
-		setTheyDied,
-		setAttacked,
-		setDroppedItems,
-		setHealth,
-	});
+
 	return { enemyRef, enemyMeshRef, api, movementStatusRef };
 }
 export function getCurrentStep(time: number) {
