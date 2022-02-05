@@ -58,31 +58,87 @@ export function usePressedKeys(): {
   useKey(DOWN, handleDown);
   useKey(RIGHT, handleRight);
 
-  useKey("w", () => setPressedKeys((p) => p.filter((key) => key !== UP)), {
-    event: "keyup",
-  });
-  useKey("a", () => setPressedKeys((p) => p.filter((key) => key !== LEFT)), {
-    event: "keyup",
-  });
-  useKey("s", () => setPressedKeys((p) => p.filter((key) => key !== DOWN)), {
-    event: "keyup",
-  });
-  useKey("d", () => setPressedKeys((p) => p.filter((key) => key !== RIGHT)), {
-    event: "keyup",
-  });
+  useKey(
+    "w",
+    (e) => {
+      e.preventDefault();
+      setPressedKeys((p) => p.filter((key) => key !== UP));
+    },
+    {
+      event: "keyup",
+    }
+  );
+  useKey(
+    "a",
+    (e) => {
+      e.preventDefault();
+      setPressedKeys((p) => p.filter((key) => key !== LEFT));
+    },
+    {
+      event: "keyup",
+    }
+  );
+  useKey(
+    "s",
+    (e) => {
+      e.preventDefault();
+      setPressedKeys((p) => p.filter((key) => key !== DOWN));
+    },
+    {
+      event: "keyup",
+    }
+  );
+  useKey(
+    "d",
+    (e) => {
+      e.preventDefault();
+      setPressedKeys((p) => p.filter((key) => key !== RIGHT));
+    },
+    {
+      event: "keyup",
+    }
+  );
 
-  useKey(UP, () => setPressedKeys((p) => p.filter((key) => key !== UP)), {
-    event: "keyup",
-  });
-  useKey(LEFT, () => setPressedKeys((p) => p.filter((key) => key !== LEFT)), {
-    event: "keyup",
-  });
-  useKey(DOWN, () => setPressedKeys((p) => p.filter((key) => key !== DOWN)), {
-    event: "keyup",
-  });
-  useKey(RIGHT, () => setPressedKeys((p) => p.filter((key) => key !== RIGHT)), {
-    event: "keyup",
-  });
+  useKey(
+    UP,
+    (e) => {
+      e.preventDefault();
+      setPressedKeys((p) => p.filter((key) => key !== UP));
+    },
+    {
+      event: "keyup",
+    }
+  );
+  useKey(
+    LEFT,
+    (e) => {
+      e.preventDefault();
+      setPressedKeys((p) => p.filter((key) => key !== LEFT));
+    },
+    {
+      event: "keyup",
+    }
+  );
+  useKey(
+    DOWN,
+    (e) => {
+      e.preventDefault();
+      setPressedKeys((p) => p.filter((key) => key !== DOWN));
+    },
+    {
+      event: "keyup",
+    }
+  );
+  useKey(
+    RIGHT,
+    (e) => {
+      e.preventDefault();
+      setPressedKeys((p) => p.filter((key) => key !== RIGHT));
+    },
+    {
+      event: "keyup",
+    }
+  );
 
   const [up, right, down, left] = [
     pressedKeys.includes(UP),

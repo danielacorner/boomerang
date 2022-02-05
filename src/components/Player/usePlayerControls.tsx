@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { PublicApi, useCylinder } from "@react-three/cannon";
+import { CylinderArgs, PublicApi, useCylinder } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP, usePressedKeys } from "./usePressedKeys";
@@ -47,11 +47,8 @@ export function usePlayerControls() {
 
   const [dashing, setDashing] = useIsDashing();
   useEventListener("keydown", (e) => {
-    console.log(
-      "🌟🚨 ~ file: usePlayerControls.tsx ~ line 50 ~ useMount ~ e.key",
-      e.key
-    );
-    if (["Shift", " "].includes(e.key)) {
+    if ([" "].includes(e.key)) {
+      e.preventDefault();
       setDashing((prevDashing) => {
         if (prevDashing) {
           return prevDashing;
@@ -72,7 +69,7 @@ export function usePlayerControls() {
     () => ({
       collisionFilterGroup: GROUP2,
       mass: 1,
-      args: poweredUp ? [3, 2, 4] : [1.5, 1, 3],
+      args: poweredUp ? [4, 4, 5] : ([2, 2, 3] as CylinderArgs),
       position: [0, 2, 0],
       // if collides with powerup, power up!
       onCollide: (e) => {

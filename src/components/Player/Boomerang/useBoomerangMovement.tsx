@@ -237,9 +237,10 @@ export function useBoomerangMovement({ idx }: { idx }) {
     }
   }, [clickTargetPosition, status]);
 
+  const friction =
+    BOOMERANG_AIR_FRICTION * (poweredUp ? 0.5 : 1) * (rangeUp ? 0.1 : 1);
   // drop the boomerang
   useFrame(() => {
-    const friction = BOOMERANG_AIR_FRICTION * (poweredUp ? 0.5 : 1);
     if (!isBoomerangMoving) {
       const slowerVelocity = [
         THREE.MathUtils.lerp(velocity.current[0], 0, friction),
@@ -254,8 +255,9 @@ export function useBoomerangMovement({ idx }: { idx }) {
   useFrame(() => {
     if (isBoomerangMoving && status === "returning") {
       const time = Date.now() - thrownTime.current;
-      const slowDownPct =
-        (1 - Math.min(time / BOOMERANG_FLY_MAX_DURATION, 1)) ** 0.5;
+      const maxFlyDuration =
+        BOOMERANG_FLY_MAX_DURATION * (rangeUp ? 2 : 1) * (poweredUp ? 1.5 : 1);
+      const slowDownPct = (1 - Math.min(time / maxFlyDuration, 1)) ** 0.5;
 
       // set the velocity to pull the boomerang towards the player
 
@@ -265,7 +267,8 @@ export function useBoomerangMovement({ idx }: { idx }) {
         playerPositionRef.current[2] - position.current[2],
       ];
 
-      const pullForce = BOOMERANG_PULL_FORCE * (rangeUp ? 0.5 : 1);
+      const pullForce =
+        BOOMERANG_PULL_FORCE * (rangeUp ? 0.7 : 1) * (poweredUp ? 1.3 : 1);
 
       const newVelocity: [number, number, number] = [
         velocity.current[0] + pullBoomerang[0] * pullForce,
