@@ -13,7 +13,7 @@ export const JEFF_BEZOS = ({
   id = null as null | number,
 } = {}) => ({
   enemyName: "Jeff Bezos (billionaire)",
-  maxHp: 140,
+  maxHp: 80,
   enemyHeight: 10,
   enemyUrl: "",
   RandomVirus: (p) => (
