@@ -39,8 +39,8 @@ export function MaxThrowDistanceRangeIndicator() {
       <meshBasicMaterial
         attach="material"
         transparent={true}
-        opacity={0.15}
-        color={0xdcfcfc}
+        opacity={0.05}
+        color={"#dcfcfc"}
       />
     </animated.mesh>
   );

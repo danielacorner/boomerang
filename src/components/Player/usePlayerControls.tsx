@@ -168,9 +168,9 @@ export function usePlayerControls() {
   const rotation = useRef<[number, number, number]>([0, 0, 0]);
 
   // last known player position... use for inaccurate needs only (updating it faster impacts performance)
-  useInterval(() => {
-    setPlayerState((p) => ({ ...p, playerPosition: positionRef.current }));
-  }, 5 * 1000);
+  // useInterval(() => {
+  //   setPlayerState((p) => ({ ...p, playerPosition: positionRef.current }));
+  // }, 5 * 1000);
 
   useEffect(() => {
     const unsubscribe = cylinderApi.rotation.subscribe(
@@ -239,11 +239,6 @@ function useMovePlayer(
       THREE.MathUtils.lerp(z1, z2, 1),
     ];
 
-    // cylinderApi.velocity.set(0, 0, 0);
-    // prevents twitchy movement
-    // const delta = Math.abs(x2 - x1) + Math.abs(y2 - y1) + Math.abs(z2 - z1);
-    // const isAboveThreshold = delta > 0.1;
-    // if (isAboveThreshold) {
     cylinderApi.position.set(x2Lerp, y2Lerp, z2Lerp);
 
     // move the camera up when rangeUp is active
@@ -273,7 +268,7 @@ function useMovePlayer(
     );
     // animate the rotation if we're dashing
     const [rotX, rotY, rotZ] = [
-      dashing ? Math.PI / 2 : 0.1,
+      dashing ? Math.PI / 2 : 0.001,
       // TODO: UP not working?
       lastPressedKey === LEFT
         ? ROT_LEFT
@@ -283,8 +278,8 @@ function useMovePlayer(
         ? ROT_RIGHT
         : lastPressedKey === UP
         ? ROT_UP
-        : 0.1,
-      dashing ? Math.PI / 2 : 0.1,
+        : 0.001,
+      dashing ? Math.PI / 2 : 0.001,
     ];
     const PLAYER_DASH_ROLL_SPEED = 0.5;
     const [rotXL, rotYL, rotZL] = [
