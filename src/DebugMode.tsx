@@ -1,5 +1,6 @@
 import { Debug } from "@react-three/cannon";
-import { Portal, ToggleButton } from "@mui/material";
+import { ToggleButton } from "@mui/material";
+import { Portal } from "@mui/base";
 import { Html } from "@react-three/drei";
 import { useIsDev } from "./store";
 import { useAtom } from "jotai";

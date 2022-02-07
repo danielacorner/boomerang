@@ -1,4 +1,5 @@
 import { atom, useAtom } from "jotai";
+import { atomWithStorage } from "jotai/utils";
 import { SetStateAction, useRef } from "react";
 import { useMount } from "react-use";
 import { Mesh, BufferGeometry, Material } from "three";
@@ -178,3 +179,6 @@ export const useIsDashing = (): [
   const isDashing = dashing && Date.now() - dashing < DASH_DURATION;
   return [isDashing, setDashing];
 };
+
+export const isMusicOnAtom = atomWithStorage<boolean>("atoms:isMusicOn", false);
+export const volumeAtom = atom<number>(5);
