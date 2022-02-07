@@ -11,6 +11,7 @@ import * as THREE from "three";
 import { GROUND_NAME, GROUP1, MAX_THROW_DISTANCE } from "../utils/constants";
 import { useCallback } from "react";
 import { distanceBetweenPoints } from "../utils/utils";
+import { Vector3 } from "three";
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
@@ -46,11 +47,13 @@ export function Ground() {
     (e: ThreeEvent<PointerEvent>) => {
       if (!playerPositionRef.current) return;
 
+      // ! not working
       const {
         newFarthestTargetPosition,
       }: {
         newFarthestTargetPosition: [number, number, number];
       } = handlePointerMove(e, playerPositionRef, rangeUp);
+
       // const { x, y, z } = getMousePosition(e);
       // const newFarthestTargetPosition: [number, number, number] = [x, y, z];
 
@@ -166,6 +169,16 @@ function handlePointerMove(
   const [sx, sy, sz] = [Math.sign(x), Math.sign(y), Math.sign(z)];
 
   // limit the throw distance
+
+  // direction of the throw, normalized vector
+  // if above max throw distance, we'll multiply this by maxThrowDistance
+  const normalizedThrowDirection = new Vector3(
+    x - playerPositionRef.current[0],
+    y - playerPositionRef.current[1],
+    z - playerPositionRef.current[2]
+  ).normalize();
+
+  // distance between points
   const distance = distanceBetweenPoints(playerPositionRef.current, [x, y, z]);
   console.log(
     "🌟🚨 ~ file: Ground.tsx ~ line 170 ~ Ground ~ playerPositionRef.current",
@@ -177,13 +190,8 @@ function handlePointerMove(
   );
 
   // if it's above the max distance, shrink it down to the max distance
-  const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
 
-  const pctOfMax = distance / maxThrowDistance;
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 177 ~ Ground ~ pctOfMax",
-    pctOfMax
-  );
+  const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
 
   const lookAt: [number, number, number] = [x, y, z];
 
@@ -191,10 +199,16 @@ function handlePointerMove(
   // (normalize, then multiply by maxThrowDistance)
   // const [normX, normY, normZ] = normalizeVector([xx, yy, zz]);
 
+  // ! have to scale down the distance to max distance, by normalizing the vector, then multiplying by maxThrowDistance
+
   const newFarthestTargetPosition: [number, number, number] =
-    pctOfMax > 1
+    distance > maxThrowDistance
       ? // if it's above 1, scale it down
-        [x / pctOfMax, y / pctOfMax, z / pctOfMax]
+        ([
+          normalizedThrowDirection.x,
+          normalizedThrowDirection.y,
+          normalizedThrowDirection.z,
+        ].map((v) => v * maxThrowDistance) as [number, number, number])
       : lookAt;
   console.log(
     "🌟🚨 ~ file: Ground.tsx ~ line 189 ~ Ground ~ newFarthestTargetPosition",
