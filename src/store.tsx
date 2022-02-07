@@ -73,6 +73,7 @@ export type GameStateType = {
   invulnerable: boolean;
   money: number;
   lookAt: [number, number, number];
+  playerPosition: [number, number, number];
   farthestTargetPosition: [number, number, number];
 };
 export const INITIAL_GAME_STATE: GameStateType = {
@@ -83,6 +84,7 @@ export const INITIAL_GAME_STATE: GameStateType = {
   invulnerable: false,
   money: 0,
   lookAt: [0, 0, 0],
+  playerPosition: [0, 0, 0],
   farthestTargetPosition: [0, 0, 0],
 };
 const gameStateRefAtom = atom<{ current: GameStateType }>({

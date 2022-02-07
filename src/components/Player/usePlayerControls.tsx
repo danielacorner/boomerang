@@ -21,7 +21,7 @@ import {
   POWERUP_NAME,
   RANGEUP_NAME,
 } from "../../utils/constants";
-import { useInterval, useMount } from "react-use";
+import { useMount } from "react-use";
 import { useEventListener } from "../../utils/useEventListener";
 
 export const POWERUP_DURATION = 16 * 1000;
@@ -146,6 +146,12 @@ export function usePlayerControls() {
   );
 
   const positionRef = useRef<[number, number, number]>([0, 0, 0]);
+  useFrame(() => {
+    gameStateRef.current = {
+      ...gameStateRef.current,
+      playerPosition: positionRef.current,
+    };
+  });
   useEffect(() => {
     const unsubscribe = cylinderApi.position.subscribe((v) => {
       positionRef.current = v;

@@ -43,100 +43,82 @@ export function Ground() {
 
   // TODO: instead of going straight to the mouse + maximum distance,
   // TODO: aim at the mouse, then hold to charge velocity, let go to shoot
-  const onPointerDown = useCallback(
-    (e: ThreeEvent<PointerEvent>) => {
-      if (!playerPositionRef.current) return;
+  const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
+    if (!playerPositionRef.current) return;
 
-      // ! not working
-      const {
-        newFarthestTargetPosition,
-      }: {
-        newFarthestTargetPosition: [number, number, number];
-      } = getFarthestTargetPosition(
-        getMousePosition(e),
-        playerPositionRef,
-        rangeUp
-      );
+    // ! playerPositionRef not working
+    const {
+      newFarthestTargetPosition,
+    }: {
+      newFarthestTargetPosition: [number, number, number];
+    } = getFarthestTargetPosition(
+      getMousePosition(e),
+      { current: gameStateRef.current.playerPosition },
+      rangeUp
+    );
 
-      // const { x, y, z } = getMousePosition(e);
-      // const newFarthestTargetPosition: [number, number, number] = [x, y, z];
-
-      console.log(
-        "🌟🚨 ~ file: Ground.tsx ~ line 55 ~ Ground ~ playerPositionRef/current",
-        playerPositionRef.current
-      );
-      console.log(
-        "🌟🚨 ~ file: Ground.tsx ~ line 59 ~ Ground ~ newFarthestTargetPosition",
-        newFarthestTargetPosition
-      );
-
-      setHeldBoomerangs((currentBoomerangs) => {
-        // if rangeUp is active, send ALL active boomerangs,
-        // plus the first available boomerang, to the target position
-        if (rangeUp) {
-          let found = false;
-          const newBoomerangs = currentBoomerangs.map((boom) => {
-            if ((!found && boom.status === "held") || boom.status !== "held") {
-              if (boom.status === "held") {
-                found = true;
-              }
-
-              return {
-                ...boom,
-                status: "flying" as any,
-                clickTargetPosition: newFarthestTargetPosition,
-              };
-            }
-            return boom;
-          });
-
-          return newBoomerangs;
-        } else {
-          // normally,
-          // find the first boomerang without a clickTargetPosition,
-          // and set it to the current target position
-          let found = false;
-          const newBoomerangs = currentBoomerangs.map((boom) => {
-            if (!found && boom.status === "held") {
+    setHeldBoomerangs((currentBoomerangs) => {
+      // if rangeUp is active, send ALL active boomerangs,
+      // plus the first available boomerang, to the target position
+      if (rangeUp) {
+        let found = false;
+        const newBoomerangs = currentBoomerangs.map((boom) => {
+          if ((!found && boom.status === "held") || boom.status !== "held") {
+            if (boom.status === "held") {
               found = true;
-              return {
-                ...boom,
-                status: "flying" as any,
-                clickTargetPosition: newFarthestTargetPosition,
-              };
             }
-            return boom;
-          });
-          return newBoomerangs;
-        }
-      });
-    },
-    [rangeUp, playerPositionRef]
-  );
 
-  const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = useCallback(
-    (e) => {
-      if (!playerPositionRef.current) return;
-      // if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPositionRef.current) {
-      const { x, y, z } = getMousePosition(e);
-      const {
-        newFarthestTargetPosition,
-      }: {
-        newFarthestTargetPosition: [number, number, number];
-      } = getFarthestTargetPosition(
-        { x, y, z },
-        playerPositionRef,
-        rangeUp
-      ) as any;
+            return {
+              ...boom,
+              status: "flying" as any,
+              clickTargetPosition: newFarthestTargetPosition,
+            };
+          }
+          return boom;
+        });
 
-      gameStateRef.current = {
-        ...gameStateRef.current,
-        lookAt: [x, y, z],
-        farthestTargetPosition: newFarthestTargetPosition,
-      };
-    },
-    [rangeUp, playerPositionRef]
-  );
+        return newBoomerangs;
+      } else {
+        // normally,
+        // find the first boomerang without a clickTargetPosition,
+        // and set it to the current target position
+        let found = false;
+        const newBoomerangs = currentBoomerangs.map((boom) => {
+          if (!found && boom.status === "held") {
+            found = true;
+            return {
+              ...boom,
+              status: "flying" as any,
+              clickTargetPosition: newFarthestTargetPosition,
+            };
+          }
+          return boom;
+        });
+        return newBoomerangs;
+      }
+    });
+  };
+
+  const onPointerMove: (event: ThreeEvent<PointerEvent>) => void = (e) => {
+    if (!playerPositionRef.current) return;
+    // if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPositionRef.current) {
+    const { x, y, z } = getMousePosition(e);
+    const {
+      newFarthestTargetPosition,
+    }: {
+      newFarthestTargetPosition: [number, number, number];
+    } = getFarthestTargetPosition(
+      { x, y, z },
+      { current: gameStateRef.current.playerPosition },
+      rangeUp
+    ) as any;
+
+    gameStateRef.current = {
+      ...gameStateRef.current,
+      lookAt: [x, y, z],
+      farthestTargetPosition: newFarthestTargetPosition,
+    };
+  };
 
   const { texture } = useTexture({ texture: "/textures/grass.jpg" });
 
@@ -184,18 +166,9 @@ export function getFarthestTargetPosition(
     y - playerPositionRef.current[1],
     z - playerPositionRef.current[2]
   ).normalize();
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 180 ~ Ground ~ normalizedThrowDirection",
-    normalizedThrowDirection
-  );
 
   // distance between points
   const distance = distanceBetweenPoints(playerPositionRef.current, [x, y, z]);
-
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 168 ~ Ground ~ distance",
-    distance
-  );
 
   // if it's above the max distance, shrink it down to the max distance
 
@@ -214,12 +187,10 @@ export function getFarthestTargetPosition(
           normalizedThrowDirection.x,
           normalizedThrowDirection.y,
           normalizedThrowDirection.z,
-        ].map((v) => v * maxThrowDistance) as [number, number, number])
+        ].map(
+          (v, idx) => v * maxThrowDistance + playerPositionRef.current[idx]
+        ) as [number, number, number])
       : [x, y, z];
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 189 ~ Ground ~ newFarthestTargetPosition",
-    newFarthestTargetPosition
-  );
 
   // can verify distance2 <= maxThrowDistance
   // const distance2 = distanceBetweenPoints(
