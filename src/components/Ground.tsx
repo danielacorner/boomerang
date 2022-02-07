@@ -52,7 +52,11 @@ export function Ground() {
         newFarthestTargetPosition,
       }: {
         newFarthestTargetPosition: [number, number, number];
-      } = handlePointerMove(e, playerPositionRef, rangeUp);
+      } = getFarthestTargetPosition(
+        getMousePosition(e),
+        playerPositionRef,
+        rangeUp
+      );
 
       // const { x, y, z } = getMousePosition(e);
       // const newFarthestTargetPosition: [number, number, number] = [x, y, z];
@@ -114,17 +118,20 @@ export function Ground() {
     (e) => {
       if (!playerPositionRef.current) return;
       // if ((rangeUp || heldBoomerangs[0].status !== "flying") && playerPositionRef.current) {
+      const { x, y, z } = getMousePosition(e);
       const {
-        lookAt,
         newFarthestTargetPosition,
       }: {
-        lookAt: [number, number, number];
         newFarthestTargetPosition: [number, number, number];
-      } = handlePointerMove(e, playerPositionRef, rangeUp) as any;
+      } = getFarthestTargetPosition(
+        { x, y, z },
+        playerPositionRef,
+        rangeUp
+      ) as any;
 
       gameStateRef.current = {
         ...gameStateRef.current,
-        lookAt,
+        lookAt: [x, y, z],
         farthestTargetPosition: newFarthestTargetPosition,
       };
     },
@@ -160,12 +167,12 @@ export function Ground() {
     </>
   );
 }
-function handlePointerMove(
-  e: ThreeEvent<PointerEvent>,
+export function getFarthestTargetPosition(
+  mousePosition: { x: number; y: number; z: number },
   playerPositionRef: { current: [number, number, number] },
   rangeUp: boolean
 ) {
-  const { x, y, z } = getMousePosition(e);
+  const { x, y, z } = mousePosition;
   const [sx, sy, sz] = [Math.sign(x), Math.sign(y), Math.sign(z)];
 
   // limit the throw distance
@@ -220,7 +227,7 @@ function handlePointerMove(
   //   newFarthestTargetPosition
   // );
 
-  return { lookAt: [x, y, z], newFarthestTargetPosition };
+  return { newFarthestTargetPosition };
 }
 
 export function getMousePosition(e: ThreeEvent<PointerEvent>) {

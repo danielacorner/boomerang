@@ -161,7 +161,7 @@ function BagContent({ position, setMounted }) {
         material-opacity={opacity}
         position={[0, -4, 0]}
       >
-        <HeartModel />
+        <HeartModel scale={0.7} />
       </animated.mesh>
     </animated.mesh>
   );
