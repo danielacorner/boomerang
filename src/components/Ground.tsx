@@ -120,7 +120,7 @@ export function Ground() {
       }: {
         lookAt: [number, number, number];
         newFarthestTargetPosition: [number, number, number];
-      } = handlePointerMove(e, playerPositionRef, rangeUp);
+      } = handlePointerMove(e, playerPositionRef, rangeUp) as any;
 
       gameStateRef.current = {
         ...gameStateRef.current,
@@ -177,13 +177,14 @@ function handlePointerMove(
     y - playerPositionRef.current[1],
     z - playerPositionRef.current[2]
   ).normalize();
+  console.log(
+    "🌟🚨 ~ file: Ground.tsx ~ line 180 ~ Ground ~ normalizedThrowDirection",
+    normalizedThrowDirection
+  );
 
   // distance between points
   const distance = distanceBetweenPoints(playerPositionRef.current, [x, y, z]);
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 170 ~ Ground ~ playerPositionRef.current",
-    playerPositionRef.current
-  );
+
   console.log(
     "🌟🚨 ~ file: Ground.tsx ~ line 168 ~ Ground ~ distance",
     distance
@@ -192,8 +193,6 @@ function handlePointerMove(
   // if it's above the max distance, shrink it down to the max distance
 
   const maxThrowDistance = MAX_THROW_DISTANCE * (rangeUp ? 3 : 1);
-
-  const lookAt: [number, number, number] = [x, y, z];
 
   // if the distance is above the max distance, scale it down
   // (normalize, then multiply by maxThrowDistance)
@@ -209,7 +208,7 @@ function handlePointerMove(
           normalizedThrowDirection.y,
           normalizedThrowDirection.z,
         ].map((v) => v * maxThrowDistance) as [number, number, number])
-      : lookAt;
+      : [x, y, z];
   console.log(
     "🌟🚨 ~ file: Ground.tsx ~ line 189 ~ Ground ~ newFarthestTargetPosition",
     newFarthestTargetPosition
@@ -221,7 +220,7 @@ function handlePointerMove(
   //   newFarthestTargetPosition
   // );
 
-  return { lookAt, newFarthestTargetPosition };
+  return { lookAt: [x, y, z], newFarthestTargetPosition };
 }
 
 export function getMousePosition(e: ThreeEvent<PointerEvent>) {

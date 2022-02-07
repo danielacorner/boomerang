@@ -11,6 +11,7 @@ import { Powerup } from "../../DroppedItems/Powerup";
 import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
 import { Html } from "@react-three/drei";
+import { DroppedBoomerangPin } from "../../DroppedItems/DroppedBoomerang";
 
 export const BoomerangWithControls = ({
   // TODO: use idx to only shoot one at a time
@@ -43,6 +44,7 @@ export const BoomerangWithControls = ({
         <BoomerangModel {...{ idx }} />
         <CarriedItems {...{ carriedItems }} />
       </Spin>
+      {status === "dropped" && <DroppedBoomerangPin />}
       <FlashWhenStatusChanges {...{ idx }} />
       <pointLight
         intensity={2}
