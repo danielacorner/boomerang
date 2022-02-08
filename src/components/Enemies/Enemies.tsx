@@ -1,24 +1,56 @@
 import { Enemy } from "./Enemy";
-import { useCallback, useEffect } from "react";
-import { usePrevious } from "react-use";
-import { DroppedItemType, useDroppedItems, useEnemies } from "../../store";
+import { useCallback, useEffect, useRef } from "react";
+import { useInterval, usePrevious } from "react-use";
+import { useDroppedItems, useEnemies } from "../../store";
 import { Virus } from "./Virus";
-import {
-  BACTERIOPHAGE_PHI29_PROHEAD,
-  BACTERIOPHAGE_P68_120,
-  getRandomVirus,
-  HERPES,
-  HIV,
-  ADENOVIRUS_160_OUTER,
-  HPV_100,
-  JEFF_BEZOS,
-} from "./VIRUSES";
+import { getRandomVirus } from "./VIRUSES";
 import { atom, useAtom } from "jotai";
-import { ITEM_TYPES } from "../../utils/constants";
+import { WAVES_OF_ENEMIES } from "./WAVES_OF_ENEMIES";
 
 const MAX_ENEMIES = 6;
 
 export function Enemies() {
+  const [Enemies] = useSpawnWavesOfEnemies();
+
+  return (
+    <>
+      {Enemies.map(
+        ({
+          id,
+          Component,
+          unmountEnemy,
+          unmounted,
+          invulnerable,
+          maxHp,
+          enemyHeight,
+          enemyUrl,
+          enemyName,
+        }) =>
+          unmounted ? null : (
+            <Enemy
+              key={id}
+              {...{
+                id,
+                unmountEnemy,
+                invulnerable,
+                maxHp,
+                enemyHeight,
+                enemyUrl,
+                enemyName,
+              }}
+            >
+              <Component />
+            </Enemy>
+          )
+      )}
+    </>
+  );
+}
+
+const currentWaveAtom = atom(0);
+export const useCurrentWave = () => useAtom(currentWaveAtom);
+
+function useSpawnWavesOfEnemies() {
   const [Enemies, setEnemies] = useEnemies();
 
   const spawnEnemy = useCallback((virus, randId) => {
@@ -51,182 +83,52 @@ export function Enemies() {
     });
   }, []);
 
-  useSpawnWavesOfEnemies(spawnEnemy);
-
-  return (
-    <>
-      {Enemies.map(
-        ({
-          id,
-          Component,
-          unmountEnemy,
-          unmounted,
-          invulnerable,
-          maxHp,
-          enemyHeight,
-          enemyUrl,
-          enemyName,
-        }) =>
-          unmounted ? null : (
-            <Enemy
-              key={id}
-              {...{
-                unmountEnemy,
-                invulnerable,
-                maxHp,
-                enemyHeight,
-                enemyUrl,
-                enemyName,
-              }}
-            >
-              <Component />
-            </Enemy>
-          )
-      )}
-    </>
-  );
-}
-
-type IDType = number | null | undefined;
-const WAVES: {
-  enemies: ((id?: IDType) => {
-    enemyName: string;
-    maxHp: number;
-    enemyHeight: number;
-    enemyUrl: string;
-    RandomVirus: (p: any) => JSX.Element;
-  })[];
-  droppedItems?: DroppedItemType[];
-}[] = [
-  {
-    enemies: [
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-    ],
-    droppedItems: [
-      { position: [8, 1, 8], type: ITEM_TYPES.POWERUP },
-      { position: [-8, 1, -8], type: ITEM_TYPES.RANGEUP },
-    ],
-  },
-  {
-    enemies: [
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => HIV(),
-      () => HIV(),
-    ],
-    droppedItems: [
-      { position: [-8, 1, 8], type: ITEM_TYPES.POWERUP },
-      { position: [8, 1, -8], type: ITEM_TYPES.RANGEUP },
-    ],
-  },
-  {
-    enemies: [
-      () => BACTERIOPHAGE_PHI29_PROHEAD(),
-      () => HIV(),
-      () => HPV_100(),
-      (id: IDType) => HERPES({ shield: true, id }),
-    ],
-    droppedItems: [
-      { position: [8, 1, 8], type: ITEM_TYPES.POWERUP },
-      { position: [8, 1, -8], type: ITEM_TYPES.RANGEUP },
-    ],
-  },
-  {
-    enemies: [
-      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: false, id }),
-      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id: IDType) => HERPES({ shield: true, id }),
-      (id: IDType) => HERPES({ shield: true, id }),
-      () => HPV_100(),
-      () => HPV_100(),
-    ],
-    droppedItems: [
-      { position: [8, 1, -8], type: ITEM_TYPES.POWERUP },
-      { position: [8, 1, -8], type: ITEM_TYPES.RANGEUP },
-    ],
-  },
-  {
-    enemies: [
-      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: false, id }),
-      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      () => JEFF_BEZOS(),
-    ],
-    droppedItems: [
-      { position: [8, 1, 8], type: ITEM_TYPES.POWERUP },
-      { position: [8, 1, -8], type: ITEM_TYPES.RANGEUP },
-    ],
-  },
-  {
-    enemies: [
-      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: false, id }),
-      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id: IDType) => BACTERIOPHAGE_P68_120({ shield: true, id }),
-      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      () => HPV_100(),
-      () => HPV_100(),
-      () => HPV_100(),
-      () => HPV_100(),
-    ],
-    droppedItems: [
-      { position: [8, 1, -8], type: ITEM_TYPES.POWERUP },
-      { position: [8, 1, 8], type: ITEM_TYPES.RANGEUP },
-    ],
-  },
-  {
-    enemies: [
-      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      (id: IDType) => ADENOVIRUS_160_OUTER({ shield: true, id }),
-      () => HPV_100(),
-      () => HPV_100(),
-      () => HPV_100(),
-      () => HPV_100(),
-    ],
-  },
-];
-
-const currentWaveAtom = atom(0);
-export const useCurrentWave = () => useAtom(currentWaveAtom);
-function useSpawnWavesOfEnemies(spawnEnemy) {
   const [currentWave, setCurrentWave] = useCurrentWave();
-  const [, setDroppedItems] = useDroppedItems();
+  const [droppedItems, setDroppedItems] = useDroppedItems();
   const prevWave = usePrevious(currentWave);
   // 1. spawn a wave of enemies
+  const ready = useRef(false);
 
   // when the wave changes,
   // spawn the associated enemies & items
   useEffect(() => {
     if (prevWave !== currentWave) {
-      const { enemies, droppedItems } = WAVES[currentWave];
+      const { enemies, droppedItems } = WAVES_OF_ENEMIES[currentWave];
 
       if (droppedItems) {
-        setDroppedItems((p) => [...p, ...droppedItems]);
+        setDroppedItems((p) => [
+          ...p,
+          ...droppedItems.map((item) => ({
+            ...item,
+            id: String(Math.random() * 10 ** 16),
+            unmounted: false,
+          })),
+        ]);
       }
 
       enemies.forEach((enemy, idx) => {
         const id = Math.round(Math.random() * 10 ** 16);
         // spawnEnemy(enemy(id), id);
         setTimeout(
-          () => spawnEnemy(enemy(id)),
+          () => spawnEnemy(enemy(id), id),
           idx * 1000 + Math.random() * 2000
         );
       });
+      setTimeout(() => (ready.current = true), 1 * 1000);
     }
   }, [currentWave]);
 
-  // 2. when all enemies are unmounted, spawn the next wave
-  const [Enemies] = useEnemies();
+  // 2. when all enemies AAND items are unmounted, spawn the next wave
   useEffect(() => {
-    if (Enemies.length > 0 && Enemies.every((enemy) => enemy.unmounted)) {
+    if (
+      ready.current &&
+      Enemies.every((enemy) => enemy.unmounted) &&
+      droppedItems.length === 0
+    ) {
+      ready.current = false;
       setCurrentWave(currentWave + 1);
     }
-  }, [Enemies]);
+  }, [Enemies, droppedItems]);
+
+  return [Enemies];
 }

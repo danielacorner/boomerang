@@ -7,23 +7,12 @@ import {
   PLAYER_NAME,
   POWERUP_NAME,
 } from "../../utils/constants";
-import { Powerup } from "./Powerup";
+import { Powerup } from "../GLTFs/Powerup";
 
 const POWERUP_HEIGHT = 2;
-const POWERUP_DROP_DURATION = 24 * 1000;
 const POWERUP_INVULNERABLE_DURATION = 2 * 1000;
-export function DroppedPowerup({ position }) {
-  const [mounted, setMounted] = useState(true);
-  useMount(() => {
-    setTimeout(() => {
-      setMounted(false);
-    }, POWERUP_DROP_DURATION);
-  });
-  return mounted ? (
-    <DroppedPowerupContent {...{ position, setMounted }} />
-  ) : null;
-}
-export function DroppedPowerupContent({ position, setMounted }) {
+
+export function DroppedPowerup({ position, setMounted, id }) {
   const [interactive, setInteractive] = useState(false);
   useMount(() => {
     setTimeout(() => {

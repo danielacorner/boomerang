@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useCylinder } from "@react-three/cannon";
 import { Html } from "@react-three/drei";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMount } from "react-use";
 import {
   PLAYER_NAME,
@@ -10,21 +10,14 @@ import {
 } from "../../utils/constants";
 import BoomerangModel from "../GLTFs/BoomerangModel";
 import { BoomerangIcon } from "../HUD/BoomerangsIndicator";
+import { useDroppedItems, useHeldBoomerangs } from "../../store";
 
 const BOOMERANG_ITEM_HEIGHT = 2;
-const BOOMERANG_ITEM_DROP_DURATION = 32 * 1000;
-export function DroppedBoomerang({ position }) {
-  const [mounted, setMounted] = useState(true);
-  useMount(() => {
-    setTimeout(() => {
-      setMounted(false);
-    }, BOOMERANG_ITEM_DROP_DURATION);
-  });
-  return mounted ? (
-    <DroppedBoomerangContent {...{ position, setMounted }} />
-  ) : null;
-}
-export function DroppedBoomerangContent({ position, setMounted }) {
+
+export function DroppedBoomerang({ position, setMounted, id }) {
+  const [, setDroppedItems] = useDroppedItems();
+  const [, setHeldBoomerangs] = useHeldBoomerangs();
+  const onceRef = useRef(false);
   const [ref, api] = useCylinder(() => ({
     args: [2, 2, BOOMERANG_ITEM_HEIGHT, 6],
     mass: 200,
@@ -33,7 +26,19 @@ export function DroppedBoomerangContent({ position, setMounted }) {
     onCollide: (e) => {
       const isCollisionWithPlayer = e.body && e.body.name === PLAYER_NAME;
 
-      if (isCollisionWithPlayer) {
+      if (isCollisionWithPlayer && !onceRef.current) {
+        onceRef.current = true;
+        console.log("💥 oof a BOOMERANG", e);
+        // console.log("COLLISION! with boomerang", e);
+        const newBoomerang = {
+          status: "held" as any,
+          clickTargetPosition: null,
+        };
+        setHeldBoomerangs((p) => [...p, newBoomerang]);
+        setDroppedItems((p) =>
+          p.map((i) => (i.id === id ? { ...i, unmounted: true } : i))
+        );
+
         setMounted(false);
       }
     },

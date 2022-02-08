@@ -26,7 +26,7 @@ export function MouseTarget() {
     );
   });
   const [heldBoomerangs] = useHeldBoomerangs();
-  const { status } = heldBoomerangs[0];
+  const { status } = heldBoomerangs[0] || { status: null };
   return (
     <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]}>
       <torusBufferGeometry args={[1, 0.1, 16, 16]} />

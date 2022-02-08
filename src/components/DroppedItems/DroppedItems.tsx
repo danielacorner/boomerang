@@ -1,53 +1,85 @@
 import { DroppedMoney } from "./DroppedMoney";
 import { DroppedHeart } from "./DroppedHeart";
-import { useDroppedItems } from "../../store";
+import { DroppedItemType, useDroppedItems } from "../../store";
 import { DroppedPowerup } from "./DroppedPowerup";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { DroppedRangeup } from "./DroppedRangeup";
 import { DroppedBoomerang } from "./DroppedBoomerang";
 import { ITEM_TYPES } from "../../utils/constants";
+import { useMount } from "react-use";
 
 export function DroppedItems() {
   const [droppedItems] = useDroppedItems();
-  const droppedMoneyPositions = droppedItems.filter(
-    ({ type }) => type === ITEM_TYPES.MONEY
+  console.log(
+    "🌟🚨 ~ file: DroppedItems.tsx ~ line 13 ~ DroppedItems ~ droppedItems",
+    droppedItems
   );
-  const droppedPowerupPositions = droppedItems.filter(
-    ({ type }) => type === ITEM_TYPES.POWERUP
-  );
-  const droppedRangeupPositions = droppedItems.filter(
-    ({ type }) => type === ITEM_TYPES.RANGEUP
-  );
-  const droppedBoomerangPositions = droppedItems.filter(
-    ({ type }) => type === ITEM_TYPES.BOOMERANG
-  );
+
   return (
     <>
-      {droppedMoneyPositions.map(({ position }) => (
-        <React.Fragment key={JSON.stringify(position)}>
-          <DroppedMoney {...{ position }} />
-        </React.Fragment>
-      ))}
-      {droppedMoneyPositions.map(({ position }) => (
-        <React.Fragment key={JSON.stringify(position)}>
-          <DroppedHeart {...{ position }} />
-        </React.Fragment>
-      ))}
-      {droppedPowerupPositions.map(({ position }) => (
-        <React.Fragment key={JSON.stringify(position)}>
-          <DroppedPowerup {...{ position }} />
-        </React.Fragment>
-      ))}
-      {droppedRangeupPositions.map(({ position }) => (
-        <React.Fragment key={JSON.stringify(position)}>
-          <DroppedRangeup {...{ position }} />
-        </React.Fragment>
-      ))}
-      {droppedBoomerangPositions.map(({ position }) => (
-        <React.Fragment key={JSON.stringify(position)}>
-          <DroppedBoomerang {...{ position }} />
-        </React.Fragment>
+      {droppedItems.map((item) => (
+        <DroppedItem key={item.id} {...item} />
       ))}
     </>
   );
+}
+
+const ITEM_TYPES_COMPONENTS: {
+  [itemType: string]: ({
+    position,
+    setMounted,
+    id,
+  }: {
+    position: [number, number, number];
+    setMounted: (mounted: boolean) => void;
+    id: string;
+  }) => JSX.Element;
+} = {
+  [ITEM_TYPES.MONEY]: DroppedMoney,
+  [ITEM_TYPES.POWERUP]: DroppedPowerup,
+  [ITEM_TYPES.RANGEUP]: DroppedRangeup,
+  [ITEM_TYPES.BOOMERANG]: DroppedBoomerang,
+};
+const ITEM_TYPES_UNMOUNT_DELAYS = {
+  [ITEM_TYPES.MONEY]: 16 * 1000,
+  [ITEM_TYPES.POWERUP]: 16 * 1000,
+  [ITEM_TYPES.RANGEUP]: 16 * 1000,
+  [ITEM_TYPES.BOOMERANG]: 64 * 1000,
+};
+
+function DroppedItem({ id, position, type, unmounted }: DroppedItemType) {
+  if (!ITEM_TYPES_COMPONENTS[type]) {
+    console.log(
+      "🌟🚨🚨🚨🚨 ~ file: DroppedItems.tsx ~ line 53 ~ DroppedItem ~ type",
+      type
+    );
+    return null;
+  }
+  const Component = (p) => ITEM_TYPES_COMPONENTS[type](p);
+  const [mounted, setMounted] = useState(!unmounted);
+  const timerRef = useRef<number>(0);
+  useMount(() => {
+    timerRef.current = window.setTimeout(() => {
+      setMounted(false);
+    }, ITEM_TYPES_UNMOUNT_DELAYS[type]);
+  });
+  const [, setDroppedItems] = useDroppedItems();
+
+  return mounted ? (
+    <Component
+      {...{
+        position,
+        setMounted: (m) => {
+          setMounted(m);
+          if (!m) {
+            setDroppedItems((p) => p.filter((i) => i.id !== id));
+            if (timerRef.current) {
+              window.clearTimeout(timerRef.current);
+            }
+          }
+        },
+        id,
+      }}
+    />
+  ) : null;
 }

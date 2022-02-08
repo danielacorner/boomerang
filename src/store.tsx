@@ -116,10 +116,10 @@ const boomerangStateAtom = atom<
     status: "held" | "flying" | "returning" | "dropped";
   }[]
 >([
-  {
-    clickTargetPosition: null,
-    status: "held",
-  },
+  // {
+  //   clickTargetPosition: null,
+  //   status: "held",
+  // },
 ]);
 export function useHeldBoomerangs() {
   return useAtom(boomerangStateAtom);
@@ -167,6 +167,8 @@ export const useIsDev = () => useAtom(isDevAtom);
 export type DroppedItemType = {
   position: [number, number, number];
   type: ITEM_TYPES;
+  id: string;
+  unmounted: boolean;
 };
 const droppedItemsAtom = atom<DroppedItemType[]>([]);
 export const useDroppedItems = () => useAtom(droppedItemsAtom);

@@ -8,23 +8,10 @@ import { animated, useSpring } from "@react-spring/three";
 import { BOOMERANG_NAME, GROUP1, ITEM_TYPES } from "../../utils/constants";
 
 const BAG_RADIUS = 1;
-const UNMOUNT_DELAY = 16 * 1000;
 
 const BAG_INVULNERABLE_DURATION = 2 * 1000;
-export function DroppedMoney({ position }) {
-  return (
-    <group>
-      <Bag {...{ position }} />
-    </group>
-  );
-}
 
-function Bag({ position }) {
-  const [mounted, setMounted] = useState(true);
-
-  return mounted ? <BagContent {...{ position, setMounted }} /> : null;
-}
-function BagContent({ position, setMounted }) {
+export function DroppedMoney({ position, setMounted, id }) {
   const [interactive, setInteractive] = useState(false);
   useMount(() => {
     setTimeout(() => {
@@ -88,14 +75,6 @@ function BagContent({ position, setMounted }) {
     ];
 
     api.applyImpulse(kickUp, worldPoint);
-
-    // 1s before unmount, fade out
-    setTimeout(() => {
-      setCollectedStatus("unmounting");
-    }, UNMOUNT_DELAY - 1000);
-
-    // unmount after the delay
-    setTimeout(() => setMounted(false), UNMOUNT_DELAY);
   });
 
   // pull the bag towards the player

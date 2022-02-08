@@ -39,7 +39,10 @@ export function useBoomerangMovement({ idx }: { idx }) {
 
   // boomerang state & click position
   const [heldBoomerangs, setHeldBoomerangs] = useHeldBoomerangs();
-  const { status, clickTargetPosition } = heldBoomerangs[idx];
+  const { status, clickTargetPosition } = heldBoomerangs[idx] || {
+    status: null,
+    clickTargetPosition: null,
+  };
 
   const isHeld = status === "held";
   const isBoomerangMoving = !["dropped", "held"].includes(status);

@@ -1,37 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import MoneyBag from "../GLTFs/MoneyBag";
 import { useMount } from "react-use";
 import { useCylinder } from "@react-three/cannon";
-import {
-  useGameState,
-  useGameStateRef,
-  useMoney,
-  usePlayerState,
-} from "../../store";
+import { useGameStateRef } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
 import { BOOMERANG_NAME, GROUP1, ITEM_TYPES } from "../../utils/constants";
-import { Html } from "@react-three/drei";
 import HeartModel from "../GLTFs/HeartModel";
 
 const BAG_RADIUS = 1;
 const UNMOUNT_DELAY = 16 * 1000;
 
 const BAG_INVULNERABLE_DURATION = 2 * 1000;
-export function DroppedHeart({ position }) {
-  return (
-    <group>
-      <Bag {...{ position }} />
-    </group>
-  );
-}
 
-function Bag({ position }) {
-  const [mounted, setMounted] = useState(true);
-
-  return mounted ? <BagContent {...{ position, setMounted }} /> : null;
-}
-function BagContent({ position, setMounted }) {
+export function DroppedHeart({ position, setMounted, id }) {
   const [interactive, setInteractive] = useState(false);
   useMount(() => {
     setTimeout(() => {
@@ -113,14 +94,6 @@ function BagContent({ position, setMounted }) {
     ];
 
     api.applyImpulse(kickUp, worldPoint);
-
-    // 1s before unmount, fade out
-    setTimeout(() => {
-      setCollectedStatus("unmounting");
-    }, UNMOUNT_DELAY - 1000);
-
-    // unmount after the delay
-    setTimeout(() => setMounted(false), UNMOUNT_DELAY);
   });
 
   // limit the angular velocity

@@ -7,7 +7,7 @@ import { BOOMERANG_NAME, ITEM_TYPES } from "../../../utils/constants";
 import { animated, useSpring } from "@react-spring/three";
 import { Spin } from "./Spin";
 import { useBoomerangMovement } from "./useBoomerangMovement";
-import { Powerup } from "../../DroppedItems/Powerup";
+import { Powerup } from "../../GLTFs/Powerup";
 import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
 import { Html } from "@react-three/drei";
@@ -23,7 +23,7 @@ export const BoomerangWithControls = ({
     idx,
   });
   const [heldBoomerangs] = useHeldBoomerangs();
-  const { status } = heldBoomerangs[idx];
+  const { status } = heldBoomerangs[idx] || { status: null };
   const [{ poweredUp, rangeUp }] = usePlayerState();
 
   const [{ scale }] = useSpring(

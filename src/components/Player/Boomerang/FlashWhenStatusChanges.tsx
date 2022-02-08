@@ -6,7 +6,7 @@ const FLASH_TIME = 200;
 
 export function FlashWhenStatusChanges({ idx }) {
   const [heldBoomerangs] = useHeldBoomerangs();
-  const { status } = heldBoomerangs[idx];
+  const { status } = heldBoomerangs[idx] || { status: null };
   const [flash, setFlash] = useState(false);
   const prevStatus = usePrevious(status);
   useEffect(() => {
