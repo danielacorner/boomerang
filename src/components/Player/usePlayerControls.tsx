@@ -257,10 +257,6 @@ function useMovePlayer(
 
     const PLAYER_ROTATION_SPEED = 0.08;
 
-    console.log(
-      "🌟🚨 ~ file: usePlayerControls.tsx ~ line 266 ~ useFrame ~ lastPressedKey",
-      lastPressedKey
-    );
     // animate the rotation if we're dashing
     const [rotX, rotY, rotZ] = [
       dashing ? Math.PI / 2 : 0.001,
