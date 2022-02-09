@@ -123,7 +123,8 @@ function useSpawnWavesOfEnemies() {
     if (
       ready.current &&
       Enemies.every((enemy) => enemy.unmounted) &&
-      droppedItems.length === 0
+      // TODO: only works for first stage right now
+      (currentWave !== 0 || droppedItems.length === 0)
     ) {
       ready.current = false;
       setCurrentWave(currentWave + 1);

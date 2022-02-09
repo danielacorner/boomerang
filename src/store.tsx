@@ -174,7 +174,7 @@ const droppedItemsAtom = atom<DroppedItemType[]>([]);
 export const useDroppedItems = () => useAtom(droppedItemsAtom);
 const isDashingAtom = atom(0);
 
-export const DASH_DURATION = 500;
+export const DASH_DURATION = 150;
 export const useIsDashing = (): [
   boolean | 0,
   (update: SetStateAction<number>) => void

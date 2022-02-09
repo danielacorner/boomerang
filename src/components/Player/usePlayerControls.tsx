@@ -62,7 +62,7 @@ export function usePlayerControls() {
     }
   });
 
-  const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1) * (dashing ? 2 : 1);
+  const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1) * (dashing ? 4 : 1);
   const [playerRef] = usePlayerRef();
   const { clock } = useThree();
   const [cylinderRef, cylinderApi] = useCylinder(

@@ -11,7 +11,7 @@ import { Powerup } from "../../GLTFs/Powerup";
 import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
 import { Html } from "@react-three/drei";
-import { DroppedBoomerangPin } from "../../DroppedItems/DroppedBoomerang";
+import { DroppedBoomerangPin } from "../../DroppedItems/DroppedBoomerangPin";
 
 export const BoomerangWithControls = ({
   // TODO: use idx to only shoot one at a time
