@@ -52,13 +52,8 @@ const SoundButtonStyles = styled.div<{ isAudioPlaying: boolean }>`
   bottom: 8px;
   right: 12px;
   opacity: 0.6;
-  padding-bottom: 16px;
   align-items: center;
   z-index: 9;
-  &&&&&&&&&&&&& {
-    padding-right: 16px;
-    margin-right: -16px;
-  }
   .MuiButtonBase-root {
     color: hsla(0, 100%, 100%, 1);
   }
@@ -107,7 +102,7 @@ const VolumeControlsStyles = styled.div<{ isAudioPlaying }>`
     cursor: pointer;
     display: flex;
     position: absolute;
-    bottom: -36px;
+    bottom: 22px;
     right: 12px;
   }
   .volumeTick {
