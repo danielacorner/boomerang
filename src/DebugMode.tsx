@@ -31,7 +31,12 @@ export function DebugMode({ children }) {
               setIsOn(!isOn);
               setIsDev(!isOn);
             }}
-            style={{ textTransform: "none", position: "fixed", bottom: 0 }}
+            style={{
+              textTransform: "none",
+              position: "fixed",
+              bottom: 64,
+              left: 64,
+            }}
           >
             {isOn ? "❌ Debug off" : "Debug mode 🐛"}
           </ToggleButton>
