@@ -23,7 +23,7 @@ export function DroppedBoomerangPin() {
 const DroppedBoomerangPinStyles = styled.div`
   .boom {
     animation: pulse 1s linear infinite;
-    transform-origin: center;
+    transform-origin: left;
   }
 
   @keyframes pulse {
