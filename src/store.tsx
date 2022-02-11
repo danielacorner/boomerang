@@ -6,6 +6,8 @@ import { Mesh, BufferGeometry, Material } from "three";
 import { ITEM_TYPES } from "./utils/constants";
 export const INITIAL_HITPOINTS = 3;
 
+// TODO: try zustand or valtio
+
 type EnemyType = {
   Component: any;
   unmounted: boolean;
@@ -66,21 +68,25 @@ export function usePlayerPositionRef(): [
 }
 
 export type GameStateType = {
+  isAnimating: boolean;
   poweredUp: boolean;
   rangeUp: boolean;
   hitpoints: number;
   maxHitpoints: number;
   invulnerable: boolean;
+  heldBoomerangs: HeldBoomerang[];
   money: number;
   lookAt: [number, number, number];
   playerPosition: [number, number, number];
   farthestTargetPosition: [number, number, number];
 };
 export const INITIAL_GAME_STATE: GameStateType = {
+  isAnimating: false,
   rangeUp: false,
   poweredUp: false,
   hitpoints: INITIAL_HITPOINTS,
   maxHitpoints: INITIAL_HITPOINTS,
+  heldBoomerangs: [],
   invulnerable: false,
   money: 0,
   lookAt: [0, 0, 0],
@@ -110,12 +116,11 @@ export function useGameStateRef(): [
   return [gameStateRef, setGameStateRef];
 }
 
-const boomerangStateAtom = atom<
-  {
-    clickTargetPosition: [number, number, number] | null;
-    status: "held" | "flying" | "returning" | "dropped";
-  }[]
->([
+type HeldBoomerang = {
+  clickTargetPosition: [number, number, number] | null;
+  status: "held" | "flying" | "returning" | "dropped";
+};
+const boomerangStateAtom = atom<HeldBoomerang[]>([
   // {
   //   clickTargetPosition: null,
   //   status: "held",

@@ -7,7 +7,11 @@ import {
   GROUP1,
 } from "../../utils/constants";
 import BoomerangModel from "../GLTFs/BoomerangModel";
-import { useDroppedItems, useHeldBoomerangs } from "../../store";
+import {
+  useDroppedItems,
+  useGameStateRef,
+  useHeldBoomerangs,
+} from "../../store";
 import { DroppedBoomerangPin } from "./DroppedBoomerangPin";
 
 const BOOMERANG_ITEM_HEIGHT = 2;
@@ -15,6 +19,7 @@ const BOOMERANG_ITEM_HEIGHT = 2;
 export function DroppedBoomerang({ position, setMounted, id }) {
   const [, setDroppedItems] = useDroppedItems();
   const [, setHeldBoomerangs] = useHeldBoomerangs();
+  const [gameStateRef] = useGameStateRef();
   const onceRef = useRef(false);
   const [ref, api] = useCylinder(() => ({
     args: [2, 2, BOOMERANG_ITEM_HEIGHT, 6],

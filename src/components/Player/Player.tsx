@@ -1,8 +1,9 @@
 import BlackMage from "../GLTFs/BlackMage";
 import { MouseTarget } from "./MouseTarget";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useGameState,
+  useGameStateRef,
   usePlayerPositionRef,
   usePlayerRef,
   usePlayerState,
@@ -19,6 +20,9 @@ import { RangeupIndicator } from "./RangeupIndicator";
 import { PowerupCircularTimer } from "./PowerupCircularTimer";
 import { Html } from "@react-three/drei";
 import { useInterval } from "react-use";
+import { useFrame } from "@react-three/fiber";
+import * as THREE from "three";
+import { useControls } from "leva";
 
 export function Player() {
   return (
@@ -48,7 +52,7 @@ function Mage() {
   const { scale, opacity } = useMageSpring();
 
   const [playerRef] = usePlayerRef();
-
+  useAnimateMage();
   return (
     <animated.mesh
       scale={scale}
@@ -63,6 +67,32 @@ function Mage() {
     </animated.mesh>
   );
 }
+
+function useAnimateMage() {
+  // when we pick up the first boomerang, we want to animate the mage
+  const [gameStateRef] = useGameStateRef();
+
+  const [playerRef] = usePlayerRef();
+  const { x, y, z } = useControls({ x: 0, y: Math.PI, z: 0 });
+  useFrame(() => {
+    if (playerRef.current && gameStateRef.current.heldBoomerangs.length === 1) {
+      gameStateRef.current.isAnimating = true;
+
+      // animate the mage up
+      playerRef.current.position.set(
+        THREE.MathUtils.lerp(playerRef.current.position.x, 0, 0.1),
+        THREE.MathUtils.lerp(playerRef.current.position.y, 10, 0.1),
+        THREE.MathUtils.lerp(playerRef.current.position.z, 0, 0.1)
+      );
+      playerRef.current.rotation.set(
+        THREE.MathUtils.lerp(playerRef.current.rotation.x, x, 0.1),
+        THREE.MathUtils.lerp(playerRef.current.rotation.y, y, 0.1),
+        THREE.MathUtils.lerp(playerRef.current.rotation.z, z, 0.1)
+      );
+    }
+  });
+}
+
 function PositionIndicator() {
   const [playerPositionRef] = usePlayerPositionRef();
   const [key, setkey] = useState(0);

@@ -30,9 +30,9 @@ export enum ITEM_TYPES {
 export const ENEMY_CYLINDER_HEIGHT = 4;
 
 export const CAMERA_DISTANCE = 26;
-export const CAMERA_POSITION: [number, number, number] = [
-  1,
-  CAMERA_DISTANCE * 2,
-  -CAMERA_DISTANCE,
-];
-export const CAMERA_RANGEUP_HEIGHT = CAMERA_POSITION[1] * 2;
+export const CAMERA_POSITIONS = {
+  CLOSEUP: [1, CAMERA_DISTANCE, -CAMERA_DISTANCE / 2],
+  /** display GAMEPLAY distance most of the time */
+  GAMEPLAY: [1, CAMERA_DISTANCE * 2, -CAMERA_DISTANCE],
+  RANGEUP: [1, CAMERA_DISTANCE * 4, -CAMERA_DISTANCE],
+} as { [key: string]: [number, number, number] };

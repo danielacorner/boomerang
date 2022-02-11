@@ -1,7 +1,7 @@
 import { Billboard, Text } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
-import { CAMERA_POSITION } from "../../utils/constants";
+import { CAMERA_POSITIONS } from "../../utils/constants";
 
 export function EnemyHpBar({
   health,
@@ -16,9 +16,9 @@ export function EnemyHpBar({
     if (!ref.current) return;
 
     ref.current.scale.set(
-      camera.position.y / CAMERA_POSITION[1],
-      camera.position.y / CAMERA_POSITION[1],
-      camera.position.y / CAMERA_POSITION[1]
+      camera.position.y / CAMERA_POSITIONS.GAMEPLAY[1],
+      camera.position.y / CAMERA_POSITIONS.GAMEPLAY[1],
+      camera.position.y / CAMERA_POSITIONS.GAMEPLAY[1]
     );
   });
   return (
