@@ -38,6 +38,11 @@ export function DroppedBoomerang({ position, setMounted, id }) {
           clickTargetPosition: null,
         };
         setHeldBoomerangs((p) => [...p, newBoomerang]);
+        gameStateRef.current.heldBoomerangs = [
+          ...gameStateRef.current.heldBoomerangs,
+          newBoomerang,
+        ];
+
         setDroppedItems((p) =>
           p.map((i) => (i.id === id ? { ...i, unmounted: true } : i))
         );

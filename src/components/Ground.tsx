@@ -77,6 +77,7 @@ export function Ground() {
           return boom;
         });
 
+        gameStateRef.current.heldBoomerangs = newBoomerangs;
         return newBoomerangs;
       } else {
         // normally,
@@ -94,6 +95,7 @@ export function Ground() {
           }
           return boom;
         });
+        gameStateRef.current.heldBoomerangs = newBoomerangs;
         return newBoomerangs;
       }
     });

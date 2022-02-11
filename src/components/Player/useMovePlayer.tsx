@@ -31,6 +31,10 @@ export function useMovePlayer(
       !positionRef.current ||
       gameStateRef.current.isAnimating
     ) {
+      console.log(
+        "🌟🚨 ~ file: useMovePlayer.tsx ~ line 33 ~ useFrame ~ gameStateRef.current.isAnimating",
+        gameStateRef.current.isAnimating
+      );
       return;
     }
     const rangeUp = gameStateRef.current.rangeUp;

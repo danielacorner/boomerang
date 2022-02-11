@@ -18,7 +18,7 @@ import { usePlayerControls } from "./usePlayerControls";
 import { RangeupCircularTimer } from "./RangeupCircularTimer";
 import { RangeupIndicator } from "./RangeupIndicator";
 import { PowerupCircularTimer } from "./PowerupCircularTimer";
-import { Html } from "@react-three/drei";
+import { Html, OrbitControls } from "@react-three/drei";
 import { useInterval } from "react-use";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
@@ -68,27 +68,44 @@ function Mage() {
   );
 }
 
+const ANIMATION_DURATION = 5 * 1000;
 function useAnimateMage() {
   // when we pick up the first boomerang, we want to animate the mage
   const [gameStateRef] = useGameStateRef();
-
   const [playerRef] = usePlayerRef();
+
   const { x, y, z } = useControls({ x: 0, y: Math.PI, z: 0 });
   useFrame(() => {
-    if (playerRef.current && gameStateRef.current.heldBoomerangs.length === 1) {
-      gameStateRef.current.isAnimating = true;
+    const { cylinderApi, cylinderRef, heldBoomerangs, isAnimating } =
+      gameStateRef.current;
+
+    if (
+      cylinderApi &&
+      playerRef.current &&
+      cylinderRef?.current &&
+      heldBoomerangs.length === 1
+    ) {
+      if (!isAnimating) {
+        gameStateRef.current.isAnimating = true;
+        setTimeout(() => {
+          // TODO turn into string state?
+          gameStateRef.current.isAnimating = false;
+        }, ANIMATION_DURATION);
+      }
 
       // animate the mage up
-      playerRef.current.position.set(
-        THREE.MathUtils.lerp(playerRef.current.position.x, 0, 0.1),
-        THREE.MathUtils.lerp(playerRef.current.position.y, 10, 0.1),
-        THREE.MathUtils.lerp(playerRef.current.position.z, 0, 0.1)
+      cylinderRef.current.position.set(
+        THREE.MathUtils.lerp(cylinderRef.current.position.x, 0, 0.1),
+        THREE.MathUtils.lerp(cylinderRef.current.position.y, 3, 0.06),
+        THREE.MathUtils.lerp(cylinderRef.current.position.z, 0, 0.1)
       );
-      playerRef.current.rotation.set(
-        THREE.MathUtils.lerp(playerRef.current.rotation.x, x, 0.1),
-        THREE.MathUtils.lerp(playerRef.current.rotation.y, y, 0.1),
-        THREE.MathUtils.lerp(playerRef.current.rotation.z, z, 0.1)
+      cylinderRef.current.rotation.set(
+        THREE.MathUtils.lerp(cylinderRef.current.rotation.x, x, 0.1),
+        THREE.MathUtils.lerp(cylinderRef.current.rotation.y, y, 0.1),
+        THREE.MathUtils.lerp(cylinderRef.current.rotation.z, z, 0.1)
       );
+      cylinderApi.velocity.set(0, 0, 0);
+      cylinderApi.angularVelocity.set(0, 0, 0);
     }
   });
 }
@@ -100,9 +117,12 @@ function PositionIndicator() {
     setkey(Math.random());
   }, 100);
   return (
-    <Html position={[0, -2, 0]} style={{ color: "white" }} key={key}>
-      {playerPositionRef.current.map((p) => p.toFixed(1)).join(",")}
-    </Html>
+    <>
+      <Html position={[0, -2, 0]} style={{ color: "white" }} key={key}>
+        {playerPositionRef.current.map((p) => p.toFixed(1)).join(",")}
+      </Html>
+      <OrbitControls />
+    </>
   );
 }
 function useMageSpring() {

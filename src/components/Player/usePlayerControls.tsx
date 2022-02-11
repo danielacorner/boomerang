@@ -130,6 +130,10 @@ export function usePlayerControls() {
     playerRef,
     [poweredUp]
   );
+  useMount(() => {
+    gameStateRef.current.cylinderApi = cylinderApi;
+    gameStateRef.current.cylinderRef = cylinderRef;
+  });
 
   const positionRef = useRef<[number, number, number]>([0, 0, 0]);
   useFrame(() => {

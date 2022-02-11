@@ -101,6 +101,8 @@ export function useBoomerangMovement({ idx }: { idx }) {
             if (isEqual(newBooms, currentBoomerangs)) {
               return currentBoomerangs;
             } else {
+              gameStateRef.current.heldBoomerangs = newBooms;
+
               return newBooms;
             }
           });
@@ -181,11 +183,12 @@ export function useBoomerangMovement({ idx }: { idx }) {
       clearTimeout(timer.current);
     } else if (status === "returning" && !keepFlying) {
       timer.current = setTimeout(() => {
-        setHeldBoomerangs((p) =>
-          p.map((boom, bIdx) =>
-            bIdx === idx ? { ...boom, status: "dropped" } : boom
-          )
-        );
+        const mapDroppedBoomerangs = (boom, bIdx) =>
+          bIdx === idx ? { ...boom, status: "dropped" } : boom;
+
+        setHeldBoomerangs((p) => p.map(mapDroppedBoomerangs));
+        gameStateRef.current.heldBoomerangs =
+          gameStateRef.current.heldBoomerangs.map(mapDroppedBoomerangs);
       }, DROP_TIMEOUT);
     }
   }, [rangeUp, status]);
@@ -229,13 +232,14 @@ export function useBoomerangMovement({ idx }: { idx }) {
       api.velocity.set(...throwVelocity);
 
       setTimeout(() => {
-        setHeldBoomerangs((p) =>
-          p.map((boom, bIdx) =>
-            bIdx === idx
-              ? { ...boom, status: "returning", clickTargetPosition: null }
-              : boom
-          )
-        );
+        const mapReturningBoomerangs = (boom, bIdx) =>
+          bIdx === idx
+            ? { ...boom, status: "returning", clickTargetPosition: null }
+            : boom;
+
+        setHeldBoomerangs((p) => p.map(mapReturningBoomerangs));
+        gameStateRef.current.heldBoomerangs =
+          gameStateRef.current.heldBoomerangs.map(mapReturningBoomerangs);
       }, 300);
     }
   }, [clickTargetPosition, status]);
@@ -294,17 +298,13 @@ export function useBoomerangMovement({ idx }: { idx }) {
         console.count("💥 picked up!");
         api.position.set(...playerPositionRef.current);
         thrownTime.current = null;
-        setHeldBoomerangs((p) =>
-          p.map((boom, bIdx) =>
-            bIdx === idx
-              ? {
-                  ...boom,
-                  status: "held",
-                  clickTargetPosition: null,
-                }
-              : boom
-          )
-        );
+        const mapHeldBoomerangs = (boom, bIdx) =>
+          bIdx === idx
+            ? { ...boom, status: "held", clickTargetPosition: null }
+            : boom;
+        setHeldBoomerangs((p) => p.map(mapHeldBoomerangs));
+        gameStateRef.current.heldBoomerangs =
+          gameStateRef.current.heldBoomerangs.map(mapHeldBoomerangs);
         api.velocity.set(0, 0, 0);
       }
     }

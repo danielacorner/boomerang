@@ -1,8 +1,9 @@
+import { PublicApi } from "@react-three/cannon";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 import { SetStateAction, useRef } from "react";
 import { useMount } from "react-use";
-import { Mesh, BufferGeometry, Material } from "three";
+import { Mesh, BufferGeometry, Material, Object3D } from "three";
 import { ITEM_TYPES } from "./utils/constants";
 export const INITIAL_HITPOINTS = 3;
 
@@ -71,6 +72,8 @@ export type GameStateType = {
   isAnimating: boolean;
   poweredUp: boolean;
   rangeUp: boolean;
+  cylinderApi: null | PublicApi;
+  cylinderRef: null | React.RefObject<THREE.Object3D<THREE.Event>>;
   hitpoints: number;
   maxHitpoints: number;
   invulnerable: boolean;
@@ -84,6 +87,8 @@ export const INITIAL_GAME_STATE: GameStateType = {
   isAnimating: false,
   rangeUp: false,
   poweredUp: false,
+  cylinderApi: null,
+  cylinderRef: null,
   hitpoints: INITIAL_HITPOINTS,
   maxHitpoints: INITIAL_HITPOINTS,
   heldBoomerangs: [],

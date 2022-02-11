@@ -1,14 +1,25 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Physics } from "@react-three/cannon";
 import { Scene } from "./components/Scene";
-import { Suspense, useRef } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { DebugMode } from "./DebugMode";
 import { Loader, Stats } from "@react-three/drei";
 import * as THREE from "three";
 import Effects from "./components/Effects";
 import { CAMERA_POSITIONS } from "./utils/constants";
+import { useHeldBoomerangs } from "./store";
 
 export function CanvasAndScene() {
+  const [isGravityOn, setIsGravityOn] = useState(true);
+  // const [heldBoomerangs] = useHeldBoomerangs();
+  // useEffect(() => {
+  //   if (heldBoomerangs.length === 1) {
+  //     setIsGravityOn(false);
+  //     setTimeout(() => {
+  //       setIsGravityOn(true);
+  //     }, 5000);
+  //   }
+  // }, [heldBoomerangs]);
   return (
     <>
       <Loader />
@@ -29,7 +40,7 @@ export function CanvasAndScene() {
         {process.env.NODE_ENV === "development" && <Stats />}
         <fog attach="fog" args={["#000", 0.5, 200]} />
         <Suspense fallback={null}>
-          <Physics gravity={[0, -9.81, 0]}>
+          <Physics gravity={[0, isGravityOn ? -9.81 : -0.1, 0]}>
             <DebugMode>
               <Scene />
             </DebugMode>
