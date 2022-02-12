@@ -17,22 +17,24 @@ export const GROUP3 = 4;
 
 export const MAX_THROW_DISTANCE = 13;
 export const HELD_ITEMS = {
-  MONEYBAG: "moneybag",
+	MONEYBAG: "moneybag",
 };
 
 export enum ITEM_TYPES {
-  POWERUP = "powerup",
-  RANGEUP = "rangeup",
-  MONEY = "money",
-  BOOMERANG = "boomerang",
-  HEART = "heart",
+	POWERUP = "powerup",
+	RANGEUP = "rangeup",
+	MONEY = "money",
+	BOOMERANG = "boomerang",
+	HEART = "heart",
 }
 export const ENEMY_CYLINDER_HEIGHT = 4;
 
 export const CAMERA_DISTANCE = 26;
 export const CAMERA_POSITIONS = {
-  CLOSEUP: [1, CAMERA_DISTANCE, -CAMERA_DISTANCE / 2],
-  /** display GAMEPLAY distance most of the time */
-  GAMEPLAY: [1, CAMERA_DISTANCE * 2, -CAMERA_DISTANCE],
-  RANGEUP: [1, CAMERA_DISTANCE * 4, -CAMERA_DISTANCE],
+	CLOSEUP: [1, CAMERA_DISTANCE, -CAMERA_DISTANCE / 2],
+	/** display GAMEPLAY distance most of the time */
+	GAMEPLAY: [1, CAMERA_DISTANCE * 2, -CAMERA_DISTANCE],
+	RANGEUP: [1, CAMERA_DISTANCE * 4, -CAMERA_DISTANCE],
 } as { [key: string]: [number, number, number] };
+
+export const ANIMATION_DURATION = 5 * 1000;
