@@ -2,12 +2,14 @@ import { useGameStateRef, usePlayerRef } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useControls } from "leva";
+import { useState } from "react";
 
 export function useAnimateMage() {
 	// when we pick up the first boomerang, we want to animate the mage
 	const [gameStateRef] = useGameStateRef();
 	const [playerRef] = usePlayerRef();
 
+	const [isAnimatingBoom, setIsAnimatingBoom] = useState(false);
 	const { x, y, z } = useControls({ x: 0, y: Math.PI, z: 0 });
 	useFrame(({ camera }) => {
 		const { cylinderApi, cylinderRef, heldBoomerangs, isAnimating } =
@@ -24,7 +26,13 @@ export function useAnimateMage() {
 		) {
 			return;
 		}
-
+		if (!isAnimatingBoom) {
+			console.log(
+				"🌟🚨 ~SETSTATE!! file: useAnimateMage.tsx ~ line 30 ~ useFrame ~ isAnimatingBoom",
+				isAnimatingBoom
+			);
+			setIsAnimatingBoom(true);
+		}
 		// animate the mage up
 		const MAGE_UP = {
 			position: [0, 5, 0],
@@ -75,4 +83,5 @@ export function useAnimateMage() {
 			camera.position.z
 		);
 	});
+	return isAnimatingBoom;
 }

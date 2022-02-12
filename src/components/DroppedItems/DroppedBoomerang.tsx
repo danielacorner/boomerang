@@ -22,6 +22,12 @@ export function DroppedBoomerang({ position, setMounted, id }) {
 	const [, setHeldBoomerangs] = useHeldBoomerangs();
 	const [gameStateRef] = useGameStateRef();
 	const onceRef = useRef(false);
+	const unmountBoom = () => {
+		setDroppedItems((p) =>
+			p.map((i) => (i.id === id ? { ...i, unmounted: true } : i))
+		);
+		setMounted(false);
+	};
 	const [ref, api] = useCylinder(() => ({
 		args: [2, 2, BOOMERANG_ITEM_HEIGHT, 6],
 		mass: 200,
@@ -39,29 +45,28 @@ export function DroppedBoomerang({ position, setMounted, id }) {
 					clickTargetPosition: null,
 				};
 				setHeldBoomerangs((p) => [...p, newBoomerang]);
-				if (
+
+				const isZeldaAnimation =
 					gameStateRef.current.heldBoomerangs.length === 0 &&
-					!gameStateRef.current.isAnimating
-				) {
+					!gameStateRef.current.isAnimating;
+				if (isZeldaAnimation) {
 					gameStateRef.current.isAnimating = true;
 					setTimeout(() => {
 						gameStateRef.current.isAnimating = false;
+						unmountBoom();
 					}, ANIMATION_DURATION);
+				} else {
+					unmountBoom();
 				}
 
 				gameStateRef.current.heldBoomerangs = [
 					...gameStateRef.current.heldBoomerangs,
 					newBoomerang,
 				];
-
-				setDroppedItems((p) =>
-					p.map((i) => (i.id === id ? { ...i, unmounted: true } : i))
-				);
-
-				setMounted(false);
 			}
 		},
 	}));
+
 	return (
 		<mesh ref={ref} name={BOOMERANG_ITEM_NAME}>
 			<DroppedBoomerangPin />

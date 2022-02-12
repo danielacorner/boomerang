@@ -20,6 +20,7 @@ import { PowerupCircularTimer } from "./PowerupCircularTimer";
 import { Html, OrbitControls } from "@react-three/drei";
 import { useInterval } from "react-use";
 import { useAnimateMage } from "./useAnimateMage";
+import BoomerangModel from "../GLTFs/BoomerangModel";
 
 export function Player() {
 	return (
@@ -49,7 +50,7 @@ function Mage() {
 	const { scale, opacity } = useMageSpring();
 
 	const [playerRef] = usePlayerRef();
-	useAnimateMage();
+	const isAnimating = useAnimateMage();
 	return (
 		<animated.mesh
 			scale={scale}
@@ -61,8 +62,13 @@ function Mage() {
 			{process.env.NODE_ENV === "development" && <PositionIndicator />}
 			<BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
 			<pointLight intensity={5} distance={24} />
+			{isAnimating && <ZeldaBoomerangAnimation />}
 		</animated.mesh>
 	);
+}
+
+function ZeldaBoomerangAnimation() {
+	return <BoomerangModel {...{ idx: null, position: [0, 4, 0] }} />;
 }
 
 /** for debugging */
