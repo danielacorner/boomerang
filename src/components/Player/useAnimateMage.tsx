@@ -10,21 +10,19 @@ export function useAnimateMage() {
   const [playerRef] = usePlayerRef();
 
   const [isAnimatingBoom, setIsAnimatingBoom] = useState(false);
-  const { x, y, z } = { x: 0, y: Math.PI, z: 0 };
+  const { x, y, z } = useControls({ x: 0, y: Math.PI, z: 0 });
   // const { x, y, z } = useControls({ x: 0, y: Math.PI, z: 0 });
   useFrame(({ camera }) => {
     const { cylinderApi, cylinderRef, heldBoomerangs, isAnimating } =
       gameStateRef.current;
 
-    if (
-      !(
-        isAnimating &&
-        cylinderApi &&
-        playerRef.current &&
-        cylinderRef?.current &&
-        heldBoomerangs.length === 1
-      )
-    ) {
+    const shouldAnimate =
+      isAnimating &&
+      cylinderApi &&
+      playerRef.current &&
+      cylinderRef?.current &&
+      heldBoomerangs.length === 1;
+    if (!shouldAnimate) {
       return;
     }
     if (!isAnimatingBoom) {

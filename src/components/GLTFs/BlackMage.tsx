@@ -8,6 +8,8 @@ title: Wizard Cat
 
 import React, { useEffect, useRef } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
+import { useGameStateRef } from "../../store";
+import { useFrame } from "@react-three/fiber";
 
 export default function Model({ ...props }) {
   const group = useRef();
@@ -16,6 +18,7 @@ export default function Model({ ...props }) {
   ) as any;
   const { actions, names, ...rest } = useAnimations(animations, group);
 
+  const [gameStateRef] = useGameStateRef();
   // Change animation when the index changes
   useEffect(() => {
     // Reset and fade in animation after an index has been changed
@@ -25,6 +28,18 @@ export default function Model({ ...props }) {
       actions[names?.[0]]?.fadeOut(0.5);
     };
   }, [actions, names]);
+
+  // const toggle = useRef(false);
+  // useFrame(() => {
+  //   if (gameStateRef.current.isAnimating && !toggle.current) {
+  //     toggle.current = true;
+  //     actions[names?.[0]]?.fadeOut(0.5);
+  //   } else if (!gameStateRef.current.isAnimating && toggle.current) {
+  //     toggle.current = false;
+  //     actions[names?.[0]]?.reset().fadeIn(0.5).play();
+  //   }
+  // });
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group position={[0, -2, -2]} rotation={[-Math.PI / 2, 0, 0]}>
