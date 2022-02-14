@@ -34,7 +34,7 @@ export function Lighting() {
       {/* <pointLight position={[0, -10, 0]} intensity={1.5} /> */}
       {/* <fog attach="fog" args={["white", 0, 40]} /> */}
 
-      <Environment preset="dawn" />
+      {/* <Environment preset="dawn" /> */}
       {/* <Sky sunPosition={[x, y, z]} rayleigh={rayleigh} /> */}
     </>
   );

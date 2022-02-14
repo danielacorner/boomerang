@@ -132,7 +132,6 @@ export function Ground() {
 
   return (
     <>
-      <Environment preset="park" />
       <fog attach="fog" args={["#74bbd0", 0, 200]} />
       {/* <Terrain /> */}
       <Plane
