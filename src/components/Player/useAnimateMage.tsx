@@ -1,8 +1,8 @@
 import { useGameStateRef, usePlayerRef } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useControls } from "leva";
 import { useState } from "react";
+import { ANIMATION_DURATION } from "../../utils/constants";
 
 export function useAnimateMage() {
   // when we pick up the first boomerang, we want to animate the mage
@@ -27,6 +27,9 @@ export function useAnimateMage() {
     }
     if (!isAnimatingBoom) {
       setIsAnimatingBoom(true);
+      setTimeout(() => {
+        setIsAnimatingBoom(false);
+      }, ANIMATION_DURATION);
     }
 
     // animate the mage up
