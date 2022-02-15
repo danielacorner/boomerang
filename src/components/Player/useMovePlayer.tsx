@@ -7,23 +7,54 @@ import {
   useIsDashing,
   useGameStateRef,
 } from "../../store";
+import { useControls } from "leva";
+import { useEffect, useRef } from "react";
 
-export function useMovePlayer(
+export function useMovePlayer({
   cylinderRef,
-  positionRef,
-  right: boolean,
-  left: boolean,
-  moveSpeed: number,
-  down: boolean,
-  up: boolean,
-  cylinderApi: PublicApi,
-  lastPressedKey: string,
-  rotation: React.MutableRefObject<[number, number, number]>,
-  velocityRef
-) {
+  right,
+  left,
+  moveSpeed,
+  down,
+  up,
+  cylinderApi,
+  lastPressedKey,
+}: {
+  cylinderRef: any;
+  right: boolean;
+  left: boolean;
+  moveSpeed: number;
+  down: boolean;
+  up: boolean;
+  cylinderApi: PublicApi;
+  lastPressedKey: string;
+}) {
+  const rotation = useRef<[number, number, number]>([0, 0, 0]);
+
+  // last known player position... use for inaccurate needs only (updating it faster impacts performance)
+  // useInterval(() => {
+  //   setPlayerState((p) => ({ ...p, playerPosition: positionRef.current }));
+  // }, 5 * 1000);
+
+  useEffect(() => {
+    const unsubscribe = cylinderApi.rotation.subscribe(
+      (v) => (rotation.current = v)
+    );
+    return unsubscribe;
+  }, []);
+
+  const velocityRef = useRef<[number, number, number]>([0, 0, 0]);
+  useEffect(() => {
+    const unsubscribe = cylinderApi.velocity.subscribe((v) => {
+      velocityRef.current = v;
+    });
+    return unsubscribe;
+  }, []);
+
   const [gameStateRef] = useGameStateRef();
   const [dashing] = useIsDashing();
-  const [playerPositionRef] = usePlayerPositionRef();
+  const { xxx } = useControls({ xxx: 0 });
+  const [positionRef] = usePlayerPositionRef();
   useFrame(() => {
     if (
       !cylinderRef.current ||
@@ -57,12 +88,16 @@ export function useMovePlayer(
 
     // }
 
-    const PLAYER_ROTATION_SPEED = 0.08;
+    const PLAYER_ROTATION_SPEED = 0.2;
+    // TODO: UP not working? seems to twitch on x-axis
+    const ROT_UP = THREE.MathUtils.degToRad(180);
+    const ROT_LEFT = THREE.MathUtils.degToRad(-90);
+    const ROT_DOWN = THREE.MathUtils.degToRad(0);
+    const ROT_RIGHT = THREE.MathUtils.degToRad(90);
 
     // animate the rotation if we're dashing
     const [rotX, rotY, rotZ] = [
-      dashing ? Math.PI / 2 : 0.001,
-      // TODO: UP not working?
+      dashing ? Math.PI / 2 : 0,
       lastPressedKey === LEFT
         ? ROT_LEFT
         : lastPressedKey === DOWN
@@ -72,11 +107,16 @@ export function useMovePlayer(
         : lastPressedKey === UP
         ? ROT_UP
         : 0.001,
-      dashing ? Math.PI / 2 : 0.001,
+      dashing ? Math.PI / 2 : 0,
     ];
     const PLAYER_DASH_ROLL_SPEED = 0.5;
+
     const [rotXL, rotYL, rotZL] = [
+      // rotX,
+      // rotY,
+      // rotZ,
       THREE.MathUtils.lerp(rotation.current[0], rotX, PLAYER_DASH_ROLL_SPEED),
+      // rotY,
       THREE.MathUtils.lerp(rotation.current[1], rotY, PLAYER_ROTATION_SPEED),
       THREE.MathUtils.lerp(rotation.current[2], rotZ, PLAYER_DASH_ROLL_SPEED),
     ];
@@ -98,7 +138,3 @@ function getAngleFromCenter([x1, y1], [x2, y2]) {
   const radians = Math.atan2(dy, dx);
   return radians * (180 / Math.PI);
 }
-const ROT_LEFT = Math.PI * -1;
-const ROT_DOWN = Math.PI * 0;
-const ROT_RIGHT = Math.PI * 1;
-const ROT_UP = Math.PI * 2;

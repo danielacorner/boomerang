@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
 import { usePlayerPositionRef, useGameStateRef } from "../../store";
 import { ANIMATE_HEIGHT, CAMERA_POSITIONS } from "../../utils/constants";
+import * as THREE from "three";
 
 export function useMoveCamera() {
   const [gameStateRef] = useGameStateRef();
@@ -9,30 +9,23 @@ export function useMoveCamera() {
 
   useFrame(({ camera }) => {
     const { rangeUp, isAnimating, heldBoomerangs } = gameStateRef.current;
-    console.log(
-      "🌟🚨 ~ file: useMoveCamera.tsx ~ line 12 ~ useFrame ~ heldBoomerangs",
-      heldBoomerangs
-    );
-    console.log(
-      "🌟🚨 ~ file: useMoveCamera.tsx ~ line 12 ~ useFrame ~ isAnimating",
-      isAnimating
-    );
 
     // move the camera up when rangeUp is active
-
     const [camX, camY, camZ] = [0, 1, 2].map((idx) => {
+      const nextCameraPosition = getNextCameraPosition({
+        playerPositionRef,
+        idx,
+        isAnimating,
+        heldBoomerangs,
+        rangeUp,
+      });
       const xyz = idx === 0 ? "x" : idx === 1 ? "y" : "z";
+      const cameraMoveSpeed = isAnimating ? 0.08 : 1;
+      // return nextCameraPosition;
       return THREE.MathUtils.lerp(
         camera.position[xyz],
-        playerPositionRef.current[idx] +
-          (isAnimating
-            ? CAMERA_POSITIONS.CLOSEUP_ANIMATION[idx]
-            : heldBoomerangs.length === 0
-            ? CAMERA_POSITIONS.CLOSEUP[idx]
-            : rangeUp
-            ? CAMERA_POSITIONS.RANGEUP[idx]
-            : CAMERA_POSITIONS.GAMEPLAY[idx]),
-        0.05
+        nextCameraPosition,
+        cameraMoveSpeed
       );
     });
 
@@ -47,4 +40,23 @@ export function useMoveCamera() {
       playerPositionRef.current[2]
     );
   });
+}
+
+function getNextCameraPosition({
+  playerPositionRef,
+  idx,
+  isAnimating,
+  heldBoomerangs,
+  rangeUp,
+}) {
+  return (
+    playerPositionRef.current[idx] +
+    (isAnimating
+      ? CAMERA_POSITIONS.CLOSEUP_ANIMATION[idx]
+      : heldBoomerangs.length === 0
+      ? CAMERA_POSITIONS.CLOSEUP[idx]
+      : rangeUp
+      ? CAMERA_POSITIONS.RANGEUP[idx]
+      : CAMERA_POSITIONS.GAMEPLAY[idx])
+  );
 }

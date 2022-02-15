@@ -10,10 +10,6 @@ import { useMount } from "react-use";
 
 export function DroppedItems() {
   const [droppedItems] = useDroppedItems();
-  console.log(
-    "🌟🚨 ~ file: DroppedItems.tsx ~ line 13 ~ DroppedItems ~ droppedItems",
-    droppedItems
-  );
 
   return (
     <>

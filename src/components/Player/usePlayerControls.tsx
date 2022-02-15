@@ -153,32 +153,9 @@ export function usePlayerControls() {
     setPlayerPositionRef(positionRef);
   });
 
-  const velocityRef = useRef<[number, number, number]>([0, 0, 0]);
-  useEffect(() => {
-    const unsubscribe = cylinderApi.velocity.subscribe((v) => {
-      velocityRef.current = v;
-    });
-    return unsubscribe;
-  }, []);
-
-  const rotation = useRef<[number, number, number]>([0, 0, 0]);
-
-  // last known player position... use for inaccurate needs only (updating it faster impacts performance)
-  // useInterval(() => {
-  //   setPlayerState((p) => ({ ...p, playerPosition: positionRef.current }));
-  // }, 5 * 1000);
-
-  useEffect(() => {
-    const unsubscribe = cylinderApi.rotation.subscribe(
-      (v) => (rotation.current = v)
-    );
-    return unsubscribe;
-  }, []);
-
   // move the player
-  useMovePlayer(
+  useMovePlayer({
     cylinderRef,
-    positionRef,
     right,
     left,
     moveSpeed,
@@ -186,7 +163,5 @@ export function usePlayerControls() {
     up,
     cylinderApi,
     lastPressedKey,
-    rotation,
-    velocityRef
-  );
+  });
 }
