@@ -24,6 +24,8 @@ export function MouseTarget() {
       newFarthestTargetPosition[1],
       newFarthestTargetPosition[2]
     );
+    const scale = gameStateRef.current.rangeUp ? 3 : 1;
+    ref.current.scale.set(scale, scale, scale);
   });
   const [heldBoomerangs] = useHeldBoomerangs();
   const { status } = heldBoomerangs[0] || { status: null };

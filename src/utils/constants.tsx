@@ -38,5 +38,8 @@ export const CAMERA_POSITIONS = {
   RANGEUP: [0, CAMERA_DISTANCE * 4, -CAMERA_DISTANCE],
 } as { [key: string]: [number, number, number] };
 
-export const ANIMATION_DURATION = 6 * 1000;
+export const getAnimationDuration = () => {
+  const isFirstVisit = window.localStorage.getItem("firstVisit") === null;
+  return (isFirstVisit ? 5 : 3) * 1000;
+};
 export const ANIMATE_HEIGHT = 5.5;

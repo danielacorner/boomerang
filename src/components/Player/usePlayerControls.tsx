@@ -122,6 +122,7 @@ export function usePlayerControls() {
             rangeUp: true,
             rangeUpStartTime: clock.getElapsedTime(),
           }));
+          gameStateRef.current = { ...gameStateRef.current, rangeUp: true };
         }
       },
       type: "Dynamic", // https://github.com/pmndrs/use-cannon#types

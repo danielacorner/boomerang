@@ -26,9 +26,11 @@ export const BoomerangWithControls = ({
   const { status } = heldBoomerangs[idx] || { status: null };
   const [{ poweredUp, rangeUp }] = usePlayerState();
 
-  const [{ scale }] = useSpring(
+  const animatedScale = status === "held" ? 0.75 : poweredUp ? 2.5 : 1;
+  const [{ scale, invScale }] = useSpring(
     {
-      scale: status === "held" ? 0.75 : poweredUp ? 2.5 : 1,
+      scale: animatedScale,
+      invScale: 1 / animatedScale,
     },
     [status, poweredUp]
   );
@@ -42,7 +44,9 @@ export const BoomerangWithControls = ({
     >
       <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
         <BoomerangModel {...{ idx }} />
-        <CarriedItems {...{ carriedItems }} />
+        <animated.mesh scale={invScale}>
+          <CarriedItems {...{ carriedItems }} />
+        </animated.mesh>
       </Spin>
       {status === "dropped" && <DroppedBoomerangPin />}
       <FlashWhenStatusChanges {...{ idx }} />

@@ -5,7 +5,7 @@ import {
   PLAYER_NAME,
   BOOMERANG_ITEM_NAME,
   GROUP1,
-  ANIMATION_DURATION,
+  getAnimationDuration,
 } from "../../utils/constants";
 import BoomerangModel from "../GLTFs/BoomerangModel";
 import {
@@ -56,7 +56,8 @@ export function DroppedBoomerang({ position, setMounted, id }) {
           gameStateRef.current.isAnimating = true;
           setTimeout(() => {
             gameStateRef.current.isAnimating = false;
-          }, ANIMATION_DURATION);
+            window.localStorage.setItem("firstVisit", "false");
+          }, getAnimationDuration());
         }
 
         gameStateRef.current.heldBoomerangs = [
