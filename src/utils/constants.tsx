@@ -38,5 +38,5 @@ export const CAMERA_POSITIONS = {
   RANGEUP: [0, CAMERA_DISTANCE * 4, -CAMERA_DISTANCE],
 } as { [key: string]: [number, number, number] };
 
-export const ANIMATION_DURATION = 7 * 1000;
+export const ANIMATION_DURATION = 6 * 1000;
 export const ANIMATE_HEIGHT = 5.5;
