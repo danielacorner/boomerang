@@ -33,7 +33,7 @@ export function Player() {
       <RangeupCircularTimer />
       <PowerupCircularTimer />
       <RangeupIndicator />
-      <Target />
+      <MouseTarget />
       <Controls />
       <MaxThrowDistanceRangeIndicator />
     </>
@@ -49,9 +49,6 @@ function Controls() {
 
   return null;
 }
-const Target = () => {
-  return <MouseTarget />;
-};
 
 function Mage() {
   const { scale, opacity } = useMageSpring();

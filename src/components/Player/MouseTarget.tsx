@@ -4,12 +4,14 @@ import {
   useGameStateRef,
   useHeldBoomerangs,
   usePlayerPositionRef,
+  usePlayerState,
 } from "../../store";
 import { getFarthestTargetPosition } from "../Ground";
 
 export function MouseTarget() {
   const ref = useRef<THREE.Mesh | null>(null);
   const [gameStateRef] = useGameStateRef();
+  const [{ rangeUp }] = usePlayerState();
   const [playerPositionRef] = usePlayerPositionRef();
   useFrame(() => {
     if (!ref.current) return;
@@ -29,14 +31,19 @@ export function MouseTarget() {
   });
   const [heldBoomerangs] = useHeldBoomerangs();
   const { status } = heldBoomerangs[0] || { status: null };
+  const opacity =
+    0.4 *
+    // during rangeUp, we can throw continuously, so always show the target
+    (rangeUp
+      ? 1
+      : // during normal gameplay, we can only throw once per boomerang
+      heldBoomerangs.every((boomerang) => boomerang.status !== "held")
+      ? 0
+      : 1);
   return (
     <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]}>
       <torusBufferGeometry args={[1, 0.1, 16, 16]} />
-      <meshBasicMaterial
-        color="#c02802"
-        transparent={true}
-        opacity={status === "held" ? 0.4 : 0}
-      />
+      <meshBasicMaterial color="#c02802" transparent={true} opacity={opacity} />
     </mesh>
   );
 }

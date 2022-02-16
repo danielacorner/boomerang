@@ -20,7 +20,7 @@ export function Lighting() {
       <directionalLight
         castShadow
         position={[-1.8, 8, 2]}
-        intensity={1.5}
+        intensity={1.6}
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
         shadow-camera-far={500}

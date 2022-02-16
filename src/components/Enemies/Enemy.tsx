@@ -63,20 +63,26 @@ export function Enemy({
     const willAttack = currentStep?.movementType === "preAttack";
     const sss = THREE.MathUtils.lerp(
       enemyRef.current.scale.x,
-      willAttack ? 1.2 : 1,
+      theyreDeadRef.current ? 2 : willAttack ? 1.2 : 1,
       ANIM_SCALE_SPEED
     );
     const scale = new THREE.Vector3(sss, sss, sss);
-    const material = enemyMeshRef.current.material as THREE.MeshBasicMaterial;
-    const opacity = THREE.MathUtils.lerp(
-      material.opacity,
-      theyreDeadRef.current ? 0 : 1,
-      ANIM_OPACITY_SPEED
-    );
-
-    material.opacity = opacity;
 
     enemyRef.current.scale.set(scale.x, scale.y, scale.z);
+
+    // const material = enemyMeshRef.current.material as THREE.MeshBasicMaterial;
+    // const opacity = THREE.MathUtils.lerp(
+    //   material.opacity,
+    //   theyreDeadRef.current ? 0 : 1,
+    //   ANIM_OPACITY_SPEED
+    // );
+
+    // enemyMeshRef.current.traverse(function (node: any) {
+    //   if (node.material) {
+    //     node.material.transparent = true;
+    //     node.material.opacity = opacity;
+    //   }
+    // });
   });
 
   // hp bar follows the enemy
@@ -98,22 +104,27 @@ export function Enemy({
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}
-        <AttackIndicator />
+        <AttackIndicator {...{ position }} />
       </mesh>
     </>
   );
 }
 
-const AnimatedText = animated(Text);
 /** warn before the enemy attacks */
-function AttackIndicator() {
+function AttackIndicator({ position }) {
   const textRef = useRef<any>(null);
   const meshRef = useRef<any>(null);
+  const [playerPositionRef] = usePlayerPositionRef();
 
   useFrame(({ clock }) => {
     if (!meshRef.current || !textRef.current) return;
+    const isPlayerWithinRange = getIsPlayerWithinRange(
+      position.current,
+      playerPositionRef.current
+    );
     const currentStep = getCurrentStep(clock.getElapsedTime());
-    const willAttack = currentStep?.movementType === "preAttack";
+    const willAttack =
+      isPlayerWithinRange && currentStep?.movementType === "preAttack";
 
     textRef.current.fillOpacity = THREE.MathUtils.lerp(
       textRef.current.fillOpacity,

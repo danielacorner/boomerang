@@ -8,6 +8,7 @@ import { Fade, IconButton, Paper } from "@mui/material";
 import { ClickAwayListener } from "@mui/base";
 import { InfoOutlined } from "@mui/icons-material";
 import { useState } from "react";
+import { MUSIC } from "./MUSIC";
 
 /** components overlaid on top of the 3d canvas */
 const HUD = () => {
@@ -18,10 +19,7 @@ const HUD = () => {
         <PlayerHPBar />
         <MoneyIndicator />
         <BoomerangsIndicator />
-        <AudioSoundButton
-          href={"https://www.youtube.com/watch?v=D4MdHQOILdw"}
-          title={"Anjunadeep Radio • Live 24/7"}
-        />
+        <AudioSoundButton {...MUSIC} />
         <Info />
       </div>
     </>

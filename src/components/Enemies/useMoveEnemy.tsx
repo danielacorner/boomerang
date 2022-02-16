@@ -15,6 +15,7 @@ import {
 } from "../../utils/constants";
 import * as THREE from "three";
 import { Vector3 } from "three";
+import { getIsPlayerWithinRange } from "./enemyUtils";
 const POWERUP_PROBABILITY = 0.12;
 const RANGEUP_PROBABILITY = 0.16;
 const HEART_PROBABILITY = 0.16;
@@ -23,7 +24,7 @@ const MAX_BOOMERANGS = 6;
 
 const ENEMY_JITTER_SPEED = 2;
 const BOOMERANG_BASE_DAMAGE = 0.75;
-const UNMOUNT_DELAY = 5 * 1000;
+const ENEMY_DIE_UNMOUNT_DELAY = 2.5 * 1000;
 type MovementType = "randomWalk" | "preAttack" | "attack";
 
 type MovementStep = {
@@ -176,7 +177,17 @@ export function useMoveEnemy({
   const [attacked, setAttacked] = useState(false);
   // movement: move towards player
   useFrame(({ clock }) => {
-    if (!position.current || !enemyRef.current || theyreDeadRef.current) {
+    // only attack if the player is within range
+    const isPlayerWithinRange = getIsPlayerWithinRange(
+      position.current,
+      playerPositionRef.current
+    );
+    if (
+      !position.current ||
+      !enemyRef.current ||
+      theyreDeadRef.current ||
+      !isPlayerWithinRange
+    ) {
       return;
     }
     const time = clock.getElapsedTime();
@@ -262,7 +273,7 @@ export function useMoveEnemy({
       theyreDeadRef.current = true;
       setTimeout(() => {
         unmountEnemy();
-      }, UNMOUNT_DELAY);
+      }, ENEMY_DIE_UNMOUNT_DELAY);
     }
   }, [theyDied]);
 
