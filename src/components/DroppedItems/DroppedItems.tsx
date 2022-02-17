@@ -40,7 +40,7 @@ const ITEM_TYPES_UNMOUNT_DELAYS = {
   [ITEM_TYPES.MONEY]: 16 * 1000,
   [ITEM_TYPES.POWERUP]: 16 * 1000,
   [ITEM_TYPES.RANGEUP]: 16 * 1000,
-  [ITEM_TYPES.BOOMERANG]: 64 * 1000,
+  [ITEM_TYPES.BOOMERANG]: null,
 };
 
 function DroppedItem({ id, position, type, unmounted }: DroppedItemType) {
@@ -55,6 +55,9 @@ function DroppedItem({ id, position, type, unmounted }: DroppedItemType) {
   const [mounted, setMounted] = useState(!unmounted);
   const timerRef = useRef<number>(0);
   useMount(() => {
+    if (!ITEM_TYPES_UNMOUNT_DELAYS[type]) {
+      return;
+    }
     timerRef.current = window.setTimeout(() => {
       setMounted(false);
     }, ITEM_TYPES_UNMOUNT_DELAYS[type]);
