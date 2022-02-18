@@ -31,7 +31,7 @@ export const ENEMY_CYLINDER_HEIGHT = 4;
 
 export const CAMERA_DISTANCE = 26;
 export const CAMERA_POSITIONS = {
-  CLOSEUP_ANIMATION: [0, CAMERA_DISTANCE * 0.2, -CAMERA_DISTANCE / 3],
+  CLOSEUP_ANIMATION: [0, CAMERA_DISTANCE * 0.4, -CAMERA_DISTANCE * 0.4],
   CLOSEUP: [0, CAMERA_DISTANCE, -CAMERA_DISTANCE / 2],
   /** display GAMEPLAY distance most of the time */
   GAMEPLAY: [0, CAMERA_DISTANCE * 2, -CAMERA_DISTANCE],
@@ -40,6 +40,6 @@ export const CAMERA_POSITIONS = {
 
 export const getAnimationDuration = () => {
   const isFirstVisit = window.localStorage.getItem("firstVisit") === null;
-  return (isFirstVisit ? 5 : 3) * 1000;
+  return (isFirstVisit ? 5 : 2.5) * 1000;
 };
-export const ANIMATE_HEIGHT = 5.5;
+export const ANIMATE_HEIGHT = 7.5;

@@ -19,14 +19,14 @@ export function ZeldaBoomerangAnimation() {
       THREE.MathUtils.lerp(
         ref.current.position.y,
         playerPositionRef.current[1] + ANIMATE_HEIGHT,
-        0.05
+        0.08
       ),
       playerPositionRef.current[2]
     );
 
     spotlightRef.current.position.set(
       playerPositionRef.current[0],
-      playerPositionRef.current[1] + 9,
+      playerPositionRef.current[1] + ANIMATE_HEIGHT + 5,
       playerPositionRef.current[2]
     );
     // spotlightRef.current.lookAt(
@@ -44,8 +44,9 @@ export function ZeldaBoomerangAnimation() {
         depthBuffer={depthBuffer}
         color={"#9e9a5b"}
         intensity={0.4}
-        angle={0.3}
+        angle={0.4}
         attenuation={5}
+        opacity={0.3}
       />
       <mesh ref={ref}>
         <BoomerangModel {...{ idx: null, rotation: [-0.81, -1.38, 0] }} />
