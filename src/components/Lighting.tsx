@@ -29,13 +29,6 @@ export function Lighting() {
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
       />
-
-      {/* <pointLight position={[-10, 0, -20]} color="red" intensity={2.5} /> */}
-      {/* <pointLight position={[0, -10, 0]} intensity={1.5} /> */}
-      {/* <fog attach="fog" args={["white", 0, 40]} /> */}
-
-      {/* <Environment preset="dawn" /> */}
-      {/* <Sky sunPosition={[x, y, z]} rayleigh={rayleigh} /> */}
     </>
   );
 }

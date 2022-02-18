@@ -100,7 +100,7 @@ export function Enemy({
         <EnemyHpBar {...{ health, maxHp, enemyHeight, enemyUrl, enemyName }} />
       </mesh>
       <mesh material-transparent={true} ref={enemyMeshRef} name={ENEMY_NAME}>
-        {/* <pointLight intensity={5} distance={8} position={[0, -5, 0]} /> */}
+        {/* <pointLight intensity={3} distance={8} position={[0, -5, 0]} /> */}
         {/* <meshBasicMaterial color={"#FFFFFF"} />
       <sphereBufferGeometry attach="geometry" args={[1, 32, 32]} /> */}
         {children}

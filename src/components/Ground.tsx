@@ -142,7 +142,7 @@ export function Ground() {
         onPointerMove={onPointerMove}
         {...PLANE_PROPS}
       >
-        <meshToonMaterial color="#525252" map={texture} />
+        <meshToonMaterial color="#6e7c58" map={texture} />
       </Plane>
       {/* <Plane {...PLANE_PROPS} position={[0, 0, 0]}>
         <meshToonMaterial color="#ffffff" opacity={0.5} transparent={true} />

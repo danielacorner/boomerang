@@ -64,7 +64,7 @@ function Mage() {
     >
       {process.env.NODE_ENV === "development" && <PositionIndicator />}
       <BlackMage position={[0, -1, 0]} rotation={[0, Math.PI, 0]} />
-      <pointLight intensity={5} distance={24} />
+      <pointLight intensity={3} distance={24} />
     </animated.mesh>
   );
 }

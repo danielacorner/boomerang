@@ -4,7 +4,7 @@ import { Walls } from "./Player/Walls";
 import { Lighting } from "./Lighting";
 import { DroppedItems } from "./DroppedItems/DroppedItems";
 import { Ground } from "./Ground";
-import { AdaptiveDpr } from "@react-three/drei";
+import { AdaptiveDpr, OrbitControls } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 
 export function Scene() {
@@ -19,7 +19,7 @@ export function Scene() {
       <Walls />
       <DroppedItems />
       <Ground />
-      <AdaptiveDpr pixelated />w
+      <AdaptiveDpr pixelated />
     </mesh>
   );
 }
