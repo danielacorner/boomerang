@@ -72,6 +72,7 @@ export type GameStateType = {
   isAnimating: boolean;
   poweredUp: boolean;
   rangeUp: boolean;
+  rangeUpStartTime: number | null;
   cylinderApi: null | PublicApi;
   cylinderRef: null | React.RefObject<THREE.Object3D<THREE.Event>>;
   hitpoints: number;
@@ -86,6 +87,7 @@ export type GameStateType = {
 export const INITIAL_GAME_STATE: GameStateType = {
   isAnimating: false,
   rangeUp: false,
+  rangeUpStartTime: null,
   poweredUp: false,
   cylinderApi: null,
   cylinderRef: null,

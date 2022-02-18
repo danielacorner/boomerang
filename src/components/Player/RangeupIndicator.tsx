@@ -14,6 +14,9 @@ export function RangeupIndicator() {
     if (!ref.current || !playerPositionRef.current) return;
     ref.current.position.set(...playerPositionRef.current);
   });
+
+  // TODO: blinking radio waves animation, one from the player's position, one from the boomerang's position
+
   return (
     <mesh ref={ref}>
       <animated.mesh scale={scale} position={[0, 5, 0]}>

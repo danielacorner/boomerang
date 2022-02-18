@@ -16,7 +16,7 @@ export function MaxThrowDistanceRangeIndicator() {
   // if it's above the max distance, shrink it down to the max distance
   const [{ scale }] = useSpring(
     () => ({
-      scale: rangeUp ? 3 : 1,
+      scale: rangeUp ? 2 : 1,
     }),
     [rangeUp]
   );

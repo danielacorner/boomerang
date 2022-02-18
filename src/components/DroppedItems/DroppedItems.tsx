@@ -7,6 +7,7 @@ import { DroppedRangeup } from "./DroppedRangeup";
 import { DroppedBoomerang } from "./DroppedBoomerang";
 import { ITEM_TYPES } from "../../utils/constants";
 import { useMount } from "react-use";
+import { Float } from "@react-three/drei";
 
 export function DroppedItems() {
   const [droppedItems] = useDroppedItems();
@@ -68,20 +69,26 @@ function DroppedItem({ id, position, type, unmounted }: DroppedItemType) {
   const [, setDroppedItems] = useDroppedItems();
 
   return mounted ? (
-    <Component
-      {...{
-        position,
-        setMounted: (m) => {
-          setMounted(m);
-          if (!m) {
-            setDroppedItems((p) => p.filter((i) => i.id !== id));
-            if (timerRef.current) {
-              window.clearTimeout(timerRef.current);
+    <Float
+      speed={4}
+      rotationIntensity={0.5} // XYZ rotation intensity, defaults to 1
+      floatIntensity={0.5} // Up/down float intensity, defaults to 1
+    >
+      <Component
+        {...{
+          position,
+          setMounted: (m) => {
+            setMounted(m);
+            if (!m) {
+              setDroppedItems((p) => p.filter((i) => i.id !== id));
+              if (timerRef.current) {
+                window.clearTimeout(timerRef.current);
+              }
             }
-          }
-        },
-        id,
-      }}
-    />
+          },
+          id,
+        }}
+      />
+    </Float>
   ) : null;
 }

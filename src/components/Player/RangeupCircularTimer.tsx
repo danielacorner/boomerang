@@ -1,4 +1,8 @@
-import { usePlayerPositionRef, usePlayerState } from "../../store";
+import {
+  useGameStateRef,
+  usePlayerPositionRef,
+  usePlayerState,
+} from "../../store";
 import { useSpring, animated } from "@react-spring/three";
 import { RANGEUP_DURATION } from "./usePlayerControls";
 import { useEffect, useRef } from "react";
@@ -12,6 +16,7 @@ export function RangeupCircularTimer(props) {
   const { scale } = useSpring({ scale: rangeUp ? 0.6 : 0 });
 
   const [playerPositionRef] = usePlayerPositionRef();
+  const [gameStateRef] = useGameStateRef();
   const outerRef = useRef<THREE.Mesh | null>(null);
   const refs = TIMER_TICKS.map((t) => useRef<THREE.Mesh | null>(null));
   //
@@ -21,8 +26,8 @@ export function RangeupCircularTimer(props) {
     }
     outerRef.current.position.set(...playerPositionRef.current);
     const time = clock.getElapsedTime();
-    if (rangeUpStartTime) {
-      const timeSinceStart = time - rangeUpStartTime;
+    if (gameStateRef.current.rangeUpStartTime) {
+      const timeSinceStart = time - gameStateRef.current.rangeUpStartTime;
 
       const timeSinceStartInTicks = Math.floor(timeSinceStart);
       const tickIndex = Math.min(timeSinceStartInTicks, TIMER_TICKS.length - 1);
@@ -38,6 +43,11 @@ export function RangeupCircularTimer(props) {
           rangeUp: false,
           rangeUpStartTime: null,
         }));
+        gameStateRef.current = {
+          ...gameStateRef.current,
+          rangeUp: false,
+          rangeUpStartTime: null,
+        };
       }
     }
   });

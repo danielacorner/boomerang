@@ -117,12 +117,17 @@ export function usePlayerControls() {
         const isCollisionWithRangeup = e.body?.name === RANGEUP_NAME;
         if (isCollisionWithRangeup) {
           console.log("💥 oof a RANGEUP", e);
+          const rangeUpStartTime = clock.getElapsedTime();
           setPlayerState((p) => ({
             ...p,
             rangeUp: true,
-            rangeUpStartTime: clock.getElapsedTime(),
+            rangeUpStartTime,
           }));
-          gameStateRef.current = { ...gameStateRef.current, rangeUp: true };
+          gameStateRef.current = {
+            ...gameStateRef.current,
+            rangeUp: true,
+            rangeUpStartTime,
+          };
         }
       },
       type: "Dynamic", // https://github.com/pmndrs/use-cannon#types
