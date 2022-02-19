@@ -22,7 +22,7 @@ export const WAVES_OF_ENEMIES: {
 }[] = [
   {
     enemies: [],
-    droppedItems: [{ position: [4, 8, 4], type: ITEM_TYPES.BOOMERANG }],
+    droppedItems: [{ position: [0, 8, 8], type: ITEM_TYPES.BOOMERANG }],
   },
   {
     enemies: [

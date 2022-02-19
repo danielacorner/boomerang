@@ -13,6 +13,7 @@ import {
 } from "../../store";
 import {
   ENEMY_NAME,
+  GROUP1,
   GROUP2,
   POWERUP_NAME,
   RANGEUP_NAME,
@@ -64,7 +65,8 @@ export function usePlayerControls() {
   const { clock } = useThree();
   const [cylinderRef, cylinderApi] = useCylinder(
     () => ({
-      collisionFilterGroup: GROUP2,
+      collisionFilterGroup: GROUP1,
+      // collisionFilterGroup: GROUP2,
       mass: 1,
       args: poweredUp ? [4, 4, 5] : ([2, 2, 3] as CylinderArgs),
       position: [0, 2, 0],

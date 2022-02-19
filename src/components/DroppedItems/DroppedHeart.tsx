@@ -89,7 +89,7 @@ export function DroppedHeart({ position, setMounted, id }) {
     ];
     const kickUp: [number, number, number] = [
       Math.random() * 0.5 - 0.25,
-      Math.random() * -1,
+      Math.random() * -5,
       Math.random() * 0.5 - 0.25,
     ];
 

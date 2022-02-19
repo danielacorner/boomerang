@@ -72,7 +72,7 @@ export function ZeldaBoomerangAnimation() {
           position={[
             THREE.MathUtils.randFloatSpread(100),
             THREE.MathUtils.randFloat(CLOUD_HEIGHT, CLOUD_HEIGHT + 10),
-            THREE.MathUtils.randFloatSpread(100),
+            THREE.MathUtils.randFloatSpread(100) + 50,
           ]}
         />
       ))}

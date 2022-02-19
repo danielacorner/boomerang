@@ -10,6 +10,7 @@ import React, { useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { animated, useSpring } from "@react-spring/three";
 import { useMount } from "react-use";
+import { useControls } from "leva";
 
 export default function MoneyBag({ fadeOut = false, ...props }) {
   const group = useRef();
@@ -28,12 +29,14 @@ export default function MoneyBag({ fadeOut = false, ...props }) {
     [mounted, fadeOut]
   );
 
+  const { yyy } = useControls({ yyy: 21.19 });
+
   return (
     <group ref={group} {...props} dispose={null} scale={0.1}>
       <group rotation={[-Math.PI / 2, 0, 0]}>
         <group rotation={[Math.PI / 2, 0, 0]}>
           <group
-            position={[1.85, 21.19, -2.73]}
+            position={[1.85, yyy, -2.73]}
             rotation={[-Math.PI / 2, 0, 0]}
             scale={[100, 100, 100]}
           >

@@ -130,6 +130,8 @@ export function Ground() {
     texture.anisotropy = 16;
   }
 
+  // TODO: procedurally generated tiles
+
   return (
     <>
       <fog attach="fog" args={["#74bbd0", 0, 200]} />

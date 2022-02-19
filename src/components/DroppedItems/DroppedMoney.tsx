@@ -34,13 +34,18 @@ export function DroppedMoney({ position, setMounted, id }) {
 
   const [ref, api] = useCylinder(
     () => ({
-      collisionFilterGroup: GROUP1,
-      collisionResponse: 0, // ? don't push back on collisions
+      // collisionFilterGroup: GROUP1,
+      // collisionResponse: 0, // ? don't push back on collisions
       args: [1, 1, BAG_RADIUS, 6],
       mass: 1,
-      type: interactive ? "Dynamic" : "Static",
+      type: "Dynamic",
+      // type: interactive ? "Dynamic" : "Kinematic",
       position,
       onCollide: (e) => {
+        console.log(
+          "🌟🚨 ~ file: DroppedMoney.tsx ~ line 44 ~ DroppedMoney ~ e",
+          e
+        );
         // when the player touches it, gain +1 money
         if (e.body?.name === "player" && collectedStatus === "uncollected") {
           setMoney((p) => p + 1);
