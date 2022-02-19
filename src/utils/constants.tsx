@@ -40,6 +40,9 @@ export const CAMERA_POSITIONS = {
 
 export const getAnimationDuration = () => {
   const isFirstVisit = window.localStorage.getItem("firstVisit") === null;
-  return (isFirstVisit ? 5 : 2.5) * 1000;
+  return (
+    (isFirstVisit ? 5 : process.env.NODE_ENV === "development" ? 1.5 : 2.5) *
+    1000
+  );
 };
 export const ANIMATE_HEIGHT = 7.5;

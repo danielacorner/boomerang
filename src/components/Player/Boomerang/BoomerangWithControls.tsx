@@ -12,6 +12,7 @@ import MoneyBag from "../../GLTFs/MoneyBag";
 import Rangeup from "../../GLTFs/Rangeup";
 import { Html } from "@react-three/drei";
 import { DroppedBoomerangPin } from "../../DroppedItems/DroppedBoomerangPin";
+import { BlinkingWaveAnimation } from "../BlinkingWaveAnimation";
 
 export const BoomerangWithControls = ({
   // TODO: use idx to only shoot one at a time
@@ -42,6 +43,12 @@ export const BoomerangWithControls = ({
       scale={scale}
       name={`${BOOMERANG_NAME}_${idx}`}
     >
+      {rangeUp && (
+        <>
+          <BlinkingWaveAnimation offsetTime={0} />
+          <BlinkingWaveAnimation offsetTime={0.5} />
+        </>
+      )}
       <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
         <BoomerangModel {...{ idx }} />
         <animated.mesh scale={invScale}>

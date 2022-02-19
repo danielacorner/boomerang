@@ -1,9 +1,8 @@
 import { usePlayerPositionRef, usePlayerState } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
-import BoomerangModel from "../GLTFs/BoomerangModel";
-import { Spin } from "./Boomerang/Spin";
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
+import { BlinkingWaveAnimation } from "./BlinkingWaveAnimation";
 
 export function RangeupIndicator() {
   const [{ rangeUp }] = usePlayerState();
@@ -20,9 +19,9 @@ export function RangeupIndicator() {
   return (
     <mesh ref={ref}>
       <animated.mesh scale={scale} position={[0, 5, 0]}>
-        <Spin>
-          <BoomerangModel idx={Infinity} keepFlying={true} />
-        </Spin>
+        <BlinkingWaveAnimation offsetTime={0} />
+        <BlinkingWaveAnimation offsetTime={0.5} />
+        <BlinkingWaveAnimation offsetTime={1} />
       </animated.mesh>
     </mesh>
   );

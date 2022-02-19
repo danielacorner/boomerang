@@ -65,8 +65,8 @@ export function usePlayerControls() {
   const { clock } = useThree();
   const [cylinderRef, cylinderApi] = useCylinder(
     () => ({
-      collisionFilterGroup: GROUP1,
-      // collisionFilterGroup: GROUP2,
+      // collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP2,
       mass: 1,
       args: poweredUp ? [4, 4, 5] : ([2, 2, 3] as CylinderArgs),
       position: [0, 2, 0],

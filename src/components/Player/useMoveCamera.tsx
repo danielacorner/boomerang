@@ -49,7 +49,6 @@ function getNextCameraPosition({
   heldBoomerangs,
   rangeUp,
 }) {
-  console.log("🌟🚨 ~ file: useMoveCamera.tsx ~ line 52 ~ rangeUp", rangeUp);
   return (
     playerPositionRef.current[idx] +
     (isAnimating
