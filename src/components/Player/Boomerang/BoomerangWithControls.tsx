@@ -58,7 +58,7 @@ export const BoomerangWithControls = ({
       {status === "dropped" && <DroppedBoomerangPin />}
       <FlashWhenStatusChanges {...{ idx }} />
       <pointLight
-        intensity={2}
+        intensity={1}
         distance={12 * (rangeUp ? 2 : 1) * (poweredUp ? 2 : 1)}
       />
     </animated.mesh>
