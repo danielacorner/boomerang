@@ -71,7 +71,7 @@ export function DroppedBoomerang({ position, setMounted, id }) {
   return (
     <mesh ref={ref} name={BOOMERANG_ITEM_NAME}>
       <DroppedBoomerangPin />
-      <pointLight intensity={3} distance={8} position={[0, 2, 0]} />
+      <pointLight intensity={1} distance={8} position={[0, 2, 0]} />
       <BoomerangModel idx={null} isDroppedBoomerang={true} />
     </mesh>
   );

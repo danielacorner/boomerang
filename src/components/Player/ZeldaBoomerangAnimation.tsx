@@ -48,34 +48,35 @@ export function ZeldaBoomerangAnimation() {
 
   return (
     <>
-      {gpu.tier > 2 && (
+      <Stars
+        radius={100}
+        depth={500}
+        count={gpu.tier > 2 ? 5000 : 1000}
+        factor={10}
+        saturation={0}
+        fade
+      />
+      {gpu.tier > 3 && (
         <>
-          <Stars
-            radius={100}
-            depth={500}
-            count={5000}
-            factor={10}
-            saturation={0}
-            fade
-          />
-
           {/* <fog attach="fog" args={["white", 0, 40]} /> */}
 
           {/* <Environment preset="dawn" /> */}
           {/* <Sky sunPosition={[x, y, z]} rayleigh={rayleigh} /> */}
           <Sky rayleigh={0.1} inclination={0.91} azimuth={0.25} />
+          {[...new Array(gpu.tier > 2 ? 50 : gpu.tier > 1 ? 8 : 0)].map(
+            (_, i) => (
+              <Cloud
+                key={i}
+                position={[
+                  THREE.MathUtils.randFloatSpread(100),
+                  THREE.MathUtils.randFloat(CLOUD_HEIGHT, CLOUD_HEIGHT + 10),
+                  THREE.MathUtils.randFloatSpread(100) + 50,
+                ]}
+              />
+            )
+          )}
         </>
       )}
-      {[...new Array(gpu.tier > 2 ? 50 : gpu.tier > 1 ? 8 : 0)].map((_, i) => (
-        <Cloud
-          key={i}
-          position={[
-            THREE.MathUtils.randFloatSpread(100),
-            THREE.MathUtils.randFloat(CLOUD_HEIGHT, CLOUD_HEIGHT + 10),
-            THREE.MathUtils.randFloatSpread(100) + 50,
-          ]}
-        />
-      ))}
 
       <SpotLight
         ref={spotlightRef}

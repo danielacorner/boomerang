@@ -9,9 +9,10 @@ import {
 import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
 import { GROUND_NAME, GROUP1, MAX_THROW_DISTANCE } from "../utils/constants";
-import { useCallback } from "react";
+import { useCallback, useRef, useState } from "react";
 import { distanceBetweenPoints } from "../utils/utils";
 import { Vector3 } from "three";
+import { ProceduralTerrain } from "./ProceduralTerrain";
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
@@ -130,12 +131,10 @@ export function Ground() {
     texture.anisotropy = 16;
   }
 
-  // TODO: procedurally generated tiles
-
   return (
     <>
       <fog attach="fog" args={["#74bbd0", 0, 200]} />
-      {/* <Terrain /> */}
+      <ProceduralTerrain />
       <Plane
         receiveShadow
         name={GROUND_NAME}
@@ -144,7 +143,7 @@ export function Ground() {
         onPointerMove={onPointerMove}
         {...PLANE_PROPS}
       >
-        <meshToonMaterial color="#6e7c58" map={texture} />
+        {/* <meshToonMaterial color="#6e7c58" map={texture} /> */}
       </Plane>
       {/* <Plane {...PLANE_PROPS} position={[0, 0, 0]}>
         <meshToonMaterial color="#ffffff" opacity={0.5} transparent={true} />
@@ -152,6 +151,7 @@ export function Ground() {
     </>
   );
 }
+
 export function getFarthestTargetPosition(
   mousePosition: { x: number; y: number; z: number },
   playerPositionRef: { current: [number, number, number] },
