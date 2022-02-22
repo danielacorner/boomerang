@@ -3,7 +3,7 @@ import { usePrevious } from "react-use";
 import { useDroppedItems, useEnemies, useGameStateRef } from "../../store";
 import { Virus } from "./Virus";
 import { getRandomVirus } from "./VIRUSES";
-import { WAVES_OF_ENEMIES } from "./WAVES_OF_ENEMIES";
+import { LEVELS } from "./LEVELS";
 import { MAX_ENEMIES, useCurrentWave } from "./Enemies";
 import { useFrame } from "@react-three/fiber";
 
@@ -51,7 +51,7 @@ export function useSpawnWavesOfEnemies() {
   // spawn the associated enemies & items
   useEffect(() => {
     if (prevWave !== currentWave) {
-      const { enemies, droppedItems } = WAVES_OF_ENEMIES[currentWave];
+      const { enemies, droppedItems } = LEVELS[currentWave];
 
       if (droppedItems) {
         setDroppedItems((p) => [

@@ -1,5 +1,9 @@
 import { useBox } from "@react-three/cannon";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { BOOMERANG_NAME, GROUP1 } from "../utils/constants";
+import { useCurrentWave } from "./Enemies/Enemies";
+import { LEVELS } from "./Enemies/LEVELS";
+import PlantModel from "./GLTFs/PlantModel";
 import { Walls } from "./Player/Walls";
 
 const TILE_WIDTH = 5;
@@ -48,40 +52,47 @@ const TILE_PROBABILITY_MACHINE = {
   ],
 };
 
-export function ProceduralTerrain() {
-  const [terrain] = useState(
-    [...Array(NUM_TILES)].reduce(
-      // TODO: generate one based on the last one
-      (acc, _, i) => {
-        const [row, col] = getRowCol(i);
-        console.log(
-          "🌟🚨 ~ file: ProceduralTerrain.tsx ~ line 25 ~ ProceduralTerrain ~ row, col",
-          row,
-          col
-        );
-        const tileToLeft = col === 0 ? null : acc[i - 1];
-        const tileAbove = row === 0 ? null : acc[i - TERRAIN.rowWidth];
+function getTerrain(currentWave) {
+  const level = LEVELS[currentWave];
+  const numTiles = level.terrain.width * level.terrain.height;
+  return [...Array(numTiles)].reduce(
+    // TODO: generate one based on the last one
+    (acc, _, i) => {
+      const [row, col] = getRowCol(i);
+      console.log(
+        "🌟🚨 ~ file: ProceduralTerrain.tsx ~ line 25 ~ ProceduralTerrain ~ row, col",
+        row,
+        col
+      );
+      const tileToLeft = col === 0 ? null : acc[i - 1];
+      const tileAbove = row === 0 ? null : acc[i - TERRAIN.rowWidth];
 
-        const color =
-          row === 0 || col === 0
-            ? COLORS.DIRT
-            : getNextColor(tileAbove.color, tileToLeft.color);
+      const color =
+        row === 0 || col === 0
+          ? COLORS.DIRT
+          : getNextColor(tileAbove.color, tileToLeft.color);
 
-        const tile = {
-          color,
-          position: [
-            (col + 0.5 - 0.5 * TERRAIN.rowWidth) * TILE_WIDTH,
-            -1,
-            (row + 0.5 - 0.5 * TERRAIN.colHeight) * TILE_WIDTH,
-          ],
-          index: i,
-          // gridPosition: [row, col],
-        };
-        return [...acc, tile];
-      },
-      []
-    )
+      const tile = {
+        color,
+        position: [
+          (col + 0.5 - 0.5 * TERRAIN.rowWidth) * TILE_WIDTH,
+          -1,
+          (row + 0.5 - 0.5 * TERRAIN.colHeight) * TILE_WIDTH,
+        ],
+        index: i,
+        // gridPosition: [row, col],
+      };
+      return [...acc, tile];
+    },
+    []
   );
+}
+export function ProceduralTerrain() {
+  const [currentWave] = useCurrentWave();
+  const [terrain, setTerrain] = useState(getTerrain(currentWave));
+  useEffect(() => {
+    setTerrain(getTerrain(currentWave));
+  }, [currentWave]);
 
   // TODO: terrain in a pseudo-random shape?
   // TODO: a wall of blocks surrounding the terrain
@@ -94,7 +105,8 @@ export function ProceduralTerrain() {
           <mesh key={i} position={position} receiveShadow>
             <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
             <meshStandardMaterial color={color} />
-            {color === COLORS.WATER && <WallBlock position={position} />}
+            {color === COLORS.WATER && <WallBlock {...{ position }} />}
+            {color === COLORS.PLANT && <PlantBlock {...{ position }} />}
           </mesh>
         );
       })}
@@ -144,6 +156,52 @@ function WallBlock({ position }) {
     <mesh ref={boxRef}>
       <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
       <meshStandardMaterial color={COLORS.DIRT} />
+    </mesh>
+  );
+}
+
+/** block off a tile in the grid (destructible) */
+function PlantBlock({ position }) {
+  const [mounted, setMounted] = useState(true);
+  return mounted ? (
+    <>
+      <mesh>
+        <DestructibleBlock {...{ setMounted, position }} />
+        <PlantModel />
+        asaaaaaaaaaaaaaaaawdddwwwwwwww
+      </mesh>
+    </>
+  ) : null;
+}
+
+function DestructibleBlock({
+  setMounted,
+  position,
+  children = null as JSX.Element | null,
+}) {
+  const boxHeight = TILE_WIDTH * 3;
+  const [boxRef] = useBox(() => ({
+    mass: 99999,
+    // type: "Kinematic",
+    collisionFilterGroup: GROUP1,
+    args: [TILE_WIDTH, boxHeight, TILE_WIDTH],
+    position: [position[0], position[1] + boxHeight / 2, position[2]],
+    rotation: [0, 0, 0],
+    onCollide: (e) => {
+      console.log(
+        "🌟🚨 ~ file: ProceduralTerrain.tsx ~ line 173 ~ const[boxRef]=useBox ~ e.body?.name",
+        e.body?.name
+      );
+      if (e.body?.name.includes(BOOMERANG_NAME)) {
+        setMounted(false);
+      }
+    },
+  }));
+  return (
+    <mesh ref={boxRef}>
+      {/* <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} /> */}
+      {/* <meshStandardMaterial color={COLORS.DIRT} /> */}
+      {children}
     </mesh>
   );
 }

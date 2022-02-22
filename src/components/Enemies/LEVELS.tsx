@@ -10,7 +10,7 @@ import {
 } from "./VIRUSES";
 import { ITEM_TYPES } from "../../utils/constants";
 
-export const WAVES_OF_ENEMIES: {
+export const LEVELS: {
   enemies: ((id?: IDType) => {
     enemyName: string;
     maxHp: number;
@@ -19,10 +19,19 @@ export const WAVES_OF_ENEMIES: {
     RandomVirus: (p: any) => JSX.Element;
   })[];
   droppedItems?: Omit<DroppedItemType, "unmounted" | "id">[];
+  terrain: {
+    /** width and height in tiles */
+    width: number;
+    height: number;
+  };
 }[] = [
   {
     enemies: [],
     droppedItems: [{ position: [0, 8, 8], type: ITEM_TYPES.BOOMERANG }],
+    terrain: {
+      width: 16,
+      height: 32,
+    },
   },
   {
     enemies: [
@@ -35,6 +44,10 @@ export const WAVES_OF_ENEMIES: {
       { position: [8, 1, 8], type: ITEM_TYPES.POWERUP },
       { position: [-8, 1, -8], type: ITEM_TYPES.RANGEUP },
     ],
+    terrain: {
+      width: 16,
+      height: 32,
+    },
   },
   {
     enemies: [
@@ -47,6 +60,10 @@ export const WAVES_OF_ENEMIES: {
       { position: [-8, 1, 8], type: ITEM_TYPES.POWERUP },
       { position: [8, 1, -8], type: ITEM_TYPES.RANGEUP },
     ],
+    terrain: {
+      width: 16,
+      height: 32,
+    },
   },
   {
     enemies: [
@@ -60,6 +77,10 @@ export const WAVES_OF_ENEMIES: {
       { position: [8, 1, -8], type: ITEM_TYPES.RANGEUP },
       { position: [8, 8, 4], type: ITEM_TYPES.BOOMERANG },
     ],
+    terrain: {
+      width: 16,
+      height: 32,
+    },
   },
   {
     enemies: [
@@ -74,6 +95,10 @@ export const WAVES_OF_ENEMIES: {
       { position: [8, 1, -8], type: ITEM_TYPES.POWERUP },
       { position: [8, 1, -8], type: ITEM_TYPES.RANGEUP },
     ],
+    terrain: {
+      width: 16,
+      height: 32,
+    },
   },
   {
     enemies: [
@@ -87,6 +112,10 @@ export const WAVES_OF_ENEMIES: {
       { position: [8, 1, 8], type: ITEM_TYPES.POWERUP },
       { position: [8, 1, -8], type: ITEM_TYPES.RANGEUP },
     ],
+    terrain: {
+      width: 16,
+      height: 32,
+    },
   },
   {
     enemies: [
@@ -105,6 +134,10 @@ export const WAVES_OF_ENEMIES: {
       { position: [8, 1, -8], type: ITEM_TYPES.POWERUP },
       { position: [8, 1, 8], type: ITEM_TYPES.RANGEUP },
     ],
+    terrain: {
+      width: 16,
+      height: 32,
+    },
   },
   {
     enemies: [
@@ -117,6 +150,10 @@ export const WAVES_OF_ENEMIES: {
       () => HPV_100(),
       () => HPV_100(),
     ],
+    terrain: {
+      width: 16,
+      height: 32,
+    },
   },
 ];
 type IDType = number | null | undefined;
