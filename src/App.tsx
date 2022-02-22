@@ -1,4 +1,5 @@
 import { useMediaQuery } from "@mui/material";
+import { Leva } from "leva";
 
 import { useEffect, useRef, useState } from "react";
 import { useFullscreen, useToggle, useWindowSize } from "react-use";
@@ -36,6 +37,7 @@ function App() {
       )}
 
       <CanvasAndScene />
+      {process.env.NODE_ENV === "development" && <Leva />}
       <HUD />
     </div>
   );

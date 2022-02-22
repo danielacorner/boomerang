@@ -16,7 +16,7 @@ export function useAnimateMage() {
   const [playerPositionRef] = usePlayerPositionRef();
 
   const [isAnimatingBoom, setIsAnimatingBoom] = useState(false);
-  const { x, y, z } = useControls({ x: 0.9, y: -0.03, z: 0 });
+  const { x, y, z } = { x: 0.9, y: -0.03, z: 0 };
   const { px, py, pz } = useControls({ px: 0, py: 6, pz: 0 });
 
   // const { x, y, z } = useControls({ x: 0, y: Math.PI, z: 0 });

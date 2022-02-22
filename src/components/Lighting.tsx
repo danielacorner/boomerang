@@ -1,13 +1,14 @@
 import { Environment, Sky } from "@react-three/drei";
+import { useControls } from "leva";
 
 export function Lighting() {
-  const { x, y, z } = { x: -0.02, y: 0.01, z: 0 };
+  const { x, y, z } = useControls({ x: -4, y: 9, z: 4 });
   const { rayleigh } = { rayleigh: 0.7 };
   return (
     <>
       <directionalLight
         castShadow
-        position={[-1.8, 8, 2]}
+        position={[x, y, z]}
         intensity={1}
         shadow-mapSize-width={1024}
         shadow-mapSize-height={1024}
@@ -17,6 +18,7 @@ export function Lighting() {
         shadow-camera-top={10}
         shadow-camera-bottom={-10}
       />
+      <ambientLight intensity={0.35} />
     </>
   );
 }

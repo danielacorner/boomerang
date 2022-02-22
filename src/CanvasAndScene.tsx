@@ -38,7 +38,7 @@ export function CanvasAndScene() {
         }}
       >
         {process.env.NODE_ENV === "development" && <Stats />}
-        <fog attach="fog" args={["#000", 0.5, 200]} />
+        {/* <fog attach="fog" args={["#000", 0.5, 200]} /> */}
         <Suspense fallback={null}>
           <Physics gravity={[0, isGravityOn ? -9.81 : -0.1, 0]}>
             <DebugMode>

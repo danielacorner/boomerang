@@ -9,15 +9,15 @@ import { BOOMERANG_NAME, GROUP1, ITEM_TYPES } from "../../utils/constants";
 
 const BAG_RADIUS = 1;
 
-const BAG_INVULNERABLE_DURATION = 2 * 1000;
+// const BAG_INVULNERABLE_DURATION = 2 * 1000;
 
 export function DroppedMoney({ position, setMounted, id }) {
-  const [interactive, setInteractive] = useState(false);
-  useMount(() => {
-    setTimeout(() => {
-      setInteractive(true);
-    }, BAG_INVULNERABLE_DURATION);
-  });
+  const [interactive, setInteractive] = useState(true);
+  // useMount(() => {
+  //   setTimeout(() => {
+  //     setInteractive(true);
+  //   }, BAG_INVULNERABLE_DURATION);
+  // });
 
   const [collectedStatus, setCollectedStatus] = useState<
     "uncollected" | "collected" | "unmounting"

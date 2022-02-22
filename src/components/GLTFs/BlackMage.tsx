@@ -73,11 +73,15 @@ export default function Model({ ...props }) {
           </group>
           <primitive object={nodes.GLTF_created_0_rootJoint} />
           <skinnedMesh
+            castShadow
+            receiveShadow
             geometry={nodes.Object_13.geometry}
             material={materials.Material}
             skeleton={nodes.Object_13.skeleton}
           />
           <skinnedMesh
+            castShadow
+            receiveShadow
             geometry={nodes.Object_14.geometry}
             material={materials.cateye}
             skeleton={nodes.Object_14.skeleton}
