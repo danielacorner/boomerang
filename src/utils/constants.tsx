@@ -34,7 +34,7 @@ export const CAMERA_POSITIONS = {
   CLOSEUP_ANIMATION: [0, CAMERA_DISTANCE * 0.4, -CAMERA_DISTANCE * 0.4],
   CLOSEUP: [0, CAMERA_DISTANCE, -CAMERA_DISTANCE / 2],
   /** display GAMEPLAY distance most of the time */
-  GAMEPLAY: [0, CAMERA_DISTANCE * 1.5, -CAMERA_DISTANCE],
+  GAMEPLAY: [0, CAMERA_DISTANCE * 1.2, -CAMERA_DISTANCE * 0.6],
   RANGEUP: [0, CAMERA_DISTANCE * 2.5, -CAMERA_DISTANCE],
 } as { [key: string]: [number, number, number] };
 

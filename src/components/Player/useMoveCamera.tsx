@@ -12,13 +12,16 @@ export function useMoveCamera() {
 
     // move the camera up when rangeUp is active
     const [camX, camY, camZ] = [0, 1, 2].map((idx) => {
-      const nextCameraPosition = getNextCameraPosition({
-        playerPositionRef,
-        idx,
-        isAnimating,
-        heldBoomerangs,
-        rangeUp,
-      });
+      const nextCameraPosition =
+        playerPositionRef.current[idx] +
+        (isAnimating
+          ? CAMERA_POSITIONS.CLOSEUP_ANIMATION[idx]
+          : heldBoomerangs.length === 0
+          ? CAMERA_POSITIONS.CLOSEUP[idx]
+          : rangeUp
+          ? CAMERA_POSITIONS.RANGEUP[idx]
+          : CAMERA_POSITIONS.GAMEPLAY[idx]);
+
       const xyz = idx === 0 ? "x" : idx === 1 ? "y" : "z";
       const cameraMoveSpeed = isAnimating ? 0.08 : 1;
       // return nextCameraPosition;
@@ -40,23 +43,4 @@ export function useMoveCamera() {
       playerPositionRef.current[2]
     );
   });
-}
-
-function getNextCameraPosition({
-  playerPositionRef,
-  idx,
-  isAnimating,
-  heldBoomerangs,
-  rangeUp,
-}) {
-  return (
-    playerPositionRef.current[idx] +
-    (isAnimating
-      ? CAMERA_POSITIONS.CLOSEUP_ANIMATION[idx]
-      : heldBoomerangs.length === 0
-      ? CAMERA_POSITIONS.CLOSEUP[idx]
-      : rangeUp
-      ? CAMERA_POSITIONS.RANGEUP[idx]
-      : CAMERA_POSITIONS.GAMEPLAY[idx])
-  );
 }
