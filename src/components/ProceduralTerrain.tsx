@@ -1,18 +1,19 @@
 import { useState } from "react";
+import { Walls } from "./Player/Walls";
 
 const TILE_WIDTH = 5;
 const TERRAIN = {
   // width of the level in tiles
-  rowWidth: 16,
+  rowWidth: 8,
   // height of the level in tiles
-  colHeight: 24,
+  colHeight: 16,
 };
 const NUM_TILES = TERRAIN.rowWidth * TERRAIN.colHeight;
 const COLORS = {
   GRASS: "#2bb169",
   DIRT: "#8c5900",
   SAND: "#e0c946",
-  WATER: "#006920",
+  WATER: "#006958",
   PLANT: "#ca6c3e",
 };
 
@@ -31,16 +32,16 @@ export function ProceduralTerrain() {
         const tileAbove = row === 0 ? null : acc[i - TERRAIN.rowWidth];
 
         const color =
-          !tileToLeft?.color || !tileAbove?.color
+          row === 0 || col === 0
             ? COLORS.DIRT
             : getNextColor(tileAbove.color, tileToLeft.color);
 
         const tile = {
           color,
           position: [
-            col * TILE_WIDTH - 0.5 * TERRAIN.rowWidth * TILE_WIDTH,
+            (col + 0.5 - 0.5 * TERRAIN.rowWidth) * TILE_WIDTH,
             -1,
-            row * TILE_WIDTH - 0.5 * TERRAIN.colHeight * TILE_WIDTH,
+            (row + 0.5 - 0.5 * TERRAIN.colHeight) * TILE_WIDTH,
           ],
           index: i,
           // gridPosition: [row, col],
@@ -49,6 +50,15 @@ export function ProceduralTerrain() {
       },
       []
     )
+  );
+
+  // TODO: terrain in a pseudo-random shape?
+  // TODO: a wall of blocks surrounding the terrain
+  // const [walls] =
+
+  console.log(
+    "🌟🚨 ~ file: ProceduralTerrain.tsx ~ line 22 ~ ProceduralTerrain ~ terrain",
+    terrain
   );
 
   return (
@@ -61,6 +71,12 @@ export function ProceduralTerrain() {
           </mesh>
         );
       })}
+      <Walls
+        {...{
+          x: (TERRAIN.rowWidth * TILE_WIDTH) / 2,
+          z: (TERRAIN.colHeight * TILE_WIDTH) / 2,
+        }}
+      />
     </>
   );
 }
@@ -76,8 +92,8 @@ const TILE_PROBABILITY_MACHINE = {
   // this tile has x probability of turning into tile y
   [COLORS.DIRT]: [
     // [x, y]
-    [0.7, COLORS.DIRT],
-    [0.1, COLORS.GRASS],
+    [0.6, COLORS.DIRT],
+    [0.2, COLORS.GRASS],
     [0.1, COLORS.WATER],
     [0.1, COLORS.SAND],
   ],
@@ -87,16 +103,16 @@ const TILE_PROBABILITY_MACHINE = {
     [0.1, COLORS.PLANT],
   ],
   [COLORS.WATER]: [
-    [0.8, COLORS.WATER],
-    [0.2, COLORS.GRASS],
+    [0.7, COLORS.WATER],
+    [0.3, COLORS.GRASS],
   ],
   [COLORS.PLANT]: [
-    [0.5, COLORS.PLANT],
-    [0.5, COLORS.GRASS],
+    [0.6, COLORS.PLANT],
+    [0.4, COLORS.GRASS],
   ],
   [COLORS.SAND]: [
-    [0.5, COLORS.SAND],
-    [0.5, COLORS.GRASS],
+    [0.7, COLORS.SAND],
+    [0.3, COLORS.DIRT],
   ],
 };
 function getNextColor(col1, col2) {

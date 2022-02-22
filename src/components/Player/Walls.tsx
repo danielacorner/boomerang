@@ -3,11 +3,11 @@ import { useThree } from "@react-three/fiber";
 import { GROUP1, WALL_NAME } from "../../utils/constants";
 
 const DEPTH = 9;
-export function Walls() {
+export function Walls(props) {
   const { viewport } = useThree();
-  const z = viewport.distance * 1;
-  const x = viewport.width * 0.45;
-  const y = viewport.height * 0.45;
+  const z = props.z || viewport.distance * 1;
+  const x = props.x || viewport.width * 0.45;
+  // const y = props.y || viewport.height * 0.45;
 
   // back, front
   const [backRef] = usePlane(() => ({

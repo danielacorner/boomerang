@@ -16,7 +16,7 @@ export function Scene() {
       <Lighting />
       <Player />
       <Enemies />
-      <Walls />
+      {/* <Walls /> */}
       <DroppedItems />
       <Ground />
       <AdaptiveDpr pixelated />

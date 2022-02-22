@@ -24,7 +24,7 @@ const MAX_BOOMERANGS = 6;
 
 const ENEMY_JITTER_SPEED = 2;
 const BOOMERANG_BASE_DAMAGE = 0.75;
-const ENEMY_DIE_UNMOUNT_DELAY = 2.5 * 1000;
+const ENEMY_DIE_UNMOUNT_DELAY = 1.5 * 1000;
 type MovementType = "randomWalk" | "preAttack" | "attack";
 
 type MovementStep = {
