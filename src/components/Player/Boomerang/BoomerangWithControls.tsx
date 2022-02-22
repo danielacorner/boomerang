@@ -44,10 +44,10 @@ export const BoomerangWithControls = ({
       name={`${BOOMERANG_NAME}_${idx}`}
     >
       {rangeUp && (
-        <>
+        <mesh scale={2}>
           <BlinkingWaveAnimation offsetTime={0} />
           <BlinkingWaveAnimation offsetTime={0.5} />
-        </>
+        </mesh>
       )}
       <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
         <BoomerangModel {...{ idx }} />

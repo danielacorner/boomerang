@@ -1,12 +1,34 @@
 import { useState } from "react";
 
+const TILE_WIDTH = 5;
+const TERRAIN = {
+  // width of the level in tiles
+  rowWidth: 16,
+  // height of the level in tiles
+  colHeight: 24,
+};
+const NUM_TILES = TERRAIN.rowWidth * TERRAIN.colHeight;
+const COLORS = {
+  GRASS: "#2bb169",
+  DIRT: "#8c5900",
+  SAND: "#e0c946",
+  WATER: "#006920",
+  PLANT: "#ca6c3e",
+};
+
 export function ProceduralTerrain() {
   const [terrain] = useState(
     [...Array(NUM_TILES)].reduce(
       // TODO: generate one based on the last one
       (acc, _, i) => {
-        const tileToLeft = acc[i - 1];
-        const tileAbove = acc[i - TERRAIN.rowWidth];
+        const [row, col] = getRowCol(i);
+        console.log(
+          "🌟🚨 ~ file: ProceduralTerrain.tsx ~ line 25 ~ ProceduralTerrain ~ row, col",
+          row,
+          col
+        );
+        const tileToLeft = col === 0 ? null : acc[i - 1];
+        const tileAbove = row === 0 ? null : acc[i - TERRAIN.rowWidth];
 
         const color =
           !tileToLeft?.color || !tileAbove?.color
@@ -15,7 +37,11 @@ export function ProceduralTerrain() {
 
         const tile = {
           color,
-          position: tilePosition(i),
+          position: [
+            col * TILE_WIDTH - 0.5 * TERRAIN.rowWidth * TILE_WIDTH,
+            -1,
+            row * TILE_WIDTH - 0.5 * TERRAIN.colHeight * TILE_WIDTH,
+          ],
           index: i,
           // gridPosition: [row, col],
         };
@@ -38,46 +64,13 @@ export function ProceduralTerrain() {
     </>
   );
 }
-const TILE_WIDTH = 5;
-const NUM_TILES = 100;
-const TERRAIN = {
-  rowWidth: NUM_TILES ** 0.5,
-};
-// const COLORS = ["#2bb169", "#8c5900", "#e0c946", "#006920", "#ca6c3e"];
-const COLORS = {
-  GRASS: "#2bb169",
-  DIRT: "#8c5900",
-  SAND: "#e0c946",
-  WATER: "#006920",
-  PLANT: "#ca6c3e",
-};
 
 function getRowCol(index) {
-  const row = Math.floor(index / NUM_TILES ** 0.5);
-  const col = index % NUM_TILES ** 0.5;
+  const row = Math.floor(index / TERRAIN.rowWidth);
+  const col = index % TERRAIN.rowWidth;
   return [row, col];
 }
-// TODO: generate the array from the top left to the bottom right
 
-// function getRowCol(index) {
-//   const row = Math.floor(index / NUM_TILES ** 0.5);
-//   const col = index % NUM_TILES ** 0.5;
-//   return [row, col];
-// }
-function tilePosition(index): [number, number, number] {
-  const [row, col] = getRowCol(index);
-  const position: [number, number, number] = [
-    col * TILE_WIDTH - NUM_TILES / 4,
-    -1,
-    row * TILE_WIDTH - NUM_TILES / 4,
-  ];
-  console.log(
-    "🌟🚨 ~ file: Ground.tsx ~ line 174 ~ tilePosition ~ position",
-    position
-  );
-  return position;
-}
-const POSITIONS = [...Array(NUM_TILES)].map((_, i) => tilePosition(i));
 // probabilities of going to the next color
 const TILE_PROBABILITY_MACHINE = {
   // this tile has x probability of turning into tile y
