@@ -1,9 +1,5 @@
 import { useBox } from "@react-three/cannon";
-import {
-  MeshDistortMaterial,
-  MeshWobbleMaterial,
-  useTexture,
-} from "@react-three/drei";
+import { MeshDistortMaterial, useTexture } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import { BOOMERANG_NAME, GROUP1, COLORS, GROUP2 } from "../utils/constants";
 import { useCurrentWave } from "./Enemies/Enemies";
@@ -106,7 +102,7 @@ export function ProceduralTerrain() {
         return (
           <mesh key={i} position={position} receiveShadow>
             <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
-            <meshStandardMaterial color={color} />
+            {color !== COLORS.WATER && <meshStandardMaterial color={color} />}
             {color === COLORS.WATER && <WaterBlock {...{ position }} />}
             {color === COLORS.PLANT && <PlantBlock {...{ position }} />}
           </mesh>
@@ -128,11 +124,16 @@ function WaterBlock({ position }) {
   return (
     <>
       <WallBlock {...{ position }} />
-      <MeshDistortMaterial
+      <meshStandardMaterial
         map={texture}
         color={COLORS.WATER}
         attach="material"
-        {...({} as any)}
+      />
+      <MeshDistortMaterial
+        alphaWrite={false}
+        map={texture}
+        color={COLORS.WATER}
+        attach="material"
         speed={speed}
         distort={distort}
       />
@@ -169,7 +170,7 @@ function WallBlock({ position }) {
     mass: 0,
     collisionFilterGroup: GROUP2,
     type: "Static",
-    args: [TILE_WIDTH, TILE_WIDTH * 3, TILE_WIDTH],
+    args: [TILE_WIDTH, TILE_WIDTH * 2, TILE_WIDTH],
     position,
     rotation: [0, 0, 0],
   }));
@@ -200,7 +201,7 @@ function DestructibleBlock({
   children = null as JSX.Element | null,
   passThrough = false,
 }) {
-  const boxHeight = TILE_WIDTH * 3;
+  const boxHeight = TILE_WIDTH * 2;
   const [boxRef] = useBox(() => ({
     mass: 99999,
     type: "Static",
