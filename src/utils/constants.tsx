@@ -17,32 +17,41 @@ export const GROUP3 = 4;
 
 export const MAX_THROW_DISTANCE = 13;
 export const HELD_ITEMS = {
-  MONEYBAG: "moneybag",
+	MONEYBAG: "moneybag",
 };
 
 export enum ITEM_TYPES {
-  POWERUP = "powerup",
-  RANGEUP = "rangeup",
-  MONEY = "money",
-  BOOMERANG = "boomerang",
-  HEART = "heart",
+	POWERUP = "powerup",
+	RANGEUP = "rangeup",
+	MONEY = "money",
+	BOOMERANG = "boomerang",
+	HEART = "heart",
 }
 export const ENEMY_CYLINDER_HEIGHT = 4;
 
 export const CAMERA_DISTANCE = 26;
 export const CAMERA_POSITIONS = {
-  CLOSEUP_ANIMATION: [0, CAMERA_DISTANCE * 0.4, -CAMERA_DISTANCE * 0.4],
-  CLOSEUP: [0, CAMERA_DISTANCE, -CAMERA_DISTANCE / 2],
-  /** display GAMEPLAY distance most of the time */
-  GAMEPLAY: [0, CAMERA_DISTANCE * 1.2, -CAMERA_DISTANCE * 0.6],
-  RANGEUP: [0, CAMERA_DISTANCE * 2.5, -CAMERA_DISTANCE],
+	CLOSEUP_ANIMATION: [0, CAMERA_DISTANCE * 0.4, -CAMERA_DISTANCE * 0.4],
+	CLOSEUP: [0, CAMERA_DISTANCE, -CAMERA_DISTANCE / 2],
+	/** display GAMEPLAY distance most of the time */
+	GAMEPLAY: [0, CAMERA_DISTANCE * 1.2, -CAMERA_DISTANCE * 0.6],
+	RANGEUP: [0, CAMERA_DISTANCE * 2.5, -CAMERA_DISTANCE],
 } as { [key: string]: [number, number, number] };
 
 export const getAnimationDuration = () => {
-  const isFirstVisit = window.localStorage.getItem("firstVisit") === null;
-  return (
-    (isFirstVisit ? 5 : process.env.NODE_ENV === "development" ? 1.5 : 2.5) *
-    1000
-  );
+	const isFirstVisit = window.localStorage.getItem("firstVisit") === null;
+	return (
+		(isFirstVisit ? 5 : process.env.NODE_ENV === "development" ? 1.5 : 2.5) *
+		1000
+	);
 };
 export const ANIMATE_HEIGHT = 7.5;
+
+export const COLORS = {
+	GRASS: "#2bb169",
+	DIRT: "#8c5900",
+	SAND: "#e0c946",
+	WATER: "#006958",
+	PLANT: "#ca6c3e",
+	TEMPLE: "#705570",
+};
