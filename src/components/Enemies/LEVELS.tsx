@@ -61,18 +61,18 @@ export const LEVELS: {
 		droppedItems: [{ position: [0, 8, 8], type: ITEM_TYPES.BOOMERANG }],
 		terrain: {
 			width: 16,
-			height: 32,
+			height: 16,
 			overrideTiles: [
 				// top 4
-				{ row: 15, col: 7, overrideColor: COLORS.TEMPLE },
-				{ row: 15, col: 8, overrideColor: COLORS.TEMPLE },
-				{ row: 16, col: 7, overrideColor: COLORS.TEMPLE },
-				{ row: 16, col: 8, overrideColor: COLORS.TEMPLE },
+				{ row: 7, col: 7, overrideColor: COLORS.TEMPLE },
+				{ row: 7, col: 8, overrideColor: COLORS.TEMPLE },
+				{ row: 8, col: 7, overrideColor: COLORS.TEMPLE },
+				{ row: 8, col: 8, overrideColor: COLORS.TEMPLE },
 				// middle 4
-				{ row: 17, col: 7, overrideColor: COLORS.TEMPLE },
-				{ row: 17, col: 8, overrideColor: COLORS.TEMPLE },
-				{ row: 18, col: 7, overrideColor: COLORS.TEMPLE },
-				{ row: 18, col: 8, overrideColor: COLORS.TEMPLE },
+				{ row: 9, col: 7, overrideColor: COLORS.TEMPLE },
+				{ row: 9, col: 8, overrideColor: COLORS.TEMPLE },
+				{ row: 10, col: 7, overrideColor: COLORS.TEMPLE },
+				{ row: 10, col: 8, overrideColor: COLORS.TEMPLE },
 			],
 		},
 	},

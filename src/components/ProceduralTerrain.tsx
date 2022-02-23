@@ -1,18 +1,12 @@
 import { useBox } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
-import { BOOMERANG_NAME, GROUP1, COLORS } from "../utils/constants";
+import { BOOMERANG_NAME, GROUP1, COLORS, GROUP2 } from "../utils/constants";
 import { useCurrentWave } from "./Enemies/Enemies";
 import { LEVELS } from "./Enemies/LEVELS";
 import PlantModel from "./GLTFs/PlantModel";
 import { Walls } from "./Player/Walls";
 
 const TILE_WIDTH = 5;
-const TERRAIN = {
-	// width of the level in tiles
-	rowWidth: 16,
-	// height of the level in tiles
-	colHeight: 32,
-};
 
 // probabilities of going to the next color
 const TILE_PROBABILITY_MACHINE = {
@@ -42,21 +36,25 @@ const TILE_PROBABILITY_MACHINE = {
 		[0.7, COLORS.SAND],
 		[0.3, COLORS.DIRT],
 	],
+	[COLORS.TEMPLE]: [
+		[0.5, COLORS.GRASS],
+		[0.5, COLORS.DIRT],
+	],
 };
 
-function getTerrain(currentWave) {
-	const level = LEVELS[currentWave];
-	const numTiles = level.terrain.width * level.terrain.height;
+function getTiles(currentWave) {
+	const { terrain } = LEVELS[currentWave];
+	const numTiles = terrain.width * terrain.height;
 	return [...Array(numTiles)].reduce(
 		// TODO: generate one based on the last one
 		(acc, _, i) => {
-			const [row, col] = getRowCol(i);
+			const [row, col] = getRowCol(i, terrain);
 
 			const tileToLeft = col === 0 ? null : acc[i - 1];
-			const tileAbove = row === 0 ? null : acc[i - TERRAIN.rowWidth];
+			const tileAbove = row === 0 ? null : acc[i - terrain.width];
 
 			const overrideColor =
-				level.terrain.overrideTiles?.find((t) => t.col === col && t.row === row)
+				terrain.overrideTiles?.find((t) => t.col === col && t.row === row)
 					?.overrideColor || null;
 
 			const color = overrideColor
@@ -68,9 +66,9 @@ function getTerrain(currentWave) {
 			const tile = {
 				color,
 				position: [
-					(col + 0.5 - 0.5 * TERRAIN.rowWidth) * TILE_WIDTH,
+					(col + 0.5 - 0.5 * terrain.width) * TILE_WIDTH,
 					-1,
-					(row + 0.5 - 0.5 * TERRAIN.colHeight) * TILE_WIDTH,
+					(row + 0.5 - 0.5 * terrain.height) * TILE_WIDTH,
 				],
 				index: i,
 				// gridPosition: [row, col],
@@ -82,11 +80,12 @@ function getTerrain(currentWave) {
 }
 export function ProceduralTerrain() {
 	const [currentWave] = useCurrentWave();
-	const [terrain, setTerrain] = useState(getTerrain(currentWave));
+	const { terrain } = LEVELS[currentWave];
+	const [tiles, setTiles] = useState(getTiles(currentWave));
 	const prevWave = useRef(currentWave);
 	useEffect(() => {
 		if (prevWave.current !== currentWave) {
-			setTerrain(getTerrain(currentWave));
+			setTiles(getTiles(currentWave));
 			prevWave.current = currentWave;
 		}
 	}, [currentWave]);
@@ -97,7 +96,7 @@ export function ProceduralTerrain() {
 
 	return (
 		<>
-			{terrain.map(({ color, position }, i) => {
+			{tiles.map(({ color, position }, i) => {
 				return (
 					<mesh key={i} position={position} receiveShadow>
 						<boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
@@ -109,17 +108,17 @@ export function ProceduralTerrain() {
 			})}
 			<Walls
 				{...{
-					x: (TERRAIN.rowWidth * TILE_WIDTH) / 2,
-					z: (TERRAIN.colHeight * TILE_WIDTH) / 2,
+					x: (terrain.width * TILE_WIDTH) / 2,
+					z: (terrain.height * TILE_WIDTH) / 2,
 				}}
 			/>
 		</>
 	);
 }
 
-function getRowCol(index) {
-	const row = Math.floor(index / TERRAIN.rowWidth);
-	const col = index % TERRAIN.rowWidth;
+function getRowCol(index, terrain) {
+	const row = Math.floor(index / terrain.width);
+	const col = index % terrain.width;
 	return [row, col];
 }
 
@@ -143,7 +142,8 @@ function getNextColor(col1, col2) {
 /** block off a tile in the grid */
 function WallBlock({ position }) {
 	const [boxRef] = useBox(() => ({
-		mass: 1,
+		mass: 0,
+		collisionFilterGroup: GROUP2,
 		type: "Static",
 		args: [TILE_WIDTH, TILE_WIDTH * 3, TILE_WIDTH],
 		position,
@@ -163,7 +163,7 @@ function PlantBlock({ position }) {
 	return mounted ? (
 		<>
 			<mesh>
-				<DestructibleBlock {...{ setMounted, position }} />
+				<DestructibleBlock {...{ setMounted, position, passThrough: true }} />
 				<PlantModel />
 			</mesh>
 		</>
@@ -174,12 +174,17 @@ function DestructibleBlock({
 	setMounted,
 	position,
 	children = null as JSX.Element | null,
+	passThrough = false,
 }) {
 	const boxHeight = TILE_WIDTH * 3;
 	const [boxRef] = useBox(() => ({
 		mass: 99999,
-		// type: "Kinematic",
-		collisionFilterGroup: GROUP1,
+		type: "Static",
+		...(passThrough
+			? {
+					collisionFilterGroup: GROUP1,
+			  }
+			: {}),
 		args: [TILE_WIDTH, boxHeight, TILE_WIDTH],
 		position: [position[0], position[1] + boxHeight / 2, position[2]],
 		rotation: [0, 0, 0],
