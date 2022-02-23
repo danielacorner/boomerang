@@ -55,3 +55,4 @@ export const COLORS = {
 	PLANT: "#ca6c3e",
 	TEMPLE: "#705570",
 };
+export const PLAYER_CYLINDER_HEIGHT = 3;

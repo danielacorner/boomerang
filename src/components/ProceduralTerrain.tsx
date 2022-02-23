@@ -189,6 +189,10 @@ function DestructibleBlock({
 		position: [position[0], position[1] + boxHeight / 2, position[2]],
 		rotation: [0, 0, 0],
 		onCollide: (e) => {
+			console.log(
+				"🌟🚨 ~ file: ProceduralTerrain.tsx ~ line 193 ~ const[boxRef]=useBox ~ e.body?.name",
+				e.body?.name
+			);
 			if (e.body?.name.includes(BOOMERANG_NAME)) {
 				setMounted(false);
 			}
