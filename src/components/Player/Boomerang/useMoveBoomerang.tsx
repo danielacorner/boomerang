@@ -18,7 +18,6 @@ import {
 } from "../../../utils/constants";
 import * as THREE from "three";
 import { usePressedKeys } from "../usePressedKeys";
-import { useWhyDidYouUpdate } from "../../useWhyDidYouUpdate";
 
 const BOOMERANG_RADIUS = 2;
 const BOOMERANG_PULL_FORCE = 0.1;
@@ -29,6 +28,7 @@ const PLAYER_RADIUS = 1.5;
 const PLAYER_THROW_VELOCITY_MULTIPLIER = 3;
 const BOOMERANG_AIR_FRICTION = 0.03;
 const MAX_BOOM_VY = 0.2;
+const MAX_THROW_SPEED = 30;
 
 /** shoots a boomerang when you click */
 export function useMoveBoomerang({ idx }: { idx }) {
@@ -228,17 +228,26 @@ export function useMoveBoomerang({ idx }: { idx }) {
         up ? 1 : down ? -1 : 0,
       ];
 
+      const fromRef = rangeUp ? position : playerPositionRef;
       const throwVelocity: [number, number, number] = [
         clickTargetPosition[0] -
-          position.current[0] +
+          fromRef.current[0] +
           playerVelocity[0] * PLAYER_THROW_VELOCITY_MULTIPLIER,
         clickTargetPosition[1] -
-          position.current[1] +
+          fromRef.current[1] +
           playerVelocity[1] * PLAYER_THROW_VELOCITY_MULTIPLIER,
         clickTargetPosition[2] -
-          position.current[2] +
+          fromRef.current[2] +
           playerVelocity[2] * PLAYER_THROW_VELOCITY_MULTIPLIER,
-      ].map((v) => v * THROW_SPEED) as [number, number, number];
+      ]
+        .map((v) => v * THROW_SPEED)
+        .map((v) => {
+          // cap the velocity
+          if (Math.abs(v) > MAX_THROW_SPEED) {
+            return v > 0 ? MAX_THROW_SPEED : -MAX_THROW_SPEED;
+          }
+          return v;
+        }) as [number, number, number];
 
       api.velocity.set(...throwVelocity);
 
@@ -255,6 +264,7 @@ export function useMoveBoomerang({ idx }: { idx }) {
     }
   }, [clickTargetPosition, status]);
 
+  // time it takes for the boomerang to drop
   const friction =
     BOOMERANG_AIR_FRICTION * (poweredUp ? 0.5 : 1) * (rangeUp ? 0.1 : 1);
   // drop the boomerang
