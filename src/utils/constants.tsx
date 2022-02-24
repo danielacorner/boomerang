@@ -48,11 +48,11 @@ export const getAnimationDuration = () => {
 export const ANIMATE_HEIGHT = 7.5;
 
 export const COLORS = {
-  GRASS: "#2bb169",
-  DIRT: "#8c5900",
-  SAND: "#e0c946",
+  GRASS: "#8bac77",
+  DIRT: "#f1eadc",
+  SAND: "#bdac4e",
   WATER: "#00a18c",
-  PLANT: "#ca6c3e",
-  TEMPLE: "#705570",
+  PLANT: "#3da74b",
+  TEMPLE: "#bd9cbd",
 };
 export const PLAYER_CYLINDER_HEIGHT = 3;

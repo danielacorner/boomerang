@@ -12,7 +12,7 @@ import { GROUND_NAME, GROUP1, MAX_THROW_DISTANCE } from "../utils/constants";
 import { useCallback, useRef, useState } from "react";
 import { distanceBetweenPoints } from "../utils/utils";
 import { Vector3 } from "three";
-import { ProceduralTerrain } from "./ProceduralTerrain";
+import { ProceduralTerrain } from "./ProceduralTerrain/ProceduralTerrain";
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
@@ -122,14 +122,6 @@ export function Ground() {
       farthestTargetPosition: newFarthestTargetPosition,
     };
   };
-
-  const { texture } = useTexture({ texture: "/textures/grass.jpg" });
-
-  if (texture) {
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(38, 38);
-    texture.anisotropy = 16;
-  }
 
   return (
     <>
