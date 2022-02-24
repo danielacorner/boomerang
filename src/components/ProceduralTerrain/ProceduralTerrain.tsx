@@ -23,10 +23,6 @@ export function ProceduralTerrain() {
     }
   }, [currentWave]);
 
-  // TODO: terrain in a pseudo-random shape?
-  // TODO: a wall of blocks surrounding the terrain
-  // const [walls] =
-
   return (
     <>
       {tiles.map(({ color, position }, i) => {
@@ -44,8 +40,8 @@ export function ProceduralTerrain() {
       })}
       <Walls
         {...{
-          x: (terrain.width * TILE_WIDTH) / 2,
-          z: (terrain.height * TILE_WIDTH) / 2,
+          x: terrain.width * TILE_WIDTH,
+          z: terrain.height * TILE_WIDTH,
         }}
       />
     </>
