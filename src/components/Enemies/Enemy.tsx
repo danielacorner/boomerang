@@ -63,7 +63,7 @@ export function Enemy({
     const willAttack = currentStep?.movementType === "preAttack";
     const sss = THREE.MathUtils.lerp(
       enemyRef.current.scale.x,
-      theyreDeadRef.current ? 2 : willAttack ? 1.2 : 1,
+      theyreDeadRef.current ? 1.5 : willAttack ? 1.2 : 1,
       ANIM_SCALE_SPEED
     );
     const scale = new THREE.Vector3(sss, sss, sss);

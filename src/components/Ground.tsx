@@ -47,18 +47,18 @@ export function Ground() {
   const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
     if (!playerPositionRef.current) return;
 
-    // ! playerPositionRef not working
-    const {
-      newFarthestTargetPosition,
-    }: {
-      newFarthestTargetPosition: [number, number, number];
-    } = getFarthestTargetPosition(
-      getMousePosition(e),
-      { current: gameStateRef.current.playerPosition },
-      rangeUp
-    );
-
     setHeldBoomerangs((currentBoomerangs) => {
+      // ! playerPositionRef not working
+      const {
+        newFarthestTargetPosition,
+      }: {
+        newFarthestTargetPosition: [number, number, number];
+      } = getFarthestTargetPosition(
+        getMousePosition(e),
+        { current: gameStateRef.current.playerPosition },
+        rangeUp
+      );
+
       // if rangeUp is active, send ALL active boomerangs,
       // plus the first available boomerang, to the target position
       if (rangeUp) {

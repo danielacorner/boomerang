@@ -1,7 +1,7 @@
 import { PublicApi } from "@react-three/cannon";
 import { atom, useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
-import { SetStateAction, useRef } from "react";
+import { SetStateAction, useEffect, useRef } from "react";
 import { useMount } from "react-use";
 import { Mesh, BufferGeometry, Material, Object3D } from "three";
 import { ITEM_TYPES } from "./utils/constants";
@@ -136,6 +136,49 @@ const boomerangStateAtom = atom<HeldBoomerang[]>([
 export function useHeldBoomerangs() {
   return useAtom(boomerangStateAtom);
 }
+
+type BoomerangRefState = {
+  position: [number, number, number];
+  status: "flying" | "returning" | "dropped";
+};
+const boomerangRefsAtom = atom<{ current: BoomerangRefState[] }>({
+  current: [],
+});
+export function useBoomerangRefs(): [
+  {
+    current: BoomerangRefState[];
+  },
+  (
+    update: SetStateAction<{
+      current: BoomerangRefState[];
+    }>
+  ) => void
+] {
+  const ref = useRef<BoomerangRefState[]>([]);
+  const [boomerangRefs, setBoomerangRefs] = useAtom(boomerangRefsAtom);
+  useMount(() => {
+    if (!boomerangRefs.current) {
+      setBoomerangRefs(ref);
+    }
+  });
+
+  // sync with heldBoomerangs
+  const [heldBoomerangs] = useHeldBoomerangs();
+  useEffect(() => {
+    if (boomerangRefs.current.length !== heldBoomerangs.length) {
+      boomerangRefs.current = [
+        ...boomerangRefs.current,
+        ...Array(heldBoomerangs.length - boomerangRefs.current.length).fill({
+          status: "held",
+          position: [0, 0, 0],
+        }),
+      ];
+    }
+  });
+
+  return [boomerangRefs, setBoomerangRefs];
+}
+
 const playerStateAtom = atom<{
   lookAt: [number, number, number];
   playerPosition: [number, number, number];
