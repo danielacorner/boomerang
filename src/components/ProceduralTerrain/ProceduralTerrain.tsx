@@ -96,7 +96,9 @@ function TempleBlock() {
 }
 
 function DirtBlock() {
-  const texture = useTexture("/textures/dirt.png");
+  const texture = useTexture(
+    Math.random() > 0.5 ? "/textures/dirt.jpg" : "/textures/dirt2.jpg"
+  );
   return (
     <meshStandardMaterial map={texture} color={COLORS.DIRT} attach="material" />
   );
