@@ -32,7 +32,7 @@ export function MouseTarget() {
   const [heldBoomerangs] = useHeldBoomerangs();
   const { status } = heldBoomerangs[0] || { status: null };
   const opacity =
-    0.4 *
+    0.7 *
     // during rangeUp, we can throw continuously, so always show the target
     (rangeUp
       ? 1
