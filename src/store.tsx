@@ -83,6 +83,8 @@ export type GameStateType = {
   lookAt: [number, number, number];
   playerPosition: [number, number, number];
   farthestTargetPosition: [number, number, number];
+  powerupTimer: number | null;
+  rangeupTimer: number | null;
 };
 export const INITIAL_GAME_STATE: GameStateType = {
   isAnimating: false,
@@ -99,6 +101,8 @@ export const INITIAL_GAME_STATE: GameStateType = {
   lookAt: [0, 0, 0],
   playerPosition: [0, 0, 0],
   farthestTargetPosition: [0, 0, 0],
+  powerupTimer: null,
+  rangeupTimer: null,
 };
 const gameStateRefAtom = atom<{ current: GameStateType }>({
   current: INITIAL_GAME_STATE,
