@@ -6,7 +6,7 @@ import { useFrame } from "@react-three/fiber";
 
 const TIMER_TICKS = [...new Array(POWERUP_DURATION / 1000)];
 const SCALE = 1;
-const RADIUS = 10;
+const RADIUS = 7.5;
 export function PowerupCircularTimer(props) {
   const [{ poweredUp, poweredUpStartTime }, setPlayerState] = usePlayerState();
   const { scale } = useSpring({ scale: poweredUp ? 0.6 : 0 });
@@ -77,7 +77,9 @@ export function PowerupCircularTimer(props) {
             ]}
           >
             <icosahedronBufferGeometry attach="geometry" args={[1, 0]} />
-            <meshBasicMaterial
+            <meshStandardMaterial
+              metalness={0.5}
+              roughness={0.5}
               attach="material"
               color={"#e0764d"}
               opacity={0.5}

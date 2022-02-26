@@ -10,7 +10,7 @@ import { useFrame } from "@react-three/fiber";
 
 const TIMER_TICKS = [...new Array(RANGEUP_DURATION / 1000)];
 const SCALE = 0.7;
-const RADIUS = 15;
+const RADIUS = 10;
 export function RangeupCircularTimer(props) {
   const [{ rangeUp, rangeUpStartTime }, setPlayerState] = usePlayerState();
   const { scale } = useSpring({ scale: rangeUp ? 0.6 : 0 });
@@ -19,36 +19,37 @@ export function RangeupCircularTimer(props) {
   const [gameStateRef] = useGameStateRef();
   const outerRef = useRef<THREE.Mesh | null>(null);
   const refs = TIMER_TICKS.map((t) => useRef<THREE.Mesh | null>(null));
-  //
+
+  // count down the rangeUpStartTime
   useFrame(({ clock }) => {
-    if (!rangeUp || !outerRef.current) {
+    if (!gameStateRef.current.rangeUpStartTime || !outerRef.current) {
       return;
     }
     outerRef.current.position.set(...playerPositionRef.current);
     const time = clock.getElapsedTime();
-    if (gameStateRef.current.rangeUpStartTime) {
-      const timeSinceStart = time - gameStateRef.current.rangeUpStartTime;
+    const timeSinceStart = time - gameStateRef.current.rangeUpStartTime;
 
-      const timeSinceStartInTicks = Math.floor(timeSinceStart);
-      const tickIndex = Math.min(timeSinceStartInTicks, TIMER_TICKS.length - 1);
-      const tickRef = refs[tickIndex];
+    const timeSinceStartInTicks = Math.floor(timeSinceStart);
+    const tickIndex = Math.min(timeSinceStartInTicks, TIMER_TICKS.length - 1);
+    const tickRef = refs[tickIndex];
 
-      if (tickRef.current) {
-        tickRef.current.scale.set(0, 0, 0);
-        // tickRef.current.scale.set(0, 0, 0);
-      }
-      if (timeSinceStart > RANGEUP_DURATION / 1000 && rangeUp) {
-        setPlayerState((p) => ({
-          ...p,
-          rangeUp: false,
-          rangeUpStartTime: null,
-        }));
-        gameStateRef.current = {
-          ...gameStateRef.current,
-          rangeUp: false,
-          rangeUpStartTime: null,
-        };
-      }
+    if (tickRef.current) {
+      tickRef.current.scale.set(0, 0, 0);
+      // tickRef.current.scale.set(0, 0, 0);
+    }
+    if (timeSinceStart > RANGEUP_DURATION / 1000 && rangeUp) {
+      // stop rangeUp!
+
+      setPlayerState((p) => ({
+        ...p,
+        rangeUp: false,
+        rangeUpStartTime: null,
+      }));
+      gameStateRef.current = {
+        ...gameStateRef.current,
+        rangeUp: false,
+        rangeUpStartTime: null,
+      };
     }
   });
 
@@ -88,9 +89,11 @@ export function RangeupCircularTimer(props) {
             ]}
           >
             <sphereBufferGeometry attach="geometry" args={[1, 16, 16]} />
-            <meshBasicMaterial
+            <meshStandardMaterial
+              metalness={0.5}
+              roughness={0.5}
               attach="material"
-              color={"#70d9f3"}
+              color={"#25a1f3"}
               opacity={0.5}
               transparent={true}
             />
