@@ -127,49 +127,39 @@ function WallBlock({ position }) {
 function PlantBlock({ position }) {
   const [mounted, setMounted] = useState(true);
   const texture = useTexture("/textures/grass.png");
-  return mounted ? (
+  return (
     <>
       <meshStandardMaterial
         map={texture}
         color={COLORS.PLANT}
         attach="material"
       />
-      <mesh>
-        <DestructibleBlock {...{ setMounted, position, passThrough: true }} />
-        <PlantModel />
-      </mesh>
+      {mounted ? (
+        <mesh>
+          <DestructibleBlock {...{ setMounted, position }} />
+          <PlantModel />
+        </mesh>
+      ) : null}
     </>
-  ) : null;
+  );
 }
 
 function DestructibleBlock({
   setMounted,
   position,
   children = null as JSX.Element | null,
-  passThrough = false,
 }) {
   const boxHeight = TILE_WIDTH * 2;
   const [boxRef] = useBox(() => ({
     mass: 99999,
-    type: "Static",
-    ...(passThrough
-      ? {
-          collisionFilterGroup: GROUP1,
-        }
-      : {}),
+    // type: "Kinematic",
+    // collisionFilterMask: GROUP1, // collides with boomerang, enemies
+    // collisionFilterGroup: GROUP1, // collides with boomerang, enemies
     args: [TILE_WIDTH, boxHeight, TILE_WIDTH],
     position: [position[0], position[1] + boxHeight / 2, position[2]],
     rotation: [0, 0, 0],
     onCollide: (e) => {
-      console.log(
-        "🌟🚨 ~ file: ProceduralTerrain.tsx ~ line 193 ~ const[boxRef]=useBox ~ e.body?.name",
-        e.body?.name
-      );
       if (e.body?.name.includes(BOOMERANG_NAME)) {
-        console.log(
-          "🌟🌟🌟🌟🚨 ~ file: ProceduralTerrain.tsx ~ line 165 ~ const[boxRef]=useBox ~ e.body?.name.includes(BOOMERANG_NAME)",
-          e.body?.name.includes(BOOMERANG_NAME)
-        );
         setMounted(false);
       }
     },
