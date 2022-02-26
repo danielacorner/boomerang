@@ -89,7 +89,9 @@ export const BoomerangWithControls = ({
           <CarriedItems {...{ carriedItems }} />
         </animated.mesh>
       </Spin>
-      {(status === "dropped" || isVeryFarAway) && <DroppedBoomerangPin />}
+      {(status === "dropped" || (isVeryFarAway && status !== "held")) && (
+        <DroppedBoomerangPin />
+      )}
       <FlashWhenStatusChanges {...{ idx }} />
       <pointLight
         intensity={1}

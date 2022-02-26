@@ -12,7 +12,9 @@ export function DroppedBoomerangPin() {
             style={{
               position: "relative",
               transformOrigin: "center",
-              transform: "translate(-28px,-60px) rotate(135deg)",
+              transform: "translate(-38px,-80px) rotate(135deg)",
+              width: 48,
+              height: 48,
             }}
           />
         </div>

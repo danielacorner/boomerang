@@ -177,10 +177,11 @@ export function useMoveEnemy({
   const [attacked, setAttacked] = useState(false);
   // movement: move towards player
   useFrame(({ clock }) => {
-    // only attack if the player is within range
+    // only move toward player if player is within (range * 2)
     const isPlayerWithinRange = getIsPlayerWithinRange(
       position.current,
-      playerPositionRef.current
+      playerPositionRef.current,
+      2
     );
     if (
       !position.current ||
