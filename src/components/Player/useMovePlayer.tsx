@@ -122,20 +122,21 @@ export function useMovePlayer({
     cylinderApi.rotation.set(rotXL, rotYL, rotZL);
     // shrink the player if we're dashing
     const DASH_SCALE = 0.5;
+    const scale = gameStateRef.current.poweredUp ? 2.4 : 1.4;
     cylinderRef.current.scale.set(
       THREE.MathUtils.lerp(
         cylinderRef.current.scale.x,
-        dashing ? DASH_SCALE * 1.5 : 1,
+        (dashing ? DASH_SCALE * 1.5 : 1) * scale,
         0.3
       ),
       THREE.MathUtils.lerp(
         cylinderRef.current.scale.y,
-        dashing ? DASH_SCALE / 2 : 1,
+        (dashing ? DASH_SCALE / 2 : 1) * scale,
         0.3
       ),
       THREE.MathUtils.lerp(
         cylinderRef.current.scale.z,
-        dashing ? DASH_SCALE * 3 : 1,
+        (dashing ? DASH_SCALE * 3 : 1) * scale,
         0.3
       )
     );

@@ -125,7 +125,16 @@ function WallBlock({ position }) {
   const geo = useMemo(
     () =>
       toConvexProps(
-        new THREE.ConeGeometry(TILE_WIDTH, TILE_WIDTH * 5, sides, 1)
+        new THREE.ConeGeometry(
+          TILE_WIDTH,
+          TILE_WIDTH *
+            5 *
+            (Math.random() > 0.5 ? 2 : 1) *
+            (Math.random() > 0.5 ? 2 : 1) *
+            (Math.random() > 0.5 ? 2 : 1),
+          sides,
+          1
+        )
       ),
     []
   );

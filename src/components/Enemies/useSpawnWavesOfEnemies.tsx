@@ -50,13 +50,17 @@ export function useSpawnWavesOfEnemies() {
   // when the wave changes,
   // spawn the associated enemies & items
   useEffect(() => {
+    console.log(
+      "🌟🚨 ~ file: useSpawnWavesOfEnemies.tsx ~ line 57 ~ useEffect ~ droppedItems",
+      droppedItems
+    );
     if (prevWave !== currentWave) {
-      const { enemies, droppedItems } = LEVELS[currentWave];
+      const level = LEVELS[currentWave];
 
-      if (droppedItems) {
+      if (level.droppedItems) {
         setDroppedItems((p) => [
           ...p,
-          ...droppedItems.map((item) => ({
+          ...(level.droppedItems || []).map((item) => ({
             ...item,
             id: String(Math.random() * 10 ** 16),
             unmounted: false,
@@ -64,7 +68,7 @@ export function useSpawnWavesOfEnemies() {
         ]);
       }
 
-      enemies.forEach((enemy, idx) => {
+      level.enemies.forEach((enemy, idx) => {
         const id = Math.round(Math.random() * 10 ** 16);
         // spawnEnemy(enemy(id), id);
         setTimeout(
@@ -89,7 +93,9 @@ export function useSpawnWavesOfEnemies() {
       !gameStateRef.current.isAnimating &&
       Enemies.every((enemy) => enemy.unmounted) &&
       // TODO: only works for first stage right now
-      (currentWave !== 0 || droppedItems.length === 0)
+      (currentWave !== 0 || droppedItems.length === 0) &&
+      droppedItems.every((item) => item.unmounted)
+      // (currentWave !== 0 || droppedItems.length === 0)
     ) {
       ready.current = false;
       setCurrentWave(currentWave + 1);

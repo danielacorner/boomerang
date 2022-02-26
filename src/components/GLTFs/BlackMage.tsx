@@ -6,10 +6,16 @@ source: https://sketchfab.com/3d-models/wizard-cat-42cc473a1c17467c8f96e47e2a443
 title: Wizard Cat
 */
 
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useGLTF, useAnimations, Float } from "@react-three/drei";
-import { useGameStateRef, useHeldBoomerangs } from "../../store";
+import {
+  useGameState,
+  useGameStateRef,
+  useHeldBoomerangs,
+  usePlayerState,
+} from "../../store";
 import { useFrame } from "@react-three/fiber";
+import { useSpring, animated } from "@react-spring/three";
 
 export default function Model({ ...props }) {
   const group = useRef();
@@ -50,6 +56,9 @@ export default function Model({ ...props }) {
     floatIntensity: 20, // Up/down float intensity, defaults to 1
   };
   const DY = 3;
+
+  const { scale, opacity } = useMageSpring();
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group position={[0, -2, -2]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -100,14 +109,20 @@ export default function Model({ ...props }) {
             </group>
           )}
           <primitive object={nodes.GLTF_created_0_rootJoint} />
-          <skinnedMesh
+          <animated.skinnedMesh
+            scale={scale}
+            material-opacity={opacity}
+            material-transparent={true}
             castShadow
             receiveShadow
             geometry={nodes.Object_13.geometry}
             material={materials.Material}
             skeleton={nodes.Object_13.skeleton}
           />
-          <skinnedMesh
+          <animated.skinnedMesh
+            scale={scale}
+            material-opacity={opacity}
+            material-transparent={true}
             castShadow
             receiveShadow
             geometry={nodes.Object_14.geometry}
@@ -121,3 +136,29 @@ export default function Model({ ...props }) {
 }
 
 useGLTF.preload("/models/black_mage/scene.gltf");
+
+function useMageSpring() {
+  const [{ poweredUp }] = usePlayerState();
+  const [{ invulnerable }] = useGameState();
+
+  const [blinkOn, setBlinkOn] = useState(false);
+
+  useEffect(() => {
+    if (invulnerable) {
+      setBlinkOn(true);
+    }
+  }, [invulnerable]);
+
+  return useSpring({
+    scale: poweredUp ? 2.4 : 1.4,
+    opacity: blinkOn ? 0 : 1,
+    onRest: () => {
+      if (invulnerable) {
+        setBlinkOn(!blinkOn);
+      }
+      if (!invulnerable && blinkOn) {
+        setBlinkOn(false);
+      }
+    },
+  });
+}

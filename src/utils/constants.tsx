@@ -35,7 +35,7 @@ export const CAMERA_POSITIONS = {
   CLOSEUP: [0, CAMERA_DISTANCE, -CAMERA_DISTANCE / 2],
   /** display GAMEPLAY distance most of the time */
   GAMEPLAY: [0, CAMERA_DISTANCE * 1.2, -CAMERA_DISTANCE * 0.6],
-  RANGEUP: [0, CAMERA_DISTANCE * 1.5, -CAMERA_DISTANCE],
+  RANGEUP: [0, CAMERA_DISTANCE * 1.6, -CAMERA_DISTANCE / 3],
 } as { [key: string]: [number, number, number] };
 
 export const getAnimationDuration = () => {

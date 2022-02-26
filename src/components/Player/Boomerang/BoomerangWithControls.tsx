@@ -77,7 +77,7 @@ export const BoomerangWithControls = ({
       scale={scale}
       name={`${BOOMERANG_NAME}_${idx}`}
     >
-      {rangeUp && (
+      {rangeUp && ["flying", "returning", "dropped"].includes(status) && (
         <mesh scale={2}>
           <BlinkingWaveAnimation offsetTime={0} />
           <BlinkingWaveAnimation offsetTime={0.5} />
