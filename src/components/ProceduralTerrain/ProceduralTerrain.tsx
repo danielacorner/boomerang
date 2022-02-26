@@ -1,13 +1,15 @@
-import { useBox } from "@react-three/cannon";
+import { useBox, useConvexPolyhedron } from "@react-three/cannon";
 import { MeshDistortMaterial, useTexture } from "@react-three/drei";
-import { useEffect, useRef, useState } from "react";
-import { BOOMERANG_NAME, GROUP1, COLORS, GROUP2 } from "../../utils/constants";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { BOOMERANG_NAME, COLORS, GROUP2 } from "../../utils/constants";
 import { useCurrentWave } from "../Enemies/Enemies";
 import { LEVELS } from "../Enemies/LEVELS";
 import PlantModel from "../GLTFs/PlantModel";
 import { Walls } from "../Player/Walls";
 import { useControls } from "leva";
 import { TILE_PROBABILITY_MACHINE } from "./TILE_PROBABILITY_MACHINE";
+import * as THREE from "three";
+import { Geometry } from "three-stdlib";
 
 const TILE_WIDTH = 5;
 
@@ -105,18 +107,50 @@ function DirtBlock() {
   );
 }
 
+/**
+ * Returns legacy geometry vertices, faces for ConvP
+ * @param {THREE.BufferGeometry} bufferGeometry
+ */
+function toConvexProps(bufferGeometry) {
+  const geo = new Geometry().fromBufferGeometry(bufferGeometry);
+  // Merge duplicate vertices resulting from glTF export.
+  // Cannon assumes contiguous, closed meshes to work
+  geo.mergeVertices();
+  return [geo.vertices.map((v) => [v.x, v.y, v.z]), geo.faces.map((f) => [f.a, f.b, f.c]), []]; // prettier-ignore
+}
+
 /** block off a tile in the grid */
 function WallBlock({ position }) {
-  const [boxRef] = useBox(() => ({
+  const sides = 4;
+  const geo = useMemo(
+    () =>
+      toConvexProps(
+        new THREE.ConeGeometry(TILE_WIDTH, TILE_WIDTH * 5, sides, 1)
+      ),
+    []
+  );
+  const [coneRef] = useConvexPolyhedron(() => ({
+    // mass: 100,
+    // ...props,
+    args: geo as any,
     mass: 0,
     collisionFilterGroup: GROUP2,
     type: "Static",
-    args: [TILE_WIDTH, TILE_WIDTH * 2, TILE_WIDTH],
+    // args: [TILE_WIDTH, TILE_WIDTH * 2, TILE_WIDTH],
     position,
     rotation: [0, 0, 0],
   }));
+
+  // const [boxRef] = useBox(() => ({
+  //   mass: 0,
+  //   collisionFilterGroup: GROUP2,
+  //   type: "Static",
+  //   args: [TILE_WIDTH, TILE_WIDTH * 2, TILE_WIDTH],
+  //   position,
+  //   rotation: [0, 0, 0],
+  // }));
   return (
-    <mesh ref={boxRef}>
+    <mesh ref={coneRef}>
       <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
       <meshStandardMaterial color={COLORS.DIRT} />
     </mesh>

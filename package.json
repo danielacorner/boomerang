@@ -28,7 +28,8 @@
     "react-spring": "^9.4.2",
     "react-use": "^17.3.1",
     "styled-components": "^5.3.3",
-    "three": "^0.137.5"
+    "three": "^0.137.5",
+    "three-stdlib": "^2.8.7"
   },
   "devDependencies": {
     "@babel/core": "^7.17.0",
