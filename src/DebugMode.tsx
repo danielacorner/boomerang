@@ -6,13 +6,13 @@ import { useIsDev } from "./store";
 import { useAtom } from "jotai";
 import { atomWithStorage } from "jotai/utils";
 
-const isDevModeAtom = atomWithStorage(
-  "isDevMode",
+const isDebugModeAtom = atomWithStorage(
+  "isDebugMode",
   process.env.NODE_ENV === "development"
 );
+export const useIsDebugMode = () => useAtom(isDebugModeAtom);
 export function DebugMode({ children }) {
-  // const [isOn, setIsOn] = useState(false);
-  const [isOn, setIsOn] = useAtom(isDevModeAtom);
+  const [isOn, setIsOn] = useIsDebugMode();
   // const isDev = process.env.NODE_ENV === "development";
   const [, setIsDev] = useIsDev();
 

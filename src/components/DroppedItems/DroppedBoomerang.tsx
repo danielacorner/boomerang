@@ -14,6 +14,8 @@ import {
   useHeldBoomerangs,
 } from "../../store";
 import { DroppedBoomerangPin } from "./DroppedBoomerangPin";
+import { useIsDebugMode } from "../../DebugMode";
+import { useCurrentWave } from "../Enemies/Enemies";
 
 const BOOMERANG_ITEM_HEIGHT = 2;
 
@@ -21,6 +23,9 @@ export function DroppedBoomerang({ position, setMounted, id }) {
   const [, setDroppedItems] = useDroppedItems();
   const [, setHeldBoomerangs] = useHeldBoomerangs();
   const [gameStateRef] = useGameStateRef();
+  const [isDebugMode] = useIsDebugMode();
+  const [, setCurrentWave] = useCurrentWave();
+
   const onceRef = useRef(false);
   const unmountBoom = () => {
     setDroppedItems((p) =>
@@ -53,11 +58,15 @@ export function DroppedBoomerang({ position, setMounted, id }) {
         unmountBoom();
 
         if (isZeldaAnimation) {
-          gameStateRef.current.isAnimating = true;
-          setTimeout(() => {
-            gameStateRef.current.isAnimating = false;
-            window.localStorage.setItem("firstVisit", "false");
-          }, getAnimationDuration());
+          if (isDebugMode) {
+            setCurrentWave(1);
+          } else {
+            gameStateRef.current.isAnimating = true;
+            setTimeout(() => {
+              gameStateRef.current.isAnimating = false;
+              window.localStorage.setItem("firstVisit", "false");
+            }, getAnimationDuration());
+          }
         }
 
         gameStateRef.current.heldBoomerangs = [
