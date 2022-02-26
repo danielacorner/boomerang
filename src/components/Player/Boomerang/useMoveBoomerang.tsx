@@ -138,8 +138,9 @@ export function useMoveBoomerang({ idx }: { idx }) {
               }
             });
             setCarriedItems([]);
-          } else if (!carriedItems.length && onceRef.current) {
-            onceRef.current = false;
+            setTimeout(() => {
+              onceRef.current = false;
+            });
           }
         }
 
