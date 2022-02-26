@@ -54,7 +54,7 @@ export function useMovePlayer({
 
   const [gameStateRef] = useGameStateRef();
   const [dashing] = useIsDashing();
-  const { xxx } = useControls({ xxx: 0 });
+  const { xxx, rrrrrrrrrr } = useControls({ xxx: 0, rrrrrrrrrr: 180 });
   const [positionRef] = usePlayerPositionRef();
   useFrame(() => {
     if (
@@ -91,7 +91,9 @@ export function useMovePlayer({
 
     const PLAYER_ROTATION_SPEED = 0.2;
     // TODO: UP not working? seems to twitch on x-axis
-    const ROT_UP = THREE.MathUtils.degToRad(180);
+
+    const ROT_UP = THREE.MathUtils.degToRad(rrrrrrrrrr);
+    // const ROT_UP = THREE.MathUtils.degToRad(180);
     const ROT_LEFT = THREE.MathUtils.degToRad(-90);
     const ROT_DOWN = THREE.MathUtils.degToRad(0);
     const ROT_RIGHT = THREE.MathUtils.degToRad(90);

@@ -7,8 +7,8 @@ title: Wizard Cat
 */
 
 import React, { useEffect, useRef } from "react";
-import { useGLTF, useAnimations } from "@react-three/drei";
-import { useGameStateRef } from "../../store";
+import { useGLTF, useAnimations, Float } from "@react-three/drei";
+import { useGameStateRef, useHeldBoomerangs } from "../../store";
 import { useFrame } from "@react-three/fiber";
 
 export default function Model({ ...props }) {
@@ -40,37 +40,65 @@ export default function Model({ ...props }) {
   //   }
   // });
 
+  const [boomerangs] = useHeldBoomerangs();
+  const heldBoomerangs = boomerangs.filter(
+    (boomerang) => boomerang.status === "held"
+  );
+  const FLOAT_PROPS = {
+    speed: 10,
+    rotationIntensity: 20, // XYZ rotation intensity, defaults to 1
+    floatIntensity: 20, // Up/down float intensity, defaults to 1
+  };
+  const DY = 3;
   return (
     <group ref={group} {...props} dispose={null}>
       <group position={[0, -2, -2]} rotation={[-Math.PI / 2, 0, 0]}>
         <group rotation={[Math.PI / 2, 0, 0]}>
-          <group
-            position={[1.41, 0.79, -0.86]}
-            rotation={[Math.PI / 2, 0, -1.97]}
-          >
-            <mesh
-              geometry={nodes.Object_4.geometry}
-              material={nodes.Object_4.material}
-            />
-          </group>
-          <group
-            position={[-1.39, 1.76, 0.58]}
-            rotation={[Math.PI / 2, 0, -1.97]}
-          >
-            <mesh
-              geometry={nodes.Object_6.geometry}
-              material={nodes.Object_6.material}
-            />
-          </group>
-          <group
-            position={[0.04, 1.71, -2.21]}
-            rotation={[Math.PI / 2, 0, -1.97]}
-          >
-            <mesh
-              geometry={nodes.Object_8.geometry}
-              material={nodes.Object_8.material}
-            />
-          </group>
+          {heldBoomerangs.length > 0 && (
+            <group position={[0, DY, 0]}>
+              <Float {...FLOAT_PROPS}>
+                <group
+                  position={[1.41, 0.79, -0.86]}
+                  rotation={[Math.PI / 2, 0, -1.97]}
+                >
+                  <mesh
+                    geometry={nodes.Object_4.geometry}
+                    material={nodes.Object_4.material}
+                  />
+                </group>
+              </Float>
+            </group>
+          )}
+          {heldBoomerangs.length > 1 && (
+            <group position={[0, DY, 0]}>
+              <Float {...FLOAT_PROPS}>
+                <group
+                  position={[-1.39, 1.76, 0.58]}
+                  rotation={[Math.PI / 2, 0, -1.97]}
+                >
+                  <mesh
+                    geometry={nodes.Object_6.geometry}
+                    material={nodes.Object_6.material}
+                  />
+                </group>
+              </Float>
+            </group>
+          )}
+          {heldBoomerangs.length > 2 && (
+            <group position={[0, DY, 0]}>
+              <Float {...FLOAT_PROPS}>
+                <group
+                  position={[0.04, 1.71, -2.21]}
+                  rotation={[Math.PI / 2, 0, -1.97]}
+                >
+                  <mesh
+                    geometry={nodes.Object_8.geometry}
+                    material={nodes.Object_8.material}
+                  />
+                </group>
+              </Float>
+            </group>
+          )}
           <primitive object={nodes.GLTF_created_0_rootJoint} />
           <skinnedMesh
             castShadow
