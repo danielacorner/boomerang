@@ -7,10 +7,7 @@ import { AdaptiveDpr } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
 import { DASH_DURATION, useGameStateRef } from "../store";
-import {
-  usePressedKeys,
-  useSetupKeyboardListeners,
-} from "./Player/usePressedKeys";
+import { usePressedKeys, useKeyboardListeners } from "./Player/usePressedKeys";
 import { isEqual } from "lodash";
 import { dedupeRepetitiveArray } from "../utils/utils";
 
@@ -18,7 +15,7 @@ export function Scene() {
   useFrame(({ performance }) => {
     performance.regress();
   });
-  useSetupKeyboardListeners();
+  useKeyboardListeners();
   useDetectDash();
   return (
     <mesh>

@@ -2,7 +2,6 @@ import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
 import { usePressedKeys } from "../Player/usePressedKeys";
 import { Direction } from "../Scene";
-import { useEffect } from "react";
 
 export const JOYSTICK_RADIUS = 64;
 const JOYSTICK_THUMB_RADIUS = JOYSTICK_RADIUS / 2;
@@ -15,12 +14,7 @@ export const MIN_THUMB_YY = -THRESHOLD;
 const trans1 = (x, y) => `translate3d(${x}px,${y}px,0)`;
 
 export function Joystick() {
-  const { pressedKeys, setPressedKeys, setLastPressedKey } = usePressedKeys();
-
-  // record last pressed key
-  useEffect(() => {
-    setLastPressedKey((prev) => pressedKeys[pressedKeys.length - 1] || prev);
-  }, [pressedKeys]);
+  const { setPressedKeys, setLastPressedKey } = usePressedKeys();
 
   const [{ xy }, set] = useSpring(() => ({
     xy: [0, 0],

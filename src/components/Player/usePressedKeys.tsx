@@ -49,8 +49,14 @@ export function usePressedKeys(): {
   };
 }
 
-export function useSetupKeyboardListeners() {
-  const { setPressedKeys } = usePressedKeys();
+export function useKeyboardListeners() {
+  const { pressedKeys, setPressedKeys, setLastPressedKey } = usePressedKeys();
+
+  // record last pressed key
+  useEffect(() => {
+    setLastPressedKey((prev) => pressedKeys[pressedKeys.length - 1] || prev);
+  }, [pressedKeys]);
+
   const handleUp = useCallback(() => {
     setPressedKeys((p) => uniq([...p, UP]));
   }, []);
