@@ -59,11 +59,13 @@ export function DroppedBoomerang({ position, setMounted, id }) {
 
         if (isZeldaAnimation) {
           if (isDebugMode) {
-            setCurrentWave(1);
+            gameStateRef.current.levelStatus = "won";
+            // setCurrentWave(1);
           } else {
             gameStateRef.current.isAnimating = true;
             setTimeout(() => {
               gameStateRef.current.isAnimating = false;
+              gameStateRef.current.levelStatus = "won";
               window.localStorage.setItem("firstVisit", "false");
             }, getAnimationDuration());
           }

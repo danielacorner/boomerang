@@ -62,7 +62,7 @@ export function ZeldaBoomerangAnimation() {
 
           {/* <Environment preset="dawn" /> */}
           {/* <Sky sunPosition={[x, y, z]} rayleigh={rayleigh} /> */}
-          <Sky rayleigh={0.1} inclination={0.91} azimuth={0.25} />
+          {/* <Sky rayleigh={0.1} inclination={0.91} azimuth={0.25} /> */}
           {[...new Array(gpu.tier > 2 ? 50 : gpu.tier > 1 ? 8 : 0)].map(
             (_, i) => (
               <Cloud

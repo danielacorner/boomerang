@@ -11,6 +11,10 @@ import { Float } from "@react-three/drei";
 
 export function DroppedItems() {
   const [droppedItems] = useDroppedItems();
+  console.log(
+    "🌟🚨 ~ file: DroppedItems.tsx ~ line 14 ~ DroppedItems ~ droppedItems",
+    droppedItems
+  );
 
   return (
     <>

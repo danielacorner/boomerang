@@ -69,6 +69,7 @@ export function usePlayerPositionRef(): [
 }
 
 export type GameStateType = {
+  levelStatus: "fighting" | "won" | "lost";
   isAnimating: boolean;
   poweredUp: boolean;
   rangeUp: boolean;
@@ -88,6 +89,7 @@ export type GameStateType = {
   dashTime: number;
 };
 export const INITIAL_GAME_STATE: GameStateType = {
+  levelStatus: "fighting",
   isAnimating: false,
   rangeUp: false,
   rangeUpStartTime: null,

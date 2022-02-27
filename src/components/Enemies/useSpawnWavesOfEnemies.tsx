@@ -88,6 +88,9 @@ export function useSpawnWavesOfEnemies() {
     }
   }, [currentWave]);
 
+  // TODO:
+  // when all enemies are dead, show the exit door
+
   // 2. when all enemies AND items are unmounted, spawn the next wave
   useFrame(() => {
     if (
@@ -100,7 +103,7 @@ export function useSpawnWavesOfEnemies() {
       // (currentWave !== 0 || droppedItems.length === 0)
     ) {
       ready.current = false;
-      setCurrentWave(currentWave + 1);
+      gameStateRef.current.levelStatus = "won";
     }
   });
 

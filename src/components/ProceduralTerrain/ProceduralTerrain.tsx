@@ -11,7 +11,7 @@ import { TILE_PROBABILITY_MACHINE } from "./TILE_PROBABILITY_MACHINE";
 import * as THREE from "three";
 import { Geometry } from "three-stdlib";
 
-const TILE_WIDTH = 5;
+export const TILE_WIDTH = 5;
 
 export function ProceduralTerrain() {
   const [currentWave] = useCurrentWave();

@@ -1,4 +1,4 @@
-import { Environment, Plane, useTexture } from "@react-three/drei";
+import { Environment, Plane, useTexture, Sky } from "@react-three/drei";
 import { usePlane } from "@react-three/cannon";
 import {
   useGameStateRef,
@@ -13,6 +13,7 @@ import { useCallback, useRef, useState } from "react";
 import { distanceBetweenPoints } from "../utils/utils";
 import { Vector3 } from "three";
 import { ProceduralTerrain } from "./ProceduralTerrain/ProceduralTerrain";
+
 const PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
@@ -125,7 +126,7 @@ export function Ground() {
 
   return (
     <>
-      <fog attach="fog" args={["#74bbd0", 0, 200]} />
+      {/* <fog attach="fog" args={["#74bbd0", 0, 200]} /> */}
       <ProceduralTerrain />
       <Plane
         receiveShadow
@@ -135,11 +136,8 @@ export function Ground() {
         onPointerMove={onPointerMove}
         {...PLANE_PROPS}
       >
-        {/* <meshToonMaterial color="#6e7c58" map={texture} /> */}
+        <meshBasicMaterial opacity={0} transparent={true} color="#000" />
       </Plane>
-      {/* <Plane {...PLANE_PROPS} position={[0, 0, 0]}>
-        <meshToonMaterial color="#ffffff" opacity={0.5} transparent={true} />
-      </Plane> */}
     </>
   );
 }
