@@ -2,7 +2,7 @@ import { atom, SetStateAction, useAtom } from "jotai";
 import { useKey } from "react-use";
 import { Direction } from "../Scene";
 import { uniq } from "lodash";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 export const [UP, LEFT, RIGHT, DOWN]: Direction[] = [
   "ArrowUp",
   "ArrowLeft",
@@ -22,26 +22,46 @@ export function usePressedKeys(): {
   left: boolean;
   pressedKeys: Direction[];
   lastPressedKey: Direction;
+  setLastPressedKey: (update: SetStateAction<Direction>) => void;
   setPressedKeys: (update: SetStateAction<Direction[]>) => void;
 } {
   const [pressedKeys, setPressedKeys] = useAtom(pressedKeysAtom);
+
+  // record the last pressed key
   const [lastPressedKey, setLastPressedKey] = useAtom(lastPressedKeyAtom);
 
+  const [up, right, down, left] = [
+    pressedKeys.includes(UP),
+    pressedKeys.includes(RIGHT),
+    pressedKeys.includes(DOWN),
+    pressedKeys.includes(LEFT),
+  ];
+
+  return {
+    up,
+    right,
+    down,
+    left,
+    pressedKeys,
+    lastPressedKey,
+    setLastPressedKey,
+    setPressedKeys,
+  };
+}
+
+export function useSetupKeyboardListeners() {
+  const { setPressedKeys } = usePressedKeys();
   const handleUp = useCallback(() => {
     setPressedKeys((p) => uniq([...p, UP]));
-    setLastPressedKey(UP);
   }, []);
   const handleLeft = useCallback(() => {
     setPressedKeys((p) => uniq([...p, LEFT]));
-    setLastPressedKey(LEFT);
   }, []);
   const handleDown = useCallback(() => {
     setPressedKeys((p) => uniq([...p, DOWN]));
-    setLastPressedKey(DOWN);
   }, []);
   const handleRight = useCallback(() => {
     setPressedKeys((p) => uniq([...p, RIGHT]));
-    setLastPressedKey(RIGHT);
   }, []);
 
   useKey("w", handleUp);
@@ -139,21 +159,4 @@ export function usePressedKeys(): {
       event: "keyup",
     }
   );
-
-  const [up, right, down, left] = [
-    pressedKeys.includes(UP),
-    pressedKeys.includes(RIGHT),
-    pressedKeys.includes(DOWN),
-    pressedKeys.includes(LEFT),
-  ];
-
-  return {
-    up,
-    right,
-    down,
-    left,
-    pressedKeys,
-    lastPressedKey,
-    setPressedKeys,
-  };
 }

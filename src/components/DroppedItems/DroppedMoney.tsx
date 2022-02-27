@@ -42,10 +42,6 @@ export function DroppedMoney({ position, setMounted, id }) {
       // type: interactive ? "Dynamic" : "Kinematic",
       position,
       onCollide: (e) => {
-        console.log(
-          "🌟🚨 ~ file: DroppedMoney.tsx ~ line 44 ~ DroppedMoney ~ e",
-          e
-        );
         // when the player touches it, gain +1 money
         if (e.body?.name === "player" && collectedStatus === "uncollected") {
           setMoney((p) => p + 1);

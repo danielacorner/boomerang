@@ -4,18 +4,19 @@ import * as THREE from "three";
 import { DOWN, LEFT, RIGHT, UP } from "./usePressedKeys";
 import {
   usePlayerPositionRef,
-  useIsDashing,
   useGameStateRef,
+  DASH_DURATION,
+  usePlayerState,
 } from "../../store";
 import { useControls } from "leva";
 import { useEffect, useRef } from "react";
 import { PLAYER_CYLINDER_HEIGHT } from "../../utils/constants";
+const MOVE_SPEED = 0.39;
 
 export function useMovePlayer({
   cylinderRef,
   right,
   left,
-  moveSpeed,
   down,
   up,
   cylinderApi,
@@ -24,7 +25,6 @@ export function useMovePlayer({
   cylinderRef: any;
   right: boolean;
   left: boolean;
-  moveSpeed: number;
   down: boolean;
   up: boolean;
   cylinderApi: PublicApi;
@@ -53,10 +53,17 @@ export function useMovePlayer({
   }, []);
 
   const [gameStateRef] = useGameStateRef();
-  const [dashing] = useIsDashing();
+
   const { xxx, rrrrrrrrrr } = useControls({ xxx: 0, rrrrrrrrrr: 180 });
   const [positionRef] = usePlayerPositionRef();
+  const [{ poweredUp }] = usePlayerState();
+
   useFrame(() => {
+    const dashing =
+      gameStateRef.current.dashTime &&
+      Date.now() - gameStateRef.current.dashTime < DASH_DURATION;
+    const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1) * (dashing ? 4 : 1);
+
     if (
       !cylinderRef.current ||
       !positionRef.current ||

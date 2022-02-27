@@ -3,13 +3,10 @@ import { CylinderArgs, useCylinder } from "@react-three/cannon";
 import { useEffect, useRef, useState } from "react";
 import { usePressedKeys } from "./usePressedKeys";
 import {
-  useHeldBoomerangs,
   usePlayerState,
   usePlayerPositionRef,
   usePlayerRef,
   useGameStateRef,
-  useIsDashing,
-  DASH_DURATION,
 } from "../../store";
 import {
   ENEMY_NAME,
@@ -24,11 +21,8 @@ import { useMovePlayer } from "./useMovePlayer";
 
 export const POWERUP_DURATION = 12 * 1000;
 export const RANGEUP_DURATION = 12 * 1000;
-const MOVE_SPEED = 0.39;
 
 export function usePlayerControls() {
-  const [, setHeldBoomerangs] = useHeldBoomerangs();
-
   const { lastPressedKey, pressedKeys, up, left, down, right } =
     usePressedKeys();
 
@@ -43,24 +37,13 @@ export function usePlayerControls() {
 
   const [{ poweredUp }, setPlayerState] = usePlayerState();
 
-  const [dashing, setDashing] = useIsDashing();
   useEventListener("keydown", (e) => {
     if ([" "].includes(e.key)) {
       e.preventDefault();
-      setDashing((prevDashing) => {
-        if (prevDashing) {
-          return prevDashing;
-        } else {
-          setTimeout(() => {
-            setDashing(0);
-          }, DASH_DURATION);
-          return Date.now();
-        }
-      });
+      gameStateRef.current.dashTime = Date.now();
     }
   });
 
-  const moveSpeed = MOVE_SPEED * (poweredUp ? 1.5 : 1) * (dashing ? 4 : 1);
   const [playerRef] = usePlayerRef();
   const { clock } = useThree();
   const [cylinderRef, cylinderApi] = useCylinder(
@@ -190,7 +173,6 @@ export function usePlayerControls() {
     cylinderRef,
     right,
     left,
-    moveSpeed,
     down,
     up,
     cylinderApi,

@@ -85,6 +85,7 @@ export type GameStateType = {
   farthestTargetPosition: [number, number, number];
   powerupTimer: number | null;
   rangeupTimer: number | null;
+  dashTime: number;
 };
 export const INITIAL_GAME_STATE: GameStateType = {
   isAnimating: false,
@@ -103,6 +104,7 @@ export const INITIAL_GAME_STATE: GameStateType = {
   farthestTargetPosition: [0, 0, 0],
   powerupTimer: null,
   rangeupTimer: null,
+  dashTime: 0,
 };
 const gameStateRefAtom = atom<{ current: GameStateType }>({
   current: INITIAL_GAME_STATE,
@@ -231,17 +233,8 @@ export type DroppedItemType = {
 };
 const droppedItemsAtom = atom<DroppedItemType[]>([]);
 export const useDroppedItems = () => useAtom(droppedItemsAtom);
-const isDashingAtom = atom(0);
 
 export const DASH_DURATION = 150;
-export const useIsDashing = (): [
-  boolean | 0,
-  (update: SetStateAction<number>) => void
-] => {
-  const [dashing, setDashing] = useAtom(isDashingAtom);
-  const isDashing = dashing && Date.now() - dashing < DASH_DURATION;
-  return [isDashing, setDashing];
-};
 
 export const isMusicOnAtom = atomWithStorage<boolean>("atoms:isMusicOn", false);
 export const volumeAtom = atom<number>(5);
