@@ -31,7 +31,7 @@ export function NextLevelPath() {
       mass: 0,
       position: [
         -TILE_WIDTH / 2,
-        0,
+        0.1,
         (level.terrain.height / 2) * TILE_WIDTH + TILE_WIDTH / 2,
       ].map((p, i) => p + GROUND_PLANE_PROPS.position[i]) as [
         number,
@@ -44,6 +44,10 @@ export function NextLevelPath() {
           return;
         }
         if (e.body.name === PLAYER_NAME) {
+          console.log(
+            "🌟🚨 ~ file: NextLevelPath.tsx ~ line 43 ~ NextLevelPath ~ e",
+            e
+          );
           setCurrentWave(currentWave + 1);
           gameStateRef.current.levelStatus = "fighting";
         }
@@ -55,22 +59,42 @@ export function NextLevelPath() {
 
   return (
     <mesh ref={boxRef}>
-      <mesh position={[0, 0, 0]}>
-        <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
-        <TempleBlock />
-      </mesh>
-      <mesh position={[TILE_WIDTH, 0, 0]}>
-        <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
-        <TempleBlock />
-      </mesh>
-      <mesh position={[0, 0, TILE_WIDTH]}>
-        <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
-        <TempleBlock />
-      </mesh>
-      <mesh position={[TILE_WIDTH, 0, TILE_WIDTH]}>
-        <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
-        <TempleBlock />
-      </mesh>
+      {visible && (
+        <>
+          <mesh position={[0, 0, -TILE_WIDTH * 2]}>
+            <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+            <TempleBlock />
+          </mesh>
+          <mesh position={[TILE_WIDTH, 0, -TILE_WIDTH * 2]}>
+            <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+            <TempleBlock />
+          </mesh>
+          <mesh position={[0, 0, -TILE_WIDTH]}>
+            <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+            <TempleBlock />
+          </mesh>
+          <mesh position={[TILE_WIDTH, 0, -TILE_WIDTH]}>
+            <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+            <TempleBlock />
+          </mesh>
+          <mesh position={[0, 0, 0]}>
+            <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+            <TempleBlock />
+          </mesh>
+          <mesh position={[TILE_WIDTH, 0, 0]}>
+            <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+            <TempleBlock />
+          </mesh>
+          <mesh position={[0, 0, TILE_WIDTH]}>
+            <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+            <TempleBlock />
+          </mesh>
+          <mesh position={[TILE_WIDTH, 0, TILE_WIDTH]}>
+            <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+            <TempleBlock />
+          </mesh>
+        </>
+      )}
     </mesh>
   );
 }
