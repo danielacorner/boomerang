@@ -2,7 +2,7 @@ import { DroppedMoney } from "./DroppedMoney";
 import { DroppedHeart } from "./DroppedHeart";
 import { DroppedItemType, useDroppedItems } from "../../store";
 import { DroppedPowerup } from "./DroppedPowerup";
-import React, { useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { DroppedRangeup } from "./DroppedRangeup";
 import { DroppedBoomerang } from "./DroppedBoomerang";
 import { ITEM_TYPES } from "../../utils/constants";
@@ -59,7 +59,7 @@ function DroppedItem({ id, position, type, unmounted }: DroppedItemType) {
     );
     return null;
   }
-  const Component = (p) => ITEM_TYPES_COMPONENTS[type](p);
+  const Component = useCallback((p) => ITEM_TYPES_COMPONENTS[type](p), []);
   const [mounted, setMounted] = useState(!unmounted);
   const timerRef = useRef<number>(0);
   useMount(() => {

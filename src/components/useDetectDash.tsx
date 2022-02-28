@@ -7,6 +7,8 @@ import { dedupeRepetitiveArray } from "../utils/utils";
 import { Direction } from "./Scene";
 
 const DASH_TIMEOUT = 750;
+// double-tap within this time window
+const DASH_DETECT_THRESHOLD = 500;
 
 export function useDetectDash() {
   const { pressedKeys } = usePressedKeys();
@@ -41,7 +43,8 @@ export function useDetectDash() {
     // then initiate dashing
     if (pressedKeysHistory.current.length >= 4) {
       const [a, b, c, d] = pressedKeysHistory.current.slice(-4);
-      const isWithinThreshold = d.timestamp - b.timestamp < 1000;
+      const isWithinThreshold =
+        d.timestamp - b.timestamp < DASH_DETECT_THRESHOLD;
       if (
         isEqual(a.keys, c.keys) &&
         isEqual(b.keys, d.keys) &&
