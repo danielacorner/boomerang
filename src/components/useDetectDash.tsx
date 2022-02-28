@@ -6,7 +6,7 @@ import { isEqual } from "lodash";
 import { dedupeRepetitiveArray } from "../utils/utils";
 import { Direction } from "./Scene";
 
-const DASH_TIMEOUT = 750;
+export const DASH_TIMEOUT = 750;
 // double-tap within this time window
 const DASH_DETECT_THRESHOLD = 500;
 

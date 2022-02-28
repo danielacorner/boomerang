@@ -1,12 +1,11 @@
 import { useCurrentWave } from "./Enemies/Enemies";
-import { MeshWobbleMaterial } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useBox } from "@react-three/cannon";
 import { PLAYER_NAME } from "../utils/constants";
 import { useGameStateRef } from "../store";
 import { LEVELS } from "./Enemies/LEVELS";
 import { TempleBlock, TILE_WIDTH } from "./ProceduralTerrain/ProceduralTerrain";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { GROUND_PLANE_PROPS } from "./Ground";
 
 // TODO: turn into a fading path... then transition to the next stage
@@ -38,7 +37,7 @@ export function NextLevelPath() {
         number,
         number
       ],
-      args: [TILE_WIDTH * 2, TILE_WIDTH * 2, TILE_WIDTH * 0.2],
+      args: [TILE_WIDTH * 2, TILE_WIDTH * 2, TILE_WIDTH * 1.1],
       onCollide: (e) => {
         if (!visible) {
           return;
@@ -48,7 +47,15 @@ export function NextLevelPath() {
             "🌟🚨 ~ file: NextLevelPath.tsx ~ line 43 ~ NextLevelPath ~ e",
             e
           );
+          // go to the next level
           setCurrentWave(currentWave + 1);
+          // move the player to the level's entrance
+          gameStateRef.current.cylinderApi?.position.set(
+            0,
+            0,
+            (level.terrain.height / 2) * TILE_WIDTH
+          );
+
           gameStateRef.current.levelStatus = "fighting";
         }
       },

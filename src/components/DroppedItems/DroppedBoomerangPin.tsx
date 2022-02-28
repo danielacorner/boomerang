@@ -5,7 +5,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import { usePlayerPositionRef } from "../../store";
 
-export function DroppedBoomerangPin() {
+export function DroppedBoomerangPin({ style = {} }) {
   const [playerPositionRef] = usePlayerPositionRef();
   const ref = useRef<THREE.Mesh | null>(null);
 
@@ -31,6 +31,8 @@ export function DroppedBoomerangPin() {
     // const y = Math.max(minY, Math.min(maxY, initialPositionRef.current.y));
     const y = initialPositionRef.current.y;
 
+    // TODO: account for inverted values
+
     const maxZ = playerPositionRef.current[2] + viewport.height / 2;
     const minZ = playerPositionRef.current[2] - viewport.height / 2;
     const z = Math.max(minZ, Math.min(maxZ, initialPositionRef.current.z));
@@ -40,7 +42,13 @@ export function DroppedBoomerangPin() {
 
   return (
     <mesh ref={ref}>
-      <Html style={{ pointerEvents: "none", transform: `translate(0px,0px)` }}>
+      <Html
+        style={{
+          pointerEvents: "none",
+          transform: `translate(0px,0px)`,
+          ...style,
+        }}
+      >
         <DroppedBoomerangPinStyles>
           <div className="boom">
             <BoomerangIcon

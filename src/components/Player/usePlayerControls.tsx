@@ -19,6 +19,7 @@ import {
 import { useMount } from "react-use";
 import { useEventListener } from "../../utils/useEventListener";
 import { useMovePlayer } from "./useMovePlayer";
+import { DASH_TIMEOUT } from "../useDetectDash";
 
 export const POWERUP_DURATION = 12 * 1000;
 export const RANGEUP_DURATION = 12 * 1000;
@@ -41,7 +42,9 @@ export function usePlayerControls() {
   useEventListener("keydown", (e) => {
     if ([" "].includes(e.key)) {
       e.preventDefault();
-      if (Date.now() - gameStateRef.current.dashTime < DASH_DURATION) {
+      // don't dash twice in a row
+      const ready = Date.now() - gameStateRef.current.dashTime > DASH_TIMEOUT;
+      if (ready) {
         gameStateRef.current.dashTime = Date.now();
       }
     }

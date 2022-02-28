@@ -21,8 +21,6 @@ import { BlinkingWaveAnimation } from "../BlinkingWaveAnimation";
 import { useFrame } from "@react-three/fiber";
 import { distanceBetweenPoints } from "../../../utils/utils";
 
-const MAX_DISTANCE_SHOW_PIN = 20;
-
 export const BoomerangWithControls = ({
   // TODO: use idx to only shoot one at a time
   idx,
@@ -48,7 +46,7 @@ export const BoomerangWithControls = ({
   const [playerPositionRef] = usePlayerPositionRef();
   const [isVeryFarAway, setIsVeryFarAway] = useState(false);
   const [boomerangRefs] = useBoomerangRefs();
-  useFrame(() => {
+  useFrame(({ viewport }) => {
     if (
       !boomerangCylinderRef.current ||
       !playerPositionRef.current ||
@@ -62,13 +60,20 @@ export const BoomerangWithControls = ({
       [boom.position[0], boom.position[1], boom.position[2]],
       playerPositionRef.current
     );
+    const distanceShowPin = Math.min(viewport.width, viewport.height) / 2;
 
-    if (distanceToPlayer > MAX_DISTANCE_SHOW_PIN && !isVeryFarAway) {
+    if (distanceToPlayer > distanceShowPin && !isVeryFarAway) {
       setIsVeryFarAway(true);
-    } else if (distanceToPlayer < MAX_DISTANCE_SHOW_PIN && isVeryFarAway) {
+    } else if (distanceToPlayer < distanceShowPin && isVeryFarAway) {
       setIsVeryFarAway(false);
     }
   });
+
+  const showPin = status === "dropped" || (isVeryFarAway && status !== "held");
+  console.log(
+    "🌟🚨 ~ file: BoomerangWithControls.tsx ~ line 73 ~ showPin",
+    showPin
+  );
 
   return (
     <animated.mesh
@@ -89,9 +94,7 @@ export const BoomerangWithControls = ({
           <CarriedItems {...{ carriedItems }} />
         </animated.mesh>
       </Spin>
-      {(status === "dropped" || (isVeryFarAway && status !== "held")) && (
-        <DroppedBoomerangPin />
-      )}
+      <DroppedBoomerangPin style={{ opacity: showPin ? 1 : 0 }} />
       <FlashWhenStatusChanges {...{ idx }} />
       <pointLight
         intensity={1}
