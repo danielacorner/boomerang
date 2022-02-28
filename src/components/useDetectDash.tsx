@@ -48,10 +48,12 @@ export function useDetectDash() {
       if (
         isEqual(a.keys, c.keys) &&
         isEqual(b.keys, d.keys) &&
+        !isEqual(a.keys, b.keys) &&
         Boolean(d.keys?.[0]) &&
         isWithinThreshold
       ) {
         gameStateRef.current.dashTime = Date.now();
+        pressedKeysHistory.current = [];
       }
     }
   });

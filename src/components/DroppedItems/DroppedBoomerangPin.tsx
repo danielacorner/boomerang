@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Billboard, Html } from "@react-three/drei";
 import { BoomerangIcon } from "../HUD/BoomerangsIndicator";
 import { useFrame, useThree } from "@react-three/fiber";
+import { useRef } from "react";
 
 export function DroppedBoomerangPin() {
   // TODO: stay on-screen at edges
@@ -11,11 +12,29 @@ export function DroppedBoomerangPin() {
     "🌟🚨 ~ file: DroppedBoomerangPin.tsx ~ line 12 ~ DroppedBoomerangPin ~ viewport",
     viewport
   );
-  // useFrame(({camera}) => {
+  const ref = useRef<THREE.Mesh | null>(null);
+  useFrame(({ camera }) => {
+    if (!ref.current) {
+      return;
+    }
 
-  // })
+    // bound the position to always be within the frame,
+    // so we can see this dropped pin from any distance
+    ref.current.position.set(
+      Math.max(
+        Math.min(ref.current.position.x, viewport.width / 2),
+        -viewport.width / 2
+      ),
+      Math.max(
+        Math.min(ref.current.position.y, viewport.height / 2),
+        -viewport.height / 2
+      ),
+      ref.current.position.z
+    );
+  });
+
   return (
-    <Billboard follow={true}>
+    <mesh ref={ref}>
       <Html style={{ pointerEvents: "none", transform: `translate(0px,0px)` }}>
         <DroppedBoomerangPinStyles>
           <div className="boom">
@@ -32,7 +51,7 @@ export function DroppedBoomerangPin() {
           </div>
         </DroppedBoomerangPinStyles>
       </Html>
-    </Billboard>
+    </mesh>
   );
 }
 const DroppedBoomerangPinStyles = styled.div`
