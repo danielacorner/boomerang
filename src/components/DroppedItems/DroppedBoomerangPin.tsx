@@ -3,34 +3,39 @@ import { Billboard, Html } from "@react-three/drei";
 import { BoomerangIcon } from "../HUD/BoomerangsIndicator";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
+import { usePlayerPositionRef } from "../../store";
 
 export function DroppedBoomerangPin() {
-  // TODO: stay on-screen at edges
-
-  const { viewport } = useThree();
-  console.log(
-    "🌟🚨 ~ file: DroppedBoomerangPin.tsx ~ line 12 ~ DroppedBoomerangPin ~ viewport",
-    viewport
-  );
+  const [playerPositionRef] = usePlayerPositionRef();
   const ref = useRef<THREE.Mesh | null>(null);
-  useFrame(({ camera }) => {
+
+  // pin tracks with the player position to stay on-screen at edges
+  const initialPositionRef = useRef(null as any);
+  useFrame(({ viewport }) => {
     if (!ref.current) {
       return;
     }
-
+    if (!initialPositionRef.current) {
+      initialPositionRef.current = ref.current.position.clone();
+    }
     // bound the position to always be within the frame,
     // so we can see this dropped pin from any distance
-    ref.current.position.set(
-      Math.max(
-        Math.min(ref.current.position.x, viewport.width / 2),
-        -viewport.width / 2
-      ),
-      Math.max(
-        Math.min(ref.current.position.y, viewport.height / 2),
-        -viewport.height / 2
-      ),
-      ref.current.position.z
-    );
+
+    // distance from the player to the edge of the screen
+    const maxX = playerPositionRef.current[0] + viewport.width / 2;
+    const minX = playerPositionRef.current[0] - viewport.width / 2;
+    const x = Math.max(minX, Math.min(maxX, initialPositionRef.current.x));
+
+    // const maxY = playerPositionRef.current[1] + viewport.height / 2;
+    // const minY = playerPositionRef.current[1] - viewport.height / 2;
+    // const y = Math.max(minY, Math.min(maxY, initialPositionRef.current.y));
+    const y = initialPositionRef.current.y;
+
+    const maxZ = playerPositionRef.current[2] + viewport.height / 2;
+    const minZ = playerPositionRef.current[2] - viewport.height / 2;
+    const z = Math.max(minZ, Math.min(maxZ, initialPositionRef.current.z));
+
+    ref.current.position.set(x, y, z);
   });
 
   return (
