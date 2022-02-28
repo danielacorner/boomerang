@@ -7,6 +7,7 @@ import {
   usePlayerPositionRef,
   usePlayerRef,
   useGameStateRef,
+  DASH_DURATION,
 } from "../../store";
 import {
   ENEMY_NAME,
@@ -40,7 +41,9 @@ export function usePlayerControls() {
   useEventListener("keydown", (e) => {
     if ([" "].includes(e.key)) {
       e.preventDefault();
-      gameStateRef.current.dashTime = Date.now();
+      if (Date.now() - gameStateRef.current.dashTime < DASH_DURATION) {
+        gameStateRef.current.dashTime = Date.now();
+      }
     }
   });
 

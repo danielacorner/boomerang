@@ -6,6 +6,8 @@ import { isEqual } from "lodash";
 import { dedupeRepetitiveArray } from "../utils/utils";
 import { Direction } from "./Scene";
 
+const DASH_TIMEOUT = 750;
+
 export function useDetectDash() {
   const { pressedKeys } = usePressedKeys();
 
@@ -27,7 +29,7 @@ export function useDetectDash() {
   useFrame(() => {
     if (
       gameStateRef.current.dashTime &&
-      Date.now() - gameStateRef.current.dashTime < DASH_DURATION
+      Date.now() - gameStateRef.current.dashTime < DASH_TIMEOUT
     ) {
       return;
     }
