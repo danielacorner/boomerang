@@ -1,14 +1,17 @@
 import { useCurrentWave } from "./Enemies/Enemies";
-import { Cloud, MeshWobbleMaterial } from "@react-three/drei";
+import { MeshWobbleMaterial } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useBox } from "@react-three/cannon";
 import { PLAYER_NAME } from "../utils/constants";
 import { useGameStateRef } from "../store";
 import { LEVELS } from "./Enemies/LEVELS";
-import { TILE_WIDTH } from "./ProceduralTerrain/ProceduralTerrain";
+import { TempleBlock, TILE_WIDTH } from "./ProceduralTerrain/ProceduralTerrain";
 import { useRef, useState } from "react";
+import { GROUND_PLANE_PROPS } from "./Ground";
 
-export function NextLevelDoor() {
+// TODO: turn into a fading path... then transition to the next stage
+
+export function NextLevelPath() {
   const [currentWave, setCurrentWave] = useCurrentWave();
   const level = LEVELS[currentWave];
   const [gameStateRef] = useGameStateRef();
@@ -22,11 +25,19 @@ export function NextLevelDoor() {
     }
   });
 
-  // TODO: when the player touches the door, go to the next level
+  //  when the player touches the door, go to the next level
   const [boxRef] = useBox(
     () => ({
       mass: 0,
-      position: [0, TILE_WIDTH / 2, (level.terrain.height / 2) * TILE_WIDTH],
+      position: [
+        -TILE_WIDTH / 2,
+        0,
+        (level.terrain.height / 2) * TILE_WIDTH + TILE_WIDTH / 2,
+      ].map((p, i) => p + GROUND_PLANE_PROPS.position[i]) as [
+        number,
+        number,
+        number
+      ],
       args: [TILE_WIDTH * 2, TILE_WIDTH * 2, TILE_WIDTH * 0.2],
       onCollide: (e) => {
         if (!visible) {
@@ -41,39 +52,25 @@ export function NextLevelDoor() {
     null,
     [visible]
   );
-  const rand = useRef(Math.random()).current - 1;
+
   return (
     <mesh ref={boxRef}>
-      <>
-        <sphereBufferGeometry attach="geometry" args={[TILE_WIDTH * 0.75]} />
-        <MeshWobbleMaterial
-          opacity={visible ? 0.8 : 0}
-          transparent
-          alphaWrite={false}
-          factor={2}
-          speed={1}
-          attach="material"
-          color="#ff009d"
-        />
-        <Cloud
-          speed={1}
-          scale={1}
-          opacity={visible ? 0.4 : 0}
-          position={[rand, -rand, -rand * 2]}
-        />
-        <Cloud
-          speed={1}
-          scale={1}
-          opacity={visible ? 0.4 : 0}
-          position={[rand, rand, -rand * 2]}
-        />
-        <Cloud
-          speed={1}
-          scale={1}
-          opacity={visible ? 0.4 : 0}
-          position={[-rand, -rand, -rand * 2]}
-        />
-      </>
+      <mesh position={[0, 0, 0]}>
+        <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+        <TempleBlock />
+      </mesh>
+      <mesh position={[TILE_WIDTH, 0, 0]}>
+        <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+        <TempleBlock />
+      </mesh>
+      <mesh position={[0, 0, TILE_WIDTH]}>
+        <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+        <TempleBlock />
+      </mesh>
+      <mesh position={[TILE_WIDTH, 0, TILE_WIDTH]}>
+        <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
+        <TempleBlock />
+      </mesh>
     </mesh>
   );
 }

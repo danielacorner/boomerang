@@ -7,7 +7,7 @@ import { AdaptiveDpr, Sky, useDetectGPU } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useKeyboardListeners } from "./Player/usePressedKeys";
 import { useDetectDash } from "./useDetectDash";
-import { NextLevelDoor } from "./NextLevelDoor";
+import { NextLevelPath } from "./NextLevelPath";
 
 export function Scene() {
   useFrame(({ performance }) => {
@@ -24,7 +24,7 @@ export function Scene() {
       <DroppedItems />
       <Ground />
       {gpu.tier <= 2 && <AdaptiveDpr pixelated />}
-      <NextLevelDoor />
+      <NextLevelPath />
       <color attach="background" args={["#000"]} />
     </mesh>
   );

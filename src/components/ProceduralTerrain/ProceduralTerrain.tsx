@@ -86,7 +86,7 @@ function SandBlock() {
   );
 }
 
-function TempleBlock() {
+export function TempleBlock() {
   const texture = useTexture("/textures/brick.png");
   return (
     <meshStandardMaterial

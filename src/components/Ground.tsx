@@ -14,7 +14,7 @@ import { distanceBetweenPoints } from "../utils/utils";
 import { Vector3 } from "three";
 import { ProceduralTerrain } from "./ProceduralTerrain/ProceduralTerrain";
 
-const PLANE_PROPS = {
+export const GROUND_PLANE_PROPS = {
   args: [1000, 1000] as any,
   position: [0, -1, 0] as [number, number, number],
   rotation: [-Math.PI / 2, 0, 0] as [number, number, number],
@@ -22,12 +22,17 @@ const PLANE_PROPS = {
 
 export function GroundBasic() {
   const [planeRef] = usePlane(() => ({
-    ...PLANE_PROPS,
+    ...GROUND_PLANE_PROPS,
     collisionFilterGroup: GROUP1,
   }));
 
   return (
-    <Plane receiveShadow name={GROUND_NAME} ref={planeRef} {...PLANE_PROPS}>
+    <Plane
+      receiveShadow
+      name={GROUND_NAME}
+      ref={planeRef}
+      {...GROUND_PLANE_PROPS}
+    >
       <meshToonMaterial color="#525252" />
     </Plane>
   );
@@ -36,7 +41,7 @@ export function GroundBasic() {
 export function Ground() {
   const [playerPositionRef] = usePlayerPositionRef();
   const [planeRef] = usePlane(() => ({
-    ...PLANE_PROPS,
+    ...GROUND_PLANE_PROPS,
     collisionFilterGroup: GROUP1,
   }));
   const [, setHeldBoomerangs] = useHeldBoomerangs();
@@ -134,7 +139,7 @@ export function Ground() {
         ref={planeRef}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
-        {...PLANE_PROPS}
+        {...GROUND_PLANE_PROPS}
       >
         <meshBasicMaterial opacity={0} transparent={true} color="#000" />
       </Plane>
