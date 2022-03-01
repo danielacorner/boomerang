@@ -54,22 +54,24 @@ export const BoomerangWithControls = ({
     ) {
       return;
     }
+    const distanceShowPin = Math.min(viewport.width, viewport.height) / 2;
+
     const boom = boomerangRefs.current[idx];
 
     const distanceToPlayer = distanceBetweenPoints(
       [boom.position[0], boom.position[1], boom.position[2]],
       playerPositionRef.current
     );
-    const distanceShowPin = Math.min(viewport.width, viewport.height) / 2;
 
-    if (distanceToPlayer > distanceShowPin && !isVeryFarAway) {
+    if (Math.abs(distanceToPlayer) > distanceShowPin && !isVeryFarAway) {
       setIsVeryFarAway(true);
     } else if (distanceToPlayer < distanceShowPin && isVeryFarAway) {
       setIsVeryFarAway(false);
     }
   });
 
-  const showPin = status === "dropped" || (isVeryFarAway && status !== "held");
+  const showPin =
+    !rangeUp && (status === "dropped" || (isVeryFarAway && status !== "held"));
   console.log(
     "🌟🚨 ~ file: BoomerangWithControls.tsx ~ line 73 ~ showPin",
     showPin
