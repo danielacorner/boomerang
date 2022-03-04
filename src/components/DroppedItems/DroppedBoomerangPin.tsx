@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { Billboard, Html } from "@react-three/drei";
+import { Html } from "@react-three/drei";
 import { BoomerangIcon } from "../HUD/BoomerangsIndicator";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import { usePlayerPositionRef } from "../../store";
 
@@ -22,8 +22,14 @@ export function DroppedBoomerangPin({ style = {} }) {
     // so we can see this dropped pin from any distance
 
     // distance from the player to the edge of the screen
+    // right edge of the screen
     const maxX = playerPositionRef.current[0] + viewport.width / 2;
+    const signMaxX = Math.sign(maxX);
+    // left edge of the screen
     const minX = playerPositionRef.current[0] - viewport.width / 2;
+    const signMinX = Math.sign(minX);
+
+    // clamp at edges of the screen
     const x = Math.max(minX, Math.min(maxX, initialPositionRef.current.x));
 
     // const maxY = playerPositionRef.current[1] + viewport.height / 2;

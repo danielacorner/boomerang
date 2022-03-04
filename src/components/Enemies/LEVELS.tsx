@@ -58,7 +58,7 @@ export const LEVELS: {
 }[] = [
   {
     enemies: [],
-    droppedItems: [{ position: [0, 8, 8], type: ITEM_TYPES.BOOMERANG }],
+    droppedItems: [{ position: [0, 4, 8], type: ITEM_TYPES.BOOMERANG }],
     terrain: {
       width: 16,
       height: 16,

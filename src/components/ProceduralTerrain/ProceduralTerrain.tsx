@@ -29,7 +29,12 @@ export function ProceduralTerrain() {
     <>
       {tiles.map(({ color, position }, i) => {
         return (
-          <mesh key={i} position={position} receiveShadow>
+          <mesh
+            key={i}
+            position={position}
+            rotation={[0, Math.PI, 0]}
+            receiveShadow
+          >
             <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
             {color === COLORS.WATER && <WaterBlock {...{ position }} />}
             {color === COLORS.GRASS && <GrassBlock />}

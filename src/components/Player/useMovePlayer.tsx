@@ -54,7 +54,7 @@ export function useMovePlayer({
 
   const [gameStateRef] = useGameStateRef();
 
-  const { xxx, rrrrrrrrrr } = useControls({ xxx: 0, rrrrrrrrrr: 180 });
+  const { rrrrrrrrrr } = useControls({ rrrrrrrrrr: 97 });
   const [positionRef] = usePlayerPositionRef();
   const [{ poweredUp }] = usePlayerState();
 

@@ -15,7 +15,9 @@ export function DroppedItems() {
   return (
     <>
       {droppedItems.map((item) => (
-        <DroppedItem key={item.id} {...item} />
+        <React.Fragment key={item.id}>
+          {item.unmounted ? null : <DroppedItem {...item} />}
+        </React.Fragment>
       ))}
     </>
   );
@@ -46,8 +48,15 @@ const ITEM_TYPES_UNMOUNT_DELAYS = {
   // [ITEM_TYPES.RANGEUP]: 16 * 1000,
   [ITEM_TYPES.BOOMERANG]: null,
 };
+const ITEM_FLOAT_PROPS = {
+  [ITEM_TYPES.BOOMERANG]: {
+    speed: 0,
+    rotationIntensity: 0,
+    floatIntensity: 0,
+  },
+};
 
-function DroppedItem({ id, position, type, unmounted }: DroppedItemType) {
+function DroppedItem({ id, position, type }: DroppedItemType) {
   if (!ITEM_TYPES_COMPONENTS[type]) {
     console.log(
       "🌟🚨🚨🚨🚨 ~ file: DroppedItems.tsx ~ line 53 ~ DroppedItem ~ type",
@@ -56,23 +65,19 @@ function DroppedItem({ id, position, type, unmounted }: DroppedItemType) {
     return null;
   }
   const Component = useCallback((p) => ITEM_TYPES_COMPONENTS[type](p), []);
-  const [mounted, setMounted] = useState(!unmounted);
-  const timerRef = useRef<number>(0);
-  useMount(() => {
-    if (!ITEM_TYPES_UNMOUNT_DELAYS[type]) {
-      return;
-    }
-    timerRef.current = window.setTimeout(() => {
-      setMounted(false);
-    }, ITEM_TYPES_UNMOUNT_DELAYS[type]);
-  });
+  const [mounted, setMounted] = useState(true);
+
+  const timerRef = useUnmountAfterTimeout(type, setMounted);
+
   const [, setDroppedItems] = useDroppedItems();
 
   return mounted ? (
     <Float
-      speed={4}
-      rotationIntensity={0.5} // XYZ rotation intensity, defaults to 1
-      floatIntensity={0.5} // Up/down float intensity, defaults to 1
+      {...(ITEM_FLOAT_PROPS[ITEM_TYPES.BOOMERANG] ?? {
+        speed: 4,
+        rotationIntensity: 0.5, // XYZ rotation intensity, defaults to 1
+        floatIntensity: 0.5, // Up/down float intensity, defaults to 1
+      })}
     >
       <Component
         {...{
@@ -91,4 +96,19 @@ function DroppedItem({ id, position, type, unmounted }: DroppedItemType) {
       />
     </Float>
   ) : null;
+}
+function useUnmountAfterTimeout(
+  type: ITEM_TYPES,
+  setMounted: React.Dispatch<React.SetStateAction<boolean>>
+) {
+  const timerRef = useRef<number>(0);
+  useMount(() => {
+    if (!ITEM_TYPES_UNMOUNT_DELAYS[type]) {
+      return;
+    }
+    timerRef.current = window.setTimeout(() => {
+      setMounted(false);
+    }, ITEM_TYPES_UNMOUNT_DELAYS[type]);
+  });
+  return timerRef;
 }

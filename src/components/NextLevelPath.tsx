@@ -8,7 +8,7 @@ import { TempleBlock, TILE_WIDTH } from "./ProceduralTerrain/ProceduralTerrain";
 import { useState } from "react";
 import { GROUND_PLANE_PROPS } from "./Ground";
 
-// TODO: turn into a fading path... then transition to the next stage
+// TODO: turn into a fading path... then transition to the next stage from bottom to top, then fade out
 
 export function NextLevelPath() {
   const [currentWave, setCurrentWave] = useCurrentWave();

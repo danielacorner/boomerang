@@ -1,6 +1,5 @@
 import { useCylinder } from "@react-three/cannon";
-import { useCallback, useRef, useState } from "react";
-import { useMount } from "react-use";
+import { useCallback, useRef } from "react";
 import {
   PLAYER_NAME,
   BOOMERANG_ITEM_NAME,
@@ -15,6 +14,7 @@ import {
 } from "../../store";
 import { DroppedBoomerangPin } from "./DroppedBoomerangPin";
 import { useIsDebugMode } from "../../DebugMode";
+import { Float } from "@react-three/drei";
 
 const BOOMERANG_ITEM_HEIGHT = 2;
 
@@ -31,11 +31,12 @@ export function DroppedBoomerang({ position, setMounted, id }) {
     );
     setMounted(false);
   }, []);
-  const [ref, api] = useCylinder(
+  const [cylRef, api] = useCylinder(
     () => ({
       args: [2, 2, BOOMERANG_ITEM_HEIGHT, 6],
       mass: 200,
       position,
+      rotation: [-0.36, -1.42, -0.13],
       collisionFilterGroup: GROUP1,
       onCollide: (e) => {
         const isCollisionWithPlayer = e.body && e.body.name === PLAYER_NAME;
@@ -86,12 +87,20 @@ export function DroppedBoomerang({ position, setMounted, id }) {
       unmountBoom,
     ]
   );
+  const { x, y, z } = { x: 1.18, y: 0.79, z: -2 };
 
   return (
-    <mesh ref={ref} name={BOOMERANG_ITEM_NAME}>
-      <DroppedBoomerangPin />
-      <pointLight intensity={1} distance={8} position={[0, 2, 0]} />
-      <BoomerangModel idx={null} isDroppedBoomerang={true} />
-    </mesh>
+    <>
+      {/* the pin stays at the initial height of the boomerang */}
+      <mesh position={position}>
+        <DroppedBoomerangPin />
+      </mesh>
+      <mesh ref={cylRef} name={BOOMERANG_ITEM_NAME}>
+        <pointLight intensity={1} distance={8} position={[0, 2, 0]} />
+        <Float rotationIntensity={x} floatIntensity={y} speed={z}>
+          <BoomerangModel idx={null} isDroppedBoomerang={true} />
+        </Float>
+      </mesh>
+    </>
   );
 }

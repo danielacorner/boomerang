@@ -53,6 +53,6 @@ export const COLORS = {
   SAND: "#bdac4e",
   WATER: "#024c77",
   PLANT: "#3da74b",
-  TEMPLE: "#bd9cbd",
+  TEMPLE: "#ac98ac",
 };
 export const PLAYER_CYLINDER_HEIGHT = 3;
