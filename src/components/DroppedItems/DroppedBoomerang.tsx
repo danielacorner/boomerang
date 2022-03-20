@@ -3,7 +3,7 @@ import { useCallback, useRef } from "react";
 import {
   PLAYER_NAME,
   BOOMERANG_ITEM_NAME,
-  GROUP1,
+  GROUP_1,
   getAnimationDuration,
 } from "../../utils/constants";
 import BoomerangModel from "../GLTFs/BoomerangModel";
@@ -37,7 +37,7 @@ export function DroppedBoomerang({ position, setMounted, id }) {
       mass: 200,
       position,
       rotation: [-0.36, -1.42, -0.13],
-      collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP_1,
       onCollide: (e) => {
         const isCollisionWithPlayer = e.body && e.body.name === PLAYER_NAME;
 

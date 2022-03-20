@@ -1,7 +1,7 @@
 import { useBox, useConvexPolyhedron } from "@react-three/cannon";
 import { MeshDistortMaterial, useTexture } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BOOMERANG_NAME, COLORS, GROUP2 } from "../../utils/constants";
+import { BOOMERANG_NAME, COLORS, GROUP_2 } from "../../utils/constants";
 import { useCurrentWave } from "../Enemies/Enemies";
 import { LEVELS } from "../Enemies/LEVELS";
 import PlantModel from "../GLTFs/PlantModel";
@@ -148,7 +148,7 @@ function WallBlock({ position }) {
     // ...props,
     args: geo as any,
     mass: 0,
-    collisionFilterGroup: GROUP2,
+    collisionFilterGroup: GROUP_2,
     type: "Static",
     // args: [TILE_WIDTH, TILE_WIDTH * 2, TILE_WIDTH],
     position,

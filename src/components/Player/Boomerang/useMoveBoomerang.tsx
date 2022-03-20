@@ -11,7 +11,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useCylinder } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
 import {
-  GROUP1,
+  GROUP_1,
   ITEM_TYPES,
   PLAYER_NAME,
   WALL_NAME,
@@ -56,13 +56,9 @@ export function useMoveBoomerang({ idx }: { idx }) {
   const onceRef = useRef(false);
   const [boomerangCylinderRef, api] = useCylinder(
     () => ({
-      mass: poweredUp ? 4 : 1,
+      mass: status === "held" ? 0 : poweredUp ? 4 : 1,
       args: [width, width, height, 6],
-      ...(isBoomerangMoving
-        ? {
-            collisionFilterMask: GROUP1, // while moving, it can only collide with group 1 (enemies, walls, ground, dropped items)
-          }
-        : {}),
+      collisionFilterMask: isBoomerangMoving ? GROUP_1 : 32, // while moving, it can only collide with group 1 (enemies, walls, ground, dropped items)
       position: position.current || playerPositionRef || INITIAL_POSITION,
       // position: playerPosition || INITIAL_POSITION,
       // TODO ? when it hits a wall, set to Dynamic
@@ -155,7 +151,7 @@ export function useMoveBoomerang({ idx }: { idx }) {
       },
     }),
     null,
-    [poweredUp, width, height, isBoomerangMoving]
+    [poweredUp, width, height, isBoomerangMoving, status]
   );
 
   const [boomerangRefs] = useBoomerangRefs();
@@ -214,7 +210,6 @@ export function useMoveBoomerang({ idx }: { idx }) {
     if (!playerRef?.current) {
       return;
     }
-
     if (clickTargetPosition && status === "flying") {
       // first, set position to player position
       if (!rangeUp) {
@@ -333,6 +328,13 @@ export function useMoveBoomerang({ idx }: { idx }) {
           gameStateRef.current.heldBoomerangs.map(mapHeldBoomerangs);
         api.velocity.set(0, 0, 0);
       }
+    }
+  });
+
+  // keep the boomerang at the player's position while held
+  useFrame(() => {
+    if (status === "held") {
+      api.position.set(...playerPositionRef.current);
     }
   });
 

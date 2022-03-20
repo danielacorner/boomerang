@@ -10,10 +10,10 @@ export const RANGEUP_NAME = "rangeup";
 // Collision filter groups - must be powers of 2!
 
 /** enemies, walls, ground, dropped items */
-export const GROUP1 = 1;
+export const GROUP_1 = 1;
 
-export const GROUP2 = 2;
-export const GROUP3 = 4;
+export const GROUP_2 = 2;
+export const GROUP_3 = 4;
 
 export const MAX_THROW_DISTANCE = 13;
 export const HELD_ITEMS = {

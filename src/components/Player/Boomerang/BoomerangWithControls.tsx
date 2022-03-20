@@ -105,7 +105,7 @@ export const BoomerangWithControls = ({
         width={12} // Width of the line
         color={"#2898ac"} // Color of the line
         length={2.4} // Length of the line
-        decay={0.6} // How fast the line fades away
+        decay={status === "held" ? 5 : 0.6} // How fast the line fades away
         local={false} // Wether to use the target's world or local positions
         stride={0} // Min distance between previous and current point
         interval={1} // Number of frames to wait before next calculation

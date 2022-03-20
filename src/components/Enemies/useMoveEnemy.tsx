@@ -10,7 +10,7 @@ import {
 import {
   BOOMERANG_NAME,
   ENEMY_CYLINDER_HEIGHT,
-  GROUP1,
+  GROUP_1,
   ITEM_TYPES,
 } from "../../utils/constants";
 import * as THREE from "three";
@@ -93,7 +93,7 @@ export function useMoveEnemy({
   const onceRef = useRef<boolean>(false);
   const [enemyRef, api] = useCylinder(
     () => ({
-      collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP_1,
       args: [3, 1, ENEMY_CYLINDER_HEIGHT, 6],
       mass: 1,
       position: position.current,

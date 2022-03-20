@@ -5,7 +5,7 @@ import { useCylinder } from "@react-three/cannon";
 import { useMoney, usePlayerState } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
-import { BOOMERANG_NAME, GROUP1, ITEM_TYPES } from "../../utils/constants";
+import { BOOMERANG_NAME, GROUP_1, ITEM_TYPES } from "../../utils/constants";
 
 const BAG_RADIUS = 1;
 

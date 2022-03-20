@@ -1,6 +1,6 @@
 import { usePlane } from "@react-three/cannon";
 import { useThree } from "@react-three/fiber";
-import { GROUP1, WALL_NAME } from "../../utils/constants";
+import { GROUP_1, WALL_NAME } from "../../utils/constants";
 
 export function Walls({ z: z1, x: x1 }) {
   const { viewport } = useThree();
@@ -11,7 +11,7 @@ export function Walls({ z: z1, x: x1 }) {
   // back, front
   const [backRef] = usePlane(
     () => ({
-      collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP_1,
       position: [0, 0, -z],
       rotation: [0, 0, 0],
     }),
@@ -20,7 +20,7 @@ export function Walls({ z: z1, x: x1 }) {
   );
   const [frontRef] = usePlane(
     () => ({
-      collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP_1,
       position: [0, 0, z],
       rotation: [0, -Math.PI, 0],
     }),
@@ -31,7 +31,7 @@ export function Walls({ z: z1, x: x1 }) {
   // left, right
   const [leftRef] = usePlane(
     () => ({
-      collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP_1,
       position: [x, 0, 0],
       rotation: [0, -Math.PI / 2, 0],
     }),
@@ -40,7 +40,7 @@ export function Walls({ z: z1, x: x1 }) {
   );
   const [rightRef] = usePlane(
     () => ({
-      collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP_1,
       position: [-x, 0, 0],
       rotation: [0, Math.PI / 2, 0],
     }),

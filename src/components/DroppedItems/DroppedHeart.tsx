@@ -4,7 +4,7 @@ import { useCylinder } from "@react-three/cannon";
 import { useGameStateRef } from "../../store";
 import { useFrame } from "@react-three/fiber";
 import { animated, useSpring } from "@react-spring/three";
-import { BOOMERANG_NAME, GROUP1, ITEM_TYPES } from "../../utils/constants";
+import { BOOMERANG_NAME, GROUP_1, ITEM_TYPES } from "../../utils/constants";
 import HeartModel from "../GLTFs/HeartModel";
 
 const BAG_RADIUS = 1;
@@ -38,7 +38,7 @@ export function DroppedHeart({ position, setMounted, id }) {
 
   const [ref, api] = useCylinder(
     () => ({
-      collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP_1,
       collisionResponse: 0, // ? don't push back on collisions
       args: [1, 1, BAG_RADIUS, 6],
       mass: 1,

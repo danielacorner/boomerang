@@ -8,7 +8,7 @@ import {
 } from "../store";
 import { ThreeEvent } from "@react-three/fiber";
 import * as THREE from "three";
-import { GROUND_NAME, GROUP1, MAX_THROW_DISTANCE } from "../utils/constants";
+import { GROUND_NAME, GROUP_1, MAX_THROW_DISTANCE } from "../utils/constants";
 import { useCallback, useRef, useState } from "react";
 import { distanceBetweenPoints } from "../utils/utils";
 import { Vector3 } from "three";
@@ -23,7 +23,7 @@ export const GROUND_PLANE_PROPS = {
 export function GroundBasic() {
   const [planeRef] = usePlane(() => ({
     ...GROUND_PLANE_PROPS,
-    collisionFilterGroup: GROUP1,
+    collisionFilterGroup: GROUP_1,
   }));
 
   return (
@@ -42,7 +42,7 @@ export function Ground() {
   const [playerPositionRef] = usePlayerPositionRef();
   const [planeRef] = usePlane(() => ({
     ...GROUND_PLANE_PROPS,
-    collisionFilterGroup: GROUP1,
+    collisionFilterGroup: GROUP_1,
   }));
   const [, setHeldBoomerangs] = useHeldBoomerangs();
   const [gameStateRef] = useGameStateRef();

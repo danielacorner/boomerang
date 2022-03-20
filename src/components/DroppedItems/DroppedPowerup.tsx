@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { useMount } from "react-use";
 import {
   BOOMERANG_NAME,
-  GROUP1,
+  GROUP_1,
   PLAYER_NAME,
   POWERUP_NAME,
 } from "../../utils/constants";
@@ -22,7 +22,7 @@ export function DroppedPowerup({ position, setMounted, id }) {
 
   const [ref, api] = useCylinder(
     () => ({
-      collisionFilterGroup: GROUP1,
+      collisionFilterGroup: GROUP_1,
       args: [2, 2, POWERUP_HEIGHT, 6],
       mass: 200,
       position,
