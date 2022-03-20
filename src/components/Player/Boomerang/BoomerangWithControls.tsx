@@ -19,6 +19,7 @@ import { Html } from "@react-three/drei";
 import { DroppedBoomerangPin } from "../../DroppedItems/DroppedBoomerangPin";
 import { BlinkingWaveAnimation } from "../BlinkingWaveAnimation";
 import { useFrame } from "@react-three/fiber";
+import { Trail } from "@react-three/drei";
 import { distanceBetweenPoints } from "../../../utils/utils";
 
 export const BoomerangWithControls = ({
@@ -72,37 +73,46 @@ export const BoomerangWithControls = ({
 
   const showPin =
     !rangeUp && (status === "dropped" || (isVeryFarAway && status !== "held"));
-  console.log(
-    "🌟🚨 ~ file: BoomerangWithControls.tsx ~ line 73 ~ showPin",
-    showPin
-  );
 
   return (
-    <animated.mesh
-      castShadow
-      ref={boomerangCylinderRef}
-      scale={scale}
-      name={`${BOOMERANG_NAME}_${idx}`}
-    >
-      {rangeUp && ["flying", "returning", "dropped"].includes(status) && (
-        <mesh scale={2}>
-          <BlinkingWaveAnimation offsetTime={0} />
-          <BlinkingWaveAnimation offsetTime={0.5} />
-        </mesh>
-      )}
-      <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
-        <BoomerangModel {...{ idx }} />
-        <animated.mesh scale={invScale}>
-          <CarriedItems {...{ carriedItems }} />
-        </animated.mesh>
-      </Spin>
-      <DroppedBoomerangPin style={{ opacity: showPin ? 1 : 0 }} />
-      <FlashWhenStatusChanges {...{ idx }} />
-      <pointLight
-        intensity={1}
-        distance={12 * (rangeUp ? 2 : 1) * (poweredUp ? 2 : 1)}
+    <>
+      <animated.mesh
+        castShadow
+        ref={boomerangCylinderRef}
+        scale={scale}
+        name={`${BOOMERANG_NAME}_${idx}`}
+      >
+        {rangeUp && ["flying", "returning", "dropped"].includes(status) && (
+          <mesh scale={2}>
+            <BlinkingWaveAnimation offsetTime={0} />
+            <BlinkingWaveAnimation offsetTime={0.5} />
+          </mesh>
+        )}
+        <Spin {...(["dropped", "held"].includes(status) ? { stop: true } : {})}>
+          <BoomerangModel {...{ idx }} />
+          <animated.mesh scale={invScale}>
+            <CarriedItems {...{ carriedItems }} />
+          </animated.mesh>
+        </Spin>
+        <DroppedBoomerangPin style={{ opacity: showPin ? 1 : 0 }} />
+        <FlashWhenStatusChanges {...{ idx }} />
+        <pointLight
+          intensity={1}
+          distance={12 * (rangeUp ? 2 : 1) * (poweredUp ? 2 : 1)}
+        />
+      </animated.mesh>
+      <Trail
+        width={12} // Width of the line
+        color={"#2898ac"} // Color of the line
+        length={2.4} // Length of the line
+        decay={0.6} // How fast the line fades away
+        local={false} // Wether to use the target's world or local positions
+        stride={0} // Min distance between previous and current point
+        interval={1} // Number of frames to wait before next calculation
+        target={boomerangCylinderRef as any} // Optional target. This object will produce the trail.
+        attenuation={(width) => width} // A function to define the width in each point along it.
       />
-    </animated.mesh>
+    </>
   );
 };
 
