@@ -5,7 +5,7 @@ import { DroppedItems } from "./DroppedItems/DroppedItems";
 import { Ground } from "./Ground";
 import { AdaptiveDpr, useDetectGPU } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import { useKeyboardListeners } from "./Player/usePressedKeys";
+import { useKeyboardListeners } from "./Player/movement/usePressedKeys";
 import { useDetectDash } from "./useDetectDash";
 import { NextLevelPath } from "./NextLevelPath";
 

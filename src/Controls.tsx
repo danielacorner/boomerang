@@ -1,4 +1,4 @@
-import { Joystick } from "./components/Joystick/Joystick";
+import { Joystick } from "./components/Player/movement/Joystick";
 import { useMediaQuery } from "@mui/material";
 
 export function Controls() {

@@ -1,7 +1,7 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef, useEffect } from "react";
-import { DASH_DURATION, useGameStateRef } from "../store";
-import { usePressedKeys } from "./Player/usePressedKeys";
+import { useGameStateRef } from "../store";
+import { usePressedKeys } from "./Player/movement/usePressedKeys";
 import { isEqual } from "lodash";
 import { dedupeRepetitiveArray } from "../utils/utils";
 import { Direction } from "./Scene";

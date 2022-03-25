@@ -8,18 +8,18 @@ import {
   usePlayerRef,
   useGameStateRef,
   DASH_DURATION,
-} from "../../store";
+} from "../../../store";
 import {
   ENEMY_NAME,
   GROUP_2,
   PLAYER_CYLINDER_HEIGHT,
   POWERUP_NAME,
   RANGEUP_NAME,
-} from "../../utils/constants";
+} from "../../../utils/constants";
 import { useMount } from "react-use";
-import { useEventListener } from "../../utils/useEventListener";
+import { useEventListener } from "../../../utils/useEventListener";
 import { useMovePlayer } from "./useMovePlayer";
-import { DASH_TIMEOUT } from "../useDetectDash";
+import { DASH_TIMEOUT } from "../../useDetectDash";
 
 export const POWERUP_DURATION = 12 * 1000;
 export const RANGEUP_DURATION = 12 * 1000;

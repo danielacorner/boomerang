@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { animated, useSpring } from "react-spring";
-import { usePressedKeys } from "../Player/usePressedKeys";
-import { Direction } from "../Scene";
+import { usePressedKeys } from "./usePressedKeys";
+import { Direction } from "../../Scene";
 
 export const JOYSTICK_RADIUS = 64;
 const JOYSTICK_THUMB_RADIUS = JOYSTICK_RADIUS / 2;

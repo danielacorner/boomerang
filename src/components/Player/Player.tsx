@@ -7,15 +7,15 @@ import {
   Boomerang,
   MaxThrowDistanceRangeIndicator,
 } from "./MaxThrowDistanceRangeIndicator";
-import { usePlayerControls } from "./usePlayerControls";
+import { usePlayerControls } from "./movement/usePlayerControls";
 import { RangeupCircularTimer } from "./RangeupCircularTimer";
 import { RangeupIndicator } from "./RangeupIndicator";
 import { PowerupCircularTimer } from "./PowerupCircularTimer";
 import { Html } from "@react-three/drei";
 import { useInterval } from "react-use";
-import { useAnimateMage } from "./useAnimateMage";
+import { useAnimateMage } from "./movement/useAnimateMage";
 import { ZeldaBoomerangAnimation } from "./ZeldaBoomerangAnimation";
-import { useMoveCamera } from "./useMoveCamera";
+import { useMoveCamera } from "./movement/useMoveCamera";
 
 export function Player() {
   useMoveCamera();

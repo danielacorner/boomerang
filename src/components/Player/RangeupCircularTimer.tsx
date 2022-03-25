@@ -4,7 +4,7 @@ import {
   usePlayerState,
 } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
-import { RANGEUP_DURATION } from "./usePlayerControls";
+import { RANGEUP_DURATION } from "./movement/usePlayerControls";
 import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 

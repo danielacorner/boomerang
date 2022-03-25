@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
-import { usePlayerPositionRef, useGameStateRef } from "../../store";
-import { ANIMATE_HEIGHT, CAMERA_POSITIONS } from "../../utils/constants";
+import { usePlayerPositionRef, useGameStateRef } from "../../../store";
+import { ANIMATE_HEIGHT, CAMERA_POSITIONS } from "../../../utils/constants";
 import * as THREE from "three";
 
 export function useMoveCamera() {

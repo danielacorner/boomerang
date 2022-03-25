@@ -17,7 +17,7 @@ import {
   WALL_NAME,
 } from "../../../utils/constants";
 import * as THREE from "three";
-import { usePressedKeys } from "../usePressedKeys";
+import { usePressedKeys } from "../movement/usePressedKeys";
 
 const BOOMERANG_RADIUS = 2;
 const BOOMERANG_PULL_FORCE = 0.1;

@@ -1,6 +1,6 @@
 import { usePlayerPositionRef, usePlayerState } from "../../store";
 import { useSpring, animated } from "@react-spring/three";
-import { POWERUP_DURATION } from "./usePlayerControls";
+import { POWERUP_DURATION } from "./movement/usePlayerControls";
 import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 
