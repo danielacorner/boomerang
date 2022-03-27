@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { Fullscreen } from "@mui/icons-material";
 
 export function StartButton({ handleStart }) {
-  return process.env.NODE_ENV === "development" ? null : (
+  return (
     <div
       style={{
         position: "fixed",

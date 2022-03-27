@@ -13,7 +13,8 @@ export function useMoveCamera() {
     // move the camera up when rangeUp is active
     const [camX, camY, camZ] = [0, 1, 2].map((idx) => {
       const nextCameraPosition =
-        playerPositionRef.current[idx] +
+        // track player x, z
+        (idx === 1 ? 0 : playerPositionRef.current[idx]) +
         (isAnimating
           ? CAMERA_POSITIONS.CLOSEUP_ANIMATION[idx]
           : heldBoomerangs.length === 0
@@ -37,9 +38,7 @@ export function useMoveCamera() {
 
     camera.lookAt(
       playerPositionRef.current[0],
-      isAnimating
-        ? playerPositionRef.current[1] + ANIMATE_HEIGHT
-        : playerPositionRef.current[1],
+      0 + (isAnimating ? ANIMATE_HEIGHT : 0),
       playerPositionRef.current[2]
     );
   });

@@ -9,10 +9,7 @@ export function walkAnimation({ initialY, frameRef, initialYRef }) {
   const FPS = 60;
   const animationPct = frameRef.current / (ANIMATION_DURATION_S * FPS);
   const animationPctSin = Math.sin(animationPct);
-  console.log(
-    "🌟🚨 ~ file: walkAnimation.tsx ~ line 13 ~ walkAnimation ~ animationPctSin",
-    animationPctSin
-  );
+
   if (!initialYRef.current) {
     initialYRef.current = initialY;
   }
