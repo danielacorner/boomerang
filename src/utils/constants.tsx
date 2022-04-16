@@ -12,7 +12,9 @@ export const RANGEUP_NAME = "rangeup";
 /** enemies, walls, ground, dropped items */
 export const GROUP_1 = 1;
 
+/** player, dropped boomerang */
 export const GROUP_2 = 2;
+
 export const GROUP_3 = 4;
 
 export const MAX_THROW_DISTANCE = 13;

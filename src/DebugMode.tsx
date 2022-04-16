@@ -42,7 +42,14 @@ export function DebugMode({ children }) {
           </ToggleButton>
         </Portal>
       </Html>
-      {isOn ? <Debug>{children}</Debug> : children}
+      {isOn ? (
+        <Debug>
+          <color attach="background" args={["white"]} />
+          {children}
+        </Debug>
+      ) : (
+        children
+      )}
     </>
   );
 }

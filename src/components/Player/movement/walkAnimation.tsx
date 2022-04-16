@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
-const ANIMATION_HEIGHT = 0.7;
-const ANIMATION_ROT_DEG = 3;
+const ANIMATION_HEIGHT = 0.5;
+const ANIMATION_ROT_DEG = 4;
 const ANIMATION_DURATION_S = 0.04;
 export function walkAnimation({ initialY, frameRef, initialYRef }) {
   frameRef.current++;

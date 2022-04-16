@@ -12,6 +12,7 @@ import { useCylinder } from "@react-three/cannon";
 import { isEqual } from "@react-spring/shared";
 import {
   GROUP_1,
+  GROUP_2,
   ITEM_TYPES,
   PLAYER_NAME,
   WALL_NAME,
@@ -54,15 +55,22 @@ export function useMoveBoomerang({ idx }: { idx }) {
   const [carriedItems, setCarriedItems] = useState<ITEM_TYPES[]>([]);
   const { clock } = useThree();
   const onceRef = useRef(false);
+  const collisionFilterMask = isBoomerangMoving
+    ? GROUP_1
+    : isHeld
+    ? 32
+    : GROUP_2;
+
   const [boomerangCylinderRef, api] = useCylinder(
     () => ({
       mass: status === "held" ? 0 : poweredUp ? 4 : 1,
       args: [width, width, height, 6],
-      collisionFilterMask: isBoomerangMoving ? GROUP_1 : 32, // while moving, it can only collide with group 1 (enemies, walls, ground, dropped items)
+      collisionFilterMask,
       position: position.current || playerPositionRef || INITIAL_POSITION,
       // position: playerPosition || INITIAL_POSITION,
-      // TODO ? when it hits a wall, set to Dynamic
-      type: isBoomerangMoving ? "Kinematic" : "Dynamic",
+      // TODO ? when it hits a wall, set to Dynamic or manually bounce it off
+      type: "Kinematic", // https://github.com/pmndrs/use-cannon#types
+      // type: isBoomerangMoving ? "Kinematic" : "Dynamic", // https://github.com/pmndrs/use-cannon#types
       // A static body does not move during simulation and behaves as if it has infinite mass. Static bodies can be moved manually by setting the position of the body. The velocity of a static body is always zero. Static bodies do not collide with other static or kinematic bodies.
       material: {
         restitution: 1,
@@ -151,7 +159,7 @@ export function useMoveBoomerang({ idx }: { idx }) {
       },
     }),
     null,
-    [poweredUp, width, height, isBoomerangMoving, status]
+    [poweredUp, width, height, isBoomerangMoving, status, collisionFilterMask]
   );
 
   const [boomerangRefs] = useBoomerangRefs();
@@ -266,9 +274,14 @@ export function useMoveBoomerang({ idx }: { idx }) {
   // drop the boomerang
   useFrame(() => {
     if (!isBoomerangMoving) {
+      const touchedGround = position.current[1] < 0.1;
       const slowerVelocity = [
         THREE.MathUtils.lerp(velocity.current[0], 0, friction),
-        THREE.MathUtils.lerp(velocity.current[1], -1, friction),
+        THREE.MathUtils.lerp(
+          velocity.current[1],
+          touchedGround ? 0 : -1,
+          friction
+        ),
         THREE.MathUtils.lerp(velocity.current[2], 0, friction),
       ];
       api.velocity.set(slowerVelocity[0], slowerVelocity[1], slowerVelocity[2]);

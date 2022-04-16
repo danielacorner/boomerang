@@ -34,6 +34,8 @@ export function ProceduralTerrain() {
             position={position}
             rotation={[0, Math.PI, 0]}
             receiveShadow
+            material-transparent={true}
+            material-opacity={0.1}
           >
             <boxBufferGeometry args={[TILE_WIDTH, 1, TILE_WIDTH]} />
             {color === COLORS.WATER && <WaterBlock {...{ position }} />}

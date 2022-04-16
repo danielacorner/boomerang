@@ -60,20 +60,19 @@ export const LEVELS: {
     enemies: [],
     droppedItems: [{ position: [0, 4, 8], type: ITEM_TYPES.BOOMERANG }],
     terrain: {
-      width: 16,
-      height: 16,
+      width: 5,
+      height: 8,
       overrideTiles: [
-        // top 4
-        { row: 7, col: 7, overrideColor: COLORS.TEMPLE },
-        { row: 7, col: 8, overrideColor: COLORS.TEMPLE },
-        { row: 8, col: 7, overrideColor: COLORS.TEMPLE },
-        { row: 8, col: 8, overrideColor: COLORS.TEMPLE },
-        // middle 4
-        { row: 9, col: 7, overrideColor: COLORS.TEMPLE },
-        { row: 9, col: 8, overrideColor: COLORS.TEMPLE },
-        { row: 10, col: 7, overrideColor: COLORS.TEMPLE },
-        { row: 10, col: 8, overrideColor: COLORS.TEMPLE },
-      ],
+        [1, 3],
+        [2, 3],
+        [3, 3],
+        [1, 4],
+        [2, 4],
+        [3, 4],
+        [1, 5],
+        [2, 5],
+        [3, 5],
+      ].map(([x, y]) => ({ row: y, col: x, overrideColor: COLORS.TEMPLE })),
     },
   },
   {

@@ -30,13 +30,12 @@ export function useMovePlayer({
   cylinderApi: PublicApi;
   lastPressedKey: string;
 }) {
-  const rotation = useRef<[number, number, number]>([0, 0, 0]);
-
   // last known player position... use for inaccurate needs only (updating it faster impacts performance)
   // useInterval(() => {
   //   setPlayerState((p) => ({ ...p, playerPosition: positionRef.current }));
   // }, 5 * 1000);
 
+  const rotation = useRef<[number, number, number]>([0, 0, 0]);
   useEffect(() => {
     const unsubscribe = cylinderApi.rotation.subscribe(
       (v) => (rotation.current = v)
@@ -44,10 +43,10 @@ export function useMovePlayer({
     return unsubscribe;
   }, []);
 
-  const velocityRef = useRef<[number, number, number]>([0, 0, 0]);
+  const velocity = useRef<[number, number, number]>([0, 0, 0]);
   useEffect(() => {
     const unsubscribe = cylinderApi.velocity.subscribe((v) => {
-      velocityRef.current = v;
+      velocity.current = v;
     });
     return unsubscribe;
   }, []);
@@ -108,7 +107,7 @@ export function useMovePlayer({
 
     const PLAYER_ROTATION_SPEED = 0.2;
     // TODO: UP not working? seems to twitch on x-axis
-    const ROT_UP = THREE.MathUtils.degToRad(97);
+    const ROT_UP = THREE.MathUtils.degToRad(90);
     // const ROT_UP = THREE.MathUtils.degToRad(180);
     const ROT_LEFT = THREE.MathUtils.degToRad(-90);
     const ROT_DOWN = THREE.MathUtils.degToRad(0);
@@ -156,7 +155,7 @@ export function useMovePlayer({
       )
     );
 
-    const [vx1, vy1, vz1] = velocityRef.current;
+    const [vx1, vy1, vz1] = velocity.current;
     const [vx2, vy2, vz2] = [0, 0, 0];
     const [vx2Lerp, vy2Lerp, vz2Lerp] = [
       THREE.MathUtils.lerp(vx1, vx2, PLAYER_ROTATION_SPEED),
