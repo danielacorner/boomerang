@@ -14,7 +14,6 @@ import {
   useHeldBoomerangs,
   usePlayerState,
 } from "../../store";
-import { useFrame } from "@react-three/fiber";
 import { useSpring, animated } from "@react-spring/three";
 
 export default function Model({ ...props }) {

@@ -83,7 +83,7 @@ export function useMovePlayer({
     // eslint-disable-next-line prefer-const
     let [x2, y2, z2] = [
       x1 + (right ? -1 : left ? 1 : 0) * moveSpeed,
-      Math.min(PLAYER_CYLINDER_HEIGHT / 2, y1),
+      Math.min(PLAYER_CYLINDER_HEIGHT / 2, y1) + 0.2,
       z1 + (down ? -1 : up ? 1 : 0) * moveSpeed,
     ];
     // if we're moving, animate the player up and down like they're walking
@@ -113,8 +113,9 @@ export function useMovePlayer({
     const ROT_DOWN = THREE.MathUtils.degToRad(0);
     const ROT_RIGHT = THREE.MathUtils.degToRad(90);
 
+    const isFacingCamera = lastPressedKey === DOWN;
     const [rotX, rotY, rotZ] = [
-      rx,
+      rx + (isFacingCamera ? 0.75 : 0.5),
       //  rotate on y axis according to last pressed key
       lastPressedKey === LEFT
         ? ROT_LEFT
